@@ -7,4 +7,8 @@
  <RuntimeIdentifiers>ubuntu.20.04-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>
