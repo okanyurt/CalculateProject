@@ -1,9 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authentication;
-using Calculate.Data;
-using Microsoft.AspNetCore.Authorization;
-using Calculate.Models;
-using Calculate.Core;
 
 namespace Calculate.Controllers
 {
@@ -11,7 +6,7 @@ namespace Calculate.Controllers
     {
        // private readonly DataContext _context;
 
-        public LoginController(DataContext context)
+        public LoginController()
         {
             //_context = context;
         }

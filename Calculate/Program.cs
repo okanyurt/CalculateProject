@@ -1,18 +1,17 @@
-﻿using static Calculate.Core.BaseController;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using static Calculate.Core.BaseController;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//builder.Services.AddAuthentication(CommonStrings.AuthCookieName)
-//    .AddCookie(CommonStrings.AuthCookieName,
-//        options =>
-//        {
-//            options.LoginPath = new PathString("/Login/Index");
-//            //options.AccessDeniedPath = new PathString("/Account/Forbidden");
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(option =>
+                {
+                    option.LoginPath = "/Login/Index";
+                });
 
-//        });
 
 var app = builder.Build();
 
