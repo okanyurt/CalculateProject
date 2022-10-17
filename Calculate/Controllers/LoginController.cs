@@ -23,7 +23,6 @@ namespace Calculate.Controllers
         }
 
         [HttpPost]
-        
         public async Task<IActionResult> Index(TokenViewModel model)
         {
             if (String.IsNullOrEmpty(model.Token))
@@ -41,6 +40,18 @@ namespace Calculate.Controllers
             }
 
             return RedirectToAction("Login", "Login", new { userId = User.UserId });
+        }
+
+        [HttpGet]
+        public IActionResult Login(SignInViewModel model)
+        {
+            if (String.IsNullOrEmpty(model.UserId))
+            {
+                model.Message = "Kullanıcı bulunamadı.";
+                return View(model);
+            }
+
+            return View();
         }
     }
 }
