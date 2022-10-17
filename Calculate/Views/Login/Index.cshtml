@@ -2,6 +2,7 @@
     ViewData["Title"] = "Login Page";
     Layout = null;
 }
+@model Calculate.Models.TokenViewModel
 
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -60,48 +61,17 @@
                                     </div>
                                 </div>
                                 <div class="card-content">
-                                    <div class="m-content">
-                                        @if (TempData["SuccessMessage"] != null)
-                                        {
-                                            <div class="alert alert-success alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
-                                                @Html.Raw(TempData["SuccessMessage"])
-                                            </div>
-                                        }
-                                        @if (TempData["InfoMessage"] != null)
-                                        {
-                                            <div class="alert alert-brand alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
-                                                @Html.Raw(TempData["InfoMessage"])
-                                            </div>
-                                        }
-                                        @if (TempData["WarningMessage"] != null)
-                                        {
-                                            <div class="alert alert-warning alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
-                                                @Html.Raw(TempData["WarningMessage"])
-                                            </div>
-                                        }
-                                        @if (TempData["ErrorMessage"] != null)
-                                        {
-                                            <div class="alert alert-danger alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
-                                                @Html.Raw(TempData["ErrorMessage"])
-                                            </div>
-                                        }
-                                    </div>
                                     <div class="card-body">
-                                        <form class="form-horizontal" action="index.html" novalidate>
-                                            @*<fieldset class="form-group position-relative has-icon-left">
-                                                <input type="text" class="form-control" id="user-name" placeholder="Your Username" required>
-                                                <div class="form-control-position">
-                                                <i class="la la-user"></i>
+                                        <form class="form-horizontal" action="/login/index" method="post" autocomplete="off" novalidate>
+                                            @if (Model != null && !string.IsNullOrWhiteSpace(Model?.Message))
+                                            {
+                                                <div type="text" class="form-group" style="color: red;">
+                                                    * @Model.Message
                                                 </div>
-                                                </fieldset>
-                                                <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="password" class="form-control" id="user-password" placeholder="Enter Password" required>
-                                                <div class="form-control-position">
-                                                <i class="la la-key"></i>
-                                                </div>
-                                                </fieldset>*@
+                                            }
                                             <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="text" class="form-control" id="user-token" placeholder="Token" required>
+
+                                                <input type="text" class="form-control" asp-for="Token" placeholder="Token" required>
                                                 <div class="form-control-position">
                                                     <i class="la la-key"></i>
                                                 </div>

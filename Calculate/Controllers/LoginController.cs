@@ -1,14 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Calculate.Data;
+using Calculate.Data.Models;
+using Calculate.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Calculate.Controllers
 {
+    [AllowAnonymous]
     public class LoginController : Controller
     {
-       // private readonly DataContext _context;
+        private readonly DataContext _context;
 
-        public LoginController()
+        public LoginController(DataContext context)
         {
-            //_context = context;
+            _context = context;
         }
 
         [HttpGet]
@@ -17,25 +22,25 @@ namespace Calculate.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> Index(TokenViewModel model)
-        //{
-        //    if (String.IsNullOrEmpty(model.Token))
-        //    {
-        //        Error("Kullanıcı bulunamadı.");
+        [HttpPost]
+        
+        public async Task<IActionResult> Index(TokenViewModel model)
+        {
+            if (String.IsNullOrEmpty(model.Token))
+            {
+                model.Message =  "Kullanıcı bulunamadı.";
+                return View(model);
+            }
 
-        //        return View(model);
-        //    }
+            var User = _context.Users.FirstOrDefault(x => x.IsEnabled && x.AccessToken==model.Token);
 
-        //    //var User = _context.users.FirstOrDefault(x => x.token == user.token);
+            if (User == null)
+            {
+                model.Message = "Uygulama bulunamadı.";
+                return View(model);
+            }
 
-        //    //if (User != null)
-        //    //{
-        //    //    return RedirectToAction("Login", "Login", new { userId = User.userId });
-        //    //}
-
-        //    return View();
-        //}
+            return RedirectToAction("Login", "Login", new { userId = User.UserId });
+        }
     }
 }
