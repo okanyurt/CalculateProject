@@ -305,8 +305,38 @@
     <div class="sidenav-overlay"></div>
     <div class="drag-target"></div>
 
-    @RenderBody()
-    
+   <div class="m-content">
+                @if (TempData["SuccessMessage"] != null)
+        {
+                        <div class="alert alert-success alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
+                @Html.Raw(TempData["SuccessMessage"])
+                        </div>
+        }
+        @if (TempData["InfoMessage"] != null)
+        {
+                        <div class="alert alert-brand alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
+                @Html.Raw(TempData["InfoMessage"])
+                        </div>
+        }
+        @if (TempData["WarningMessage"] != null)
+        {
+                        <div class="alert alert-warning alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
+                @Html.Raw(TempData["WarningMessage"])
+                        </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+                        <div class="alert alert-danger alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
+                @Html.Raw(TempData["ErrorMessage"])
+                        </div>
+        }
+        @RenderBody()
+            </div>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>  

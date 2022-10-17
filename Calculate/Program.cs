@@ -1,7 +1,18 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using static Calculate.Core.BaseController;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//builder.Services.AddAuthentication(CommonStrings.AuthCookieName)
+//    .AddCookie(CommonStrings.AuthCookieName,
+//        options =>
+//        {
+//            options.LoginPath = new PathString("/Login/Index");
+//            //options.AccessDeniedPath = new PathString("/Account/Forbidden");
+
+//        });
 
 var app = builder.Build();
 
