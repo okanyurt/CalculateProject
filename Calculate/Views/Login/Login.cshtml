@@ -2,6 +2,7 @@
     ViewData["Title"] = "Login Page";
     Layout = null;
 }
+@model Calculate.Models.SignInViewModel
 
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -66,15 +67,21 @@
                                 </div>
                                 <div class="card-content">                                
                                     <div class="card-body">
-                                        <form class="form-horizontal" action="index.html" novalidate>
+                                        <form class="form-horizontal" action="/login/login" method="post" autocomplete="off" novalidate>
+                                           @if (Model != null && !string.IsNullOrWhiteSpace(Model?.Message))
+                                            {
+                                                <div type="text" class="form-group" style="color: red;">
+                                                    * @Model.Message
+                                                </div>
+                                            }
                                             <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="text" class="form-control" id="user-name" placeholder="Your Username" required>
+                                                <input type="text" class="form-control" asp-for="MobilePhone" placeholder="Your Username" required>
                                                 <div class="form-control-position">
                                                     <i class="la la-user"></i>
                                                 </div>
                                             </fieldset>
                                             <fieldset class="form-group position-relative has-icon-left">
-                                                <input type="password" class="form-control" id="user-password" placeholder="Enter Password" required>
+                                                <input type="password" class="form-control" asp-for="Password" placeholder="Enter Password" required>
                                                 <div class="form-control-position">
                                                     <i class="la la-key"></i>
                                                 </div>

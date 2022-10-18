@@ -13,9 +13,14 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    [Authorize]
+   // [Authorize]
     public IActionResult Index()
     {
+        if(Request.Cookies["AuthenticationKey"] == null)
+        {
+            return RedirectToAction("Index", "Login");
+        }
+
         return View();
     }
 

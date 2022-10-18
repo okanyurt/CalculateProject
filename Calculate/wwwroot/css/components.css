@@ -83,8 +83,9 @@ html {
       margin: 0 auto;
       padding-left: 260px; }
     html body.bg-full-screen-image {
-      background: url(../../app-assets/images/backgrounds/bg-2.jpg) no-repeat center center fixed;
-      background-size: cover; }
+        background: url(../images/backgrounds/bg-9.jpg) no-repeat center center fixed;
+        background-size: cover;
+    }
     html body .pace .pace-progress {
       background: #ff4961; }
 
