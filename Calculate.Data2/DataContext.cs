@@ -67,6 +67,8 @@ namespace Calculate.Data
 
         public override DbSet<User> Users { get; set; }
 
+        public DbSet<Operation> Operations { get; set; }
+
         //public DbSet<Login> Logins { get; set; }
     }
 }
