@@ -24,7 +24,7 @@ public class HomeController : Controller
             return RedirectToAction("Index", "Login");
         }
 
-        return View(_context.Operations.ToList());
+        return View(_context.Operations.Where(x => x.IsEnable == true).ToList());
     }
 
     [HttpGet]
@@ -39,6 +39,12 @@ public class HomeController : Controller
     {
         try
         {
+            var date = DateTime.UtcNow;
+            o.CreatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
+            o.CreatedDate = date;
+            o.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
+            o.UpdatedDate = date;
+            o.IsEnable = true;
             _context.Operations.Add(o);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
@@ -55,7 +61,10 @@ public class HomeController : Controller
         {
             var ope = _context.Operations.Find(id);
             if(ope != null) {
-                _context.Operations.Remove(ope);
+                var date = DateTime.UtcNow;
+                ope.IsEnable = false;
+                ope.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
+                ope.UpdatedDate = date;
                 _context.SaveChanges();
             }
             
@@ -84,11 +93,16 @@ public class HomeController : Controller
             var ope = _context.Operations.Find(o.Id);
             if(ope != null)
             {
-                ope.IslemNo = o.IslemNo;
-                ope.HesapAdi = o.HesapAdi;
-                ope.BankaAdi = o.BankaAdi;
-                ope.IslemTipi = o.IslemTipi;
-                ope.Miktar = o.Miktar;
+                var date = DateTime.UtcNow;
+                ope.ProcessNumber = o.ProcessNumber;
+                ope.AccountId = o.AccountId;
+                ope.AccountDetailId = o.AccountDetailId;
+                ope.ProcessTypeId = o.ProcessTypeId;
+                ope.Price = o.Price;
+                ope.ProcessPrice = o.ProcessPrice;
+                ope.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
+                ope.UpdatedDate = date;
+                ope.IsEnable = true;
                 _context.SaveChanges();
             }
           

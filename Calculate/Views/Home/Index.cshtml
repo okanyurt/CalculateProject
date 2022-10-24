@@ -118,8 +118,9 @@
                                                     <th>Banka Adı</th>
                                                     <th>İşlem Tipi</th>
                                                     <th>Miktar</th>
+                                                    <th>Komisyon</th>
                                                     <th>Güncelle</th>
-                                                    <th>Sil</th>                                                    
+                                                    <th>Sil</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -127,19 +128,22 @@
                                                 {
                                                     <tr>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.IslemNo)
+                                                            @Html.DisplayFor(modelItem => item.ProcessNumber)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.HesapAdi)
+                                                            @Html.DisplayFor(modelItem => item.AccountId)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.BankaAdi)
+                                                            @Html.DisplayFor(modelItem => item.AccountDetailId)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.IslemTipi)
+                                                            @Html.DisplayFor(modelItem => item.ProcessTypeId)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.Miktar)
+                                                            @Html.DisplayFor(modelItem => item.Price)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.ProcessPrice)
                                                         </td>
                                                         <td><a class="btn btn-warning btn-sm" href="/Home/OperationEdit/@item.Id"><i class="la la-pencil"></i> Güncelle</a></td>
                                                         <td><a class="btn btn-danger btn-sm" href="/Home/OperationDelete/@item.Id"><i class="la la-trash"></i> Sil</a></td>
@@ -153,6 +157,7 @@
                                                     <th>Banka Adı</th>
                                                     <th>İşlem Tipi</th>
                                                     <th>Miktar</th>
+                                                    <th>Komisyon</th>
                                                     <th>Güncelle</th>
                                                     <th>Sil</th>
                                                 </tr>

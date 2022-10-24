@@ -19,28 +19,28 @@
                 <div class="row">
                     <div class="form-group col-12 mb-2">
                         <label for="donationinput1">İşlem No</label>
-                        @Html.TextBoxFor(x => x.IslemNo, new {@class = "form-control square"})
+                        @Html.TextBoxFor(x => x.ProcessNumber, new {@class = "form-control square"})
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-12 mb-2">
                         <label for="donationinput2">Hesap Adı</label>
-                        @Html.TextBoxFor(x => x.HesapAdi, new {@class = "form-control square"})
+                        @Html.TextBoxFor(x => x.AccountId, new {@class = "form-control square"})
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-12 mb-2">
                         <label for="donationinput3">Banka Adı</label>
-                        @Html.TextBoxFor(x => x.BankaAdi, new {@class = "form-control square"})
+                        @Html.TextBoxFor(x => x.AccountDetailId, new {@class = "form-control square"})
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-12 mb-2">
                         <label for="donationinput4">İşlem Tipi</label>
-                        @Html.TextBoxFor(x => x.IslemTipi, new {@class = "form-control square"})
+                        @Html.TextBoxFor(x => x.ProcessTypeId, new {@class = "form-control square"})
                     </div>
                 </div>
 
@@ -48,7 +48,16 @@
                     <div class="form-group col-12 mb-2">
                         <label>Miktar</label>
                         <div class="input-group mt-0">
-                            @Html.TextBoxFor(x => x.Miktar, new {@class = "form-control square"})                        
+                            @Html.TextBoxFor(x => x.Price, new {@class = "form-control square"})                        
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-12 mb-2">
+                        <label>Komisyon</label>
+                        <div class="input-group mt-0">
+                            @Html.TextBoxFor(x => x.ProcessPrice, new {@class = "form-control square"})                        
                         </div>
                     </div>
                 </div>
