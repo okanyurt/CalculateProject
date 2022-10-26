@@ -1,12 +1,16 @@
 ﻿using Calculate.Data;
+using Calculate.Service.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using static Calculate.Core.BaseController;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IOperationService, OperationService>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

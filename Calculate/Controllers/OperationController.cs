@@ -1,5 +1,6 @@
 ﻿using Calculate.Data;
 using Calculate.Data.Models;
+using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,11 +8,12 @@ namespace Calculate.Controllers
 {
     public class OperationController : Controller
     {
-        private readonly DataContext _context;
 
-        public OperationController(DataContext context)
+        private readonly IOperationService _operationService;
+
+        public OperationController(IOperationService operationService)
         {
-            _context = context;
+            _operationService = operationService;
         }
 
         [HttpGet]
@@ -22,7 +24,7 @@ namespace Calculate.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            var operation = _context.Operations.Where(x => x.IsEnable == true).ToList();
+            var operation = _operationService.GetAll();
             return View(operation);
 
         }
@@ -32,21 +34,8 @@ namespace Calculate.Controllers
         {
             try
             {
-                Operation o = new Operation();
-                var date = DateTime.UtcNow;
-                o.ProcessNumber = ProcessNumber;
-                o.AccountId = AccountId;
-                o.AccountDetailId = AccountDetailId;
-                o.ProcessTypeId = ProcessTypeId;
-                o.Price = Price;
-                o.ProcessPrice = ProcessPrice;
-                o.CreatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
-                o.CreatedDate = date;
-                o.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
-                o.UpdatedDate = date;
-                o.IsEnable = true;
-                _context.Operations.Add(o);
-                _context.SaveChanges();
+                string userId = Request.Cookies["AuthenticationKey"];
+                _operationService.Add(ProcessNumber, AccountId, AccountDetailId, ProcessTypeId, Price, ProcessPrice, userId);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -59,16 +48,8 @@ namespace Calculate.Controllers
         {
             try
             {
-                var ope = _context.Operations.Find(id);
-                if (ope != null)
-                {
-                    var date = DateTime.UtcNow;
-                    ope.IsEnable = false;
-                    ope.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
-                    ope.UpdatedDate = date;
-                    _context.SaveChanges();
-                }
-
+                string userId = Request.Cookies["AuthenticationKey"];
+                _operationService.Remove(id, userId);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -78,9 +59,9 @@ namespace Calculate.Controllers
         }
 
         [HttpGet]
-        public Operation OperationEdit(int id)
+        public Task<Operation> OperationEdit(int id)
         {
-            var ope = _context.Operations.Find(id);
+            var ope =  _operationService.GetByIdAsync(id);
 
             return ope;
         }
@@ -91,20 +72,10 @@ namespace Calculate.Controllers
         {
             try
             {
+                string userId = Request.Cookies["AuthenticationKey"];
+                _operationService.Update(OperationUpdate, userId);
 
-                var ope = _context.Operations.Find(OperationUpdate.Id);
-                var date = DateTime.UtcNow;
-                ope.ProcessNumber = OperationUpdate.ProcessNumber;
-                ope.AccountId = OperationUpdate.AccountId;
-                ope.AccountDetailId = OperationUpdate.AccountDetailId;
-                ope.ProcessTypeId = OperationUpdate.ProcessTypeId;
-                ope.Price = OperationUpdate.Price;
-                ope.ProcessPrice = OperationUpdate.ProcessPrice;
-                ope.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
-                ope.UpdatedDate = date;
-                ope.IsEnable = true;
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));                        
             }
             catch
             {

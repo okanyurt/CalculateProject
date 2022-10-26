@@ -4,17 +4,18 @@ using Calculate.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Calculate.Service.Services;
 
 namespace Calculate.Controllers
 {
     [AllowAnonymous]
     public class LoginController : Controller
     {
-        private readonly DataContext _context;
+        private readonly ILoginService _login;
        
-        public LoginController(DataContext context)
+        public LoginController(ILoginService login)
         {
-            _context = context;
+            _login = login;
         }
 
         [HttpGet]
@@ -32,17 +33,12 @@ namespace Calculate.Controllers
                 return View(model);
             }
 
-            var User = _context.Users.FirstOrDefault(x => x.IsEnabled && x.AccessToken==model.Token);
-
+            var User = _login.GetUserIndex(model.Token);
             if (User == null)
             {
                 model.Message = "Uygulama bulunamadı.";
                 return View(model);
             }
-
-            //private readonly CookieOptions _cookieOptionsForAuthentication = new() { Path = "/", Expires = DateTime.Now.AddDays(1) };
-
-            //Response.Cookies.Append("AuthenticationKey", $"{user.Id}", _cookieOptionsForAuthentication);
 
             CookieOptions options = new CookieOptions();
             options.Expires = DateTime.Now.AddMinutes(1);
@@ -54,12 +50,6 @@ namespace Calculate.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            //if (String.IsNullOrEmpty(model.UserId))
-            //{
-            //    model.Message = "Kullanıcı bulunamadı.";
-            //    return View(model);
-            //}
-
             if (Request.Cookies["AuthenticationKey"] == null)
             {
                 return RedirectToAction("Index", "Login");
@@ -77,8 +67,7 @@ namespace Calculate.Controllers
                 return View(model);
             }
 
-            var User = _context.Users.FirstOrDefault(x => x.IsEnabled && x.PhoneNumber == model.MobilePhone && x.PasswordHash == model.Password);
-
+            var User = _login.GetUserLogin(model.MobilePhone, model.Password);
             if (User == null)
             {
                 model.Message = "Uygulama bulunamadı.";
