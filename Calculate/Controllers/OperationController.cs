@@ -1,6 +1,7 @@
 ﻿using Calculate.Data;
 using Calculate.Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Calculate.Controllers
 {
@@ -13,6 +14,7 @@ namespace Calculate.Controllers
             _context = context;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             if (Request.Cookies["AuthenticationKey"] == null)
@@ -20,22 +22,24 @@ namespace Calculate.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            return View(_context.Operations.Where(x => x.IsEnable == true).ToList());
-        }
+            var operation = _context.Operations.Where(x => x.IsEnable == true).ToList();
+            return View(operation);
 
-        [HttpGet]
-        public IActionResult OperationCreate()
-        {
-            return View();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult OperationCreate(Operation o)
+        public IActionResult Index(int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice)
         {
             try
             {
+                Operation o = new Operation();
                 var date = DateTime.UtcNow;
+                o.ProcessNumber = ProcessNumber;
+                o.AccountId = AccountId;
+                o.AccountDetailId = AccountDetailId;
+                o.ProcessTypeId = ProcessTypeId;
+                o.Price = Price;
+                o.ProcessPrice = ProcessPrice;
                 o.CreatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
                 o.CreatedDate = date;
                 o.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
@@ -74,35 +78,32 @@ namespace Calculate.Controllers
         }
 
         [HttpGet]
-        public IActionResult OperationEdit(int id)
+        public Operation OperationEdit(int id)
         {
             var ope = _context.Operations.Find(id);
 
-            return View("OperationCreate", ope);
+            return ope;
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult OperationEdit(Operation o)
+        //[ValidateAntiForgeryToken]
+        public IActionResult OperationEdit([FromBody] OperationUpdate OperationUpdate)
         {
             try
             {
-                var ope = _context.Operations.Find(o.Id);
-                if (ope != null)
-                {
-                    var date = DateTime.UtcNow;
-                    ope.ProcessNumber = o.ProcessNumber;
-                    ope.AccountId = o.AccountId;
-                    ope.AccountDetailId = o.AccountDetailId;
-                    ope.ProcessTypeId = o.ProcessTypeId;
-                    ope.Price = o.Price;
-                    ope.ProcessPrice = o.ProcessPrice;
-                    ope.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
-                    ope.UpdatedDate = date;
-                    ope.IsEnable = true;
-                    _context.SaveChanges();
-                }
 
+                var ope = _context.Operations.Find(OperationUpdate.Id);
+                var date = DateTime.UtcNow;
+                ope.ProcessNumber = OperationUpdate.ProcessNumber;
+                ope.AccountId = OperationUpdate.AccountId;
+                ope.AccountDetailId = OperationUpdate.AccountDetailId;
+                ope.ProcessTypeId = OperationUpdate.ProcessTypeId;
+                ope.Price = OperationUpdate.Price;
+                ope.ProcessPrice = OperationUpdate.ProcessPrice;
+                ope.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == Request.Cookies["AuthenticationKey"]).Id;
+                ope.UpdatedDate = date;
+                ope.IsEnable = true;
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch

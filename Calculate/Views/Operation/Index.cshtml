@@ -1,7 +1,8 @@
-﻿@{
+﻿@model IEnumerable<Calculate.Data.Models.Operation>
+@{
     ViewData["Title"] = "Operation Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model IEnumerable<Calculate.Data.Models.Operation>
 
 <div class="app-content content">
     <div class="content-overlay"></div>
@@ -19,7 +20,11 @@
                                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                                     <div class="heading-elements">
                                         <ul class="list-inline mb-0">
-                                            <li> <a class="btn btn-success btn-sm" href="/Operation/OperationCreate/"><i class="ft-plus white"></i> Ekle</a></li>
+                                            <li>
+                                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createPopup">
+                                                    <i class="ft-plus white"></i> Ekle
+                                                </button>
+                                            </li>
                                             <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
                                             <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
                                             <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
@@ -69,7 +74,7 @@
                                                         <td>
                                                             @Html.DisplayFor(modelItem => item.ProcessPrice)
                                                         </td>
-                                                        <td><a class="btn btn-warning btn-sm" href="/Operation/OperationEdit/@item.Id"><i class="la la-pencil"></i> Güncelle</a></td>
+                                                        <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
                                                         <td><a class="btn btn-danger btn-sm" href="/Operation/OperationDelete/@item.Id"><i class="la la-trash"></i> Sil</a></td>
                                                     </tr>
                                                 }
@@ -94,6 +99,163 @@
                     </div>
                 </section>
             </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <!-- Modal -->
+                    <div class="modal fade text-left" id="createPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel1">Basic Modal</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    @using (Html.BeginForm())
+                                    {
+                                        <form class="form-group">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
+                                                        <input style="width:300px !important;" id="ProcessNumber" name="ProcessNumber">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
+                                                        <input style="width:300px !important;" id="AccountId" name="AccountId">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
+                                                        <input style="width:300px !important;" id="AccountDetailId" name="AccountDetailId">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
+                                                        <input style="width:300px !important;" id="ProcessTypeId" name="ProcessTypeId">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label class="col-sm-2 col-form-label">Miktar</label>
+                                                        <input style="width:300px !important;" id="Price" name="Price">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label class="col-sm-2 col-form-label">Komisyon</label>
+                                                        <input style="width:300px !important;" id="ProcessPrice" name="ProcessPrice">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-actions text-center">
+                                                <a type="button" class="btn btn-warning mr-1" href="/Operation/Index/">
+                                                    <i class="ft-x"></i> Cancel
+                                                </a>
+                                                <input type="submit" class="btn btn-primary la la-check-square-o" value="Save" />
+                                            </div>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <!-- Modal -->
+                    <div class="modal fade text-left" id="editPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel1">Basic Modal</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    @using (Html.BeginForm())
+                                    {
+                                        <form class="form-group" id="editForm">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
+                                                        <input type="hidden" id="EditId" name="Id">
+                                                        <input style="width:300px !important;" id="EditProcessNumber" name="EditProcessNumber">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
+                                                        <input style="width:300px !important;" id="EditAccountId" name="EditAccountId">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
+                                                        <input style="width:300px !important;" id="EditAccountDetailId" name="EditAccountDetailId">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
+                                                        <input style="width:300px !important;" id="EditProcessTypeId" name="EditProcessTypeId">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label class="col-sm-2 col-form-label">Miktar</label>
+                                                        <input style="width:300px !important;" id="EditPrice" name="EditPrice">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label class="col-sm-2 col-form-label">Komisyon</label>
+                                                        <input style="width:300px !important;" id="EditProcessPrice" name="EditProcessPrice">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-actions text-center">
+                                                <a type="button" class="btn btn-warning mr-1" href="/Operation/Index/">
+                                                    <i class="ft-x"></i> Cancel
+                                                </a>
+                                                <a type="button" href="" class="btn btn-primary la la-check-square-o" onclick="Update()">
+                                                    Update
+                                                </a>
+                                            </div>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/operationIndex.js"></script>

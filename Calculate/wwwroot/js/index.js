@@ -13,7 +13,7 @@
         }
     });
 
-    setTimeout(function () {
-        $("#example_wrapper .dt-buttons").append('<button class="btn btn-success btn-sm" onclick="location.href=' + '"<%: Url.Action("OperationCreate", "Home") %>"' + '"><i class="ft-plus white"></i> Ekle</button>');
-    }, 100);
+    //setTimeout(function () {
+    //    $("#example_wrapper .dt-buttons").append('<button class="btn btn-success btn-sm" onclick="location.href=' + '"<%: Url.Action("OperationCreate", "Home") %>"' + '"><i class="ft-plus white"></i> Ekle</button>');
+    //}, 100);
 });
