@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Calculate.Data.Models.Operation>
+﻿@model IEnumerable<Calculate.Data.Models.OperationGet>
 @{
     ViewData["Title"] = "Operation Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -60,13 +60,13 @@
                                                             @Html.DisplayFor(modelItem => item.ProcessNumber)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.AccountId)
+                                                            @Html.DisplayFor(modelItem => item.Account)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.AccountDetailId)
+                                                            @Html.DisplayFor(modelItem => item.AccountDetail)
                                                         </td>
                                                         <td>
-                                                            @Html.DisplayFor(modelItem => item.ProcessTypeId)
+                                                            @Html.DisplayFor(modelItem => item.ProcessType)
                                                         </td>
                                                         <td>
                                                             @Html.DisplayFor(modelItem => item.Price)
@@ -127,14 +127,14 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        <input style="width:300px !important;" id="AccountId" name="AccountId">
+                                                        @Html.DropDownList("AccountId",ViewBag.accounts as SelectList,"Lütfen bir hesap seçiniz",new { style = "width:300px !important;" })            
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <input style="width:300px !important;" id="AccountDetailId" name="AccountDetailId">
+                                                        <select id="AccountDetailId" name="AccountDetailId" style="width:300px !important;"></select>                   
                                                     </div>
                                                 </div>
 
@@ -203,14 +203,14 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        <input style="width:300px !important;" id="EditAccountId" name="EditAccountId">
+                                                        @Html.DropDownList("EditAccountId",ViewBag.accounts as SelectList,new { style = "width:300px !important;" })
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <input style="width:300px !important;" id="EditAccountDetailId" name="EditAccountDetailId">
+                                                        <select id="EditAccountDetailId" name="EditAccountDetailId" style="width:300px !important;"></select> 
                                                     </div>
                                                 </div>
 
@@ -240,7 +240,7 @@
                                                 <a type="button" class="btn btn-warning mr-1" href="/Operation/Index/">
                                                     <i class="ft-x"></i> Cancel
                                                 </a>
-                                                <a type="button" href="" class="btn btn-primary la la-check-square-o" onclick="Update()">
+                                                <a type="button" class="btn btn-primary la la-check-square-o" onclick="Update()">
                                                     Update
                                                 </a>
                                             </div>

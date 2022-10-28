@@ -70,6 +70,14 @@ namespace Calculate.Data
 
         public DbSet<Operation> Operations { get; set; }
 
+        public DbSet<Account> Accounts { get; set; }
+
+        public DbSet<Bank> Banks { get; set; }
+
+        public DbSet<AccountDetail> AccountDetails { get; set; }
+
+        public DbSet<ProcessType> ProcessTypes { get; set; }
+
         //public DbSet<Login> Logins { get; set; }
     }
 }

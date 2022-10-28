@@ -1,16 +1,75 @@
-﻿function edit(Id) {
+﻿$(document).ready(function () {
+    $.noConflict();
+    $('#example').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        "createdRow": function (row, data, dataIndex) {
+            if (data[2] == "London") {
+                $(row).addClass('red');
+
+            }
+        }
+    });
+
+
+    $('#AccountId').change(function () {
+        var Id = parseInt($('#AccountId').val());
+        $.ajax({
+            url: '/Operation/GetBank/' + Id,
+            success: function (data) {
+                var items = '<option>Lütfen bir banka seçiniz</option>';
+                $.each(data, function (i, bank) {
+                    items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
+                });
+                $('#AccountDetailId').html(items);
+            }
+        });
+    });
+
+    $('#EditAccountId').change(function () {
+        var Id = parseInt($('#EditAccountId').val());
+        $.ajax({
+            url: '/Operation/GetBank/' + Id,
+            success: function (data) {
+                var items = '<option>Lütfen bir banka seçiniz</option>';
+                $.each(data, function (i, bank) {
+                    items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
+                });
+                $('#EditAccountDetailId').html(items);
+            }
+        });
+    });
+});
+
+function edit(Id) {
     $.ajax({
         url: '/Operation/OperationEdit/' + Id,
-        success: function (data) {
-            
+        success: function (editdata) {
+
             $('#editPopup').modal('show');
-            $("#EditId").val(data.id);
-            $("#EditProcessNumber").val(data.processNumber);
-            $("#EditAccountId").val(data.accountId);
-            $("#EditAccountDetailId").val(data.accountDetailId);
-            $("#EditProcessTypeId").val(data.processTypeId);
-            $("#EditPrice").val(data.price);
-            $("#EditProcessPrice").val(data.processPrice);
+
+            var Id = parseInt($('#EditAccountId').val());
+
+            $.ajax({
+                url: '/Operation/GetBank/' + Id,
+                success: function (data) {
+                    var items = '<option>Lütfen bir banka seçiniz</option>';
+                    $.each(data, function (i, bank) {
+                        items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
+                    });
+                    $('#EditAccountDetailId').html(items);
+
+                    $("#EditId").val(editdata.id);
+                    $("#EditProcessNumber").val(editdata.processNumber);
+                    $("#EditAccountId").val(editdata.accountId);
+                    $("#EditAccountDetailId").val(editdata.accountDetailId);
+                    $("#EditProcessTypeId").val(editdata.processTypeId);
+                    $("#EditPrice").val(editdata.price);
+                    $("#EditProcessPrice").val(editdata.processPrice);
+                }
+            });           
         }
     });
 }
@@ -29,11 +88,13 @@ function Update() {
     $.ajax({
         url: '/Operation/OperationEdit',
         type: "POST",
-        dataType: 'json',
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(OperationUpdate),
-        success: function (data) {
-
+        success: function (response) {
+            window.location.href = response.redirectToUrl;
+        },
+        error: function (response) {
+            window.location.href = response.redirectToUrl;
         }
     });
 }

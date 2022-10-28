@@ -2,6 +2,7 @@
 using Calculate.Data.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Calculate.Controllers
@@ -25,6 +26,9 @@ namespace Calculate.Controllers
             }
 
             var operation = _operationService.GetAll();
+       
+            ViewBag.accounts = new SelectList(GetAccount(), "Id", "Name");
+
             return View(operation);
 
         }
@@ -68,19 +72,31 @@ namespace Calculate.Controllers
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public IActionResult OperationEdit([FromBody] OperationUpdate OperationUpdate)
+        public JsonResult OperationEdit([FromBody] OperationUpdate OperationUpdate)
         {
             try
             {
                 string userId = Request.Cookies["AuthenticationKey"];
                 _operationService.Update(OperationUpdate, userId);
-
-                return RedirectToAction(nameof(Index));                        
+                return Json(new { redirectToUrl = Url.Action("Index", "Operation") });                     
             }
             catch
             {
-                return View();
+                return Json(new { redirectToUrl = Url.Action("Index", "Operation") });
             }
         }
+
+        public List<AccountGetName> GetAccount()
+        {
+            var accounts = _operationService.GetAccount();
+            return accounts;
+        }
+
+        [HttpGet]
+        public JsonResult GetBank(int id)
+        {
+            var banks = _operationService.GetBank(id);
+            return Json(new SelectList(banks.ToArray(), "Id", "Name"));
+        }   
     }
 }
