@@ -1,4 +1,5 @@
 .bg-maintenance-image {
-  background-image: url(../../../app-assets/images/backgrounds/bg-2.jpg);
-  background-repeat: no-repeat;
-  background-size: cover; }
+    background-image: url(../images/backgrounds/bg-2.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
