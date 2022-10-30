@@ -4,6 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Calculate</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Calculate.styles.css" asp-append-version="true" />
@@ -15,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="~/fonts/line-awesome/css/line-awesome-font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="~/fonts/line-awesome/css/line-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="~/css/material-vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="~/css/tables/datatable/datatables.min.css"> 
+    <link rel="stylesheet" type="text/css" href="~/css/tables/datatable/datatables.min.css">
     <link rel="stylesheet" type="text/css" href="~/css/material.css">
     <link rel="stylesheet" type="text/css" href="~/css/components.css">
     <link rel="stylesheet" type="text/css" href="~/css/bootstrap-extended.css">
@@ -32,6 +35,7 @@
     <link rel="stylesheet" type="text/css" href="~/css/core/colors/palette-gradient.css">
     <link rel="stylesheet" type="text/css" href="~/css/cryptocoins/cryptocoins.css">
     <link rel="stylesheet" type="text/css" href="~/css/charts/apexcharts.css">
+    <link rel="stylesheet" type="text/css" href="~/css/toastr.min.css">
 </head>
 <body class="vertical-layout vertical-menu-modern 2-columns material-vertical-layout material-layout  fixed-navbar" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
     <header>
@@ -68,7 +72,7 @@
                                                     <i class="la la-shopping-cart font-large-1 mr-0"></i>
                                                     <p class="font-medium-2 mt-25 mb-50">İşlemler</p>
                                                 </a>
-                                            </li>                                            
+                                            </li>
                                         </ul>
                                     </li>
                                     <li class="col-md-3">
@@ -250,7 +254,7 @@
                 </li>
                 <li class=" nav-item">
                     <a href="~/Operation/Index" target="_self"><i class="material-icons">add_shopping_cart</i><span class="menu-title" data-i18n="Bank">İşlemler</span></a>
-                </li>               
+                </li>
             </ul>
         </div>
     </div>
@@ -260,41 +264,41 @@
     <div class="sidenav-overlay"></div>
     <div class="drag-target"></div>
 
-   <div class="m-content">
-                @if (TempData["SuccessMessage"] != null)
+    <div class="m-content">
+        @if (TempData["SuccessMessage"] != null)
         {
-                        <div class="alert alert-success alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
+            <div class="alert alert-success alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
                 @Html.Raw(TempData["SuccessMessage"])
-                        </div>
+            </div>
         }
         @if (TempData["InfoMessage"] != null)
         {
-                        <div class="alert alert-brand alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
+            <div class="alert alert-brand alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
                 @Html.Raw(TempData["InfoMessage"])
-                        </div>
+            </div>
         }
         @if (TempData["WarningMessage"] != null)
         {
-                        <div class="alert alert-warning alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
+            <div class="alert alert-warning alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
                 @Html.Raw(TempData["WarningMessage"])
-                        </div>
+            </div>
         }
         @if (TempData["ErrorMessage"] != null)
         {
-                        <div class="alert alert-danger alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
+            <div class="alert alert-danger alert-dismissible fade show m-alert m-alert--square m-alert--air" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Kapat"></button>
                 @Html.Raw(TempData["ErrorMessage"])
-                        </div>
+            </div>
         }
         @RenderBody()
-            </div>
+    </div>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>  
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/material-vendors.min.js"></script>
     <script src="~/js/tables/datatable/datatables.min.js"></script>
     <script src="~/js/tables/datatable/dataTables.buttons.min.js"></script>
@@ -316,7 +320,8 @@
     <script src="~/js/data/jvector/visitor-data.js"></script>
     <script src="~/js/vendors.min.js"></script>
     <script src="~/js/charts/apexcharts/apexcharts.min.js"></script>
-    <script src="~/js/scripts/pages/dashboard-crypto.js"></script>   
+    <script src="~/js/scripts/pages/dashboard-crypto.js"></script>
+    <script src="~/js/toastr.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

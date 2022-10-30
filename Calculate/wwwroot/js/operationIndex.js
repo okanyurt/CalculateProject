@@ -19,7 +19,7 @@
         $.ajax({
             url: '/Operation/GetBank/' + Id,
             success: function (data) {
-                var items = '<option>Lütfen bir banka seçiniz</option>';
+                var items = '<option value="">Lütfen bir banka seçiniz</option>';
                 $.each(data, function (i, bank) {
                     items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
                 });
@@ -33,25 +33,11 @@
         $.ajax({
             url: '/Operation/GetBank/' + Id,
             success: function (data) {
-                var items = '<option>Lütfen bir banka seçiniz</option>';
+                var items = '<option value="">Lütfen bir banka seçiniz</option>';
                 $.each(data, function (i, bank) {
                     items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
                 });
                 $('#EditAccountDetailId').html(items);
-            }
-        });
-    });
-
-    $('#ProcessTypeId').change(function () {
-        var Id = parseInt($('#ProcessTypeId').val());
-        $.ajax({
-            url: '/Operation/GetProcessType/' + Id,
-            success: function (data) {
-                var items = '<option>Lütfen bir işlem türü seçiniz</option>';
-                $.each(data, function (i, processType) {
-                    items += "<option value='" + processType.value + "'>" + processType.text + "</option>";
-                });
-                $('#ProcessTypeId').html(items);
             }
         });
     });
@@ -105,10 +91,14 @@ function Update() {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(OperationUpdate),
         success: function (response) {
-            window.location.href = response.redirectToUrl;
+            if (response.isSuccess) {
+                toastr.success("İşlem başarılı.");
+                $('#editPopup').modal('toggle');
+            } else {
+                toastr.error(result.message);
+            }
         },
         error: function (response) {
-            window.location.href = response.redirectToUrl;
         }
     });
 }

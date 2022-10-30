@@ -1,4 +1,5 @@
-﻿using Calculate.Data;
+﻿using Calculate.Core;
+using Calculate.Data;
 using Calculate.Data.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Calculate.Controllers
 {
-    public class OperationController : Controller
+    public class OperationController : BaseController
     {
 
         private readonly IOperationService _operationService;
@@ -42,6 +43,7 @@ namespace Calculate.Controllers
             {
                 string userId = Request.Cookies["AuthenticationKey"];
                 await _operationService.AddAsync(ProcessNumber, AccountId, AccountDetailId, ProcessTypeId, Price, ProcessPrice, userId);
+                Success("İşlem başarılı.");
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -80,11 +82,12 @@ namespace Calculate.Controllers
             {
                 string userId = Request.Cookies["AuthenticationKey"];
                 await _operationService.UpdateAsync(OperationUpdate, userId);
-                return Json(new { redirectToUrl = Url.Action("Index", "Operation") });                     
+                Success("İşlem başarılı.");
+                return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = true });                     
             }
             catch
             {
-                return Json(new { redirectToUrl = Url.Action("Index", "Operation") });
+                return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = false });
             }
         }
 

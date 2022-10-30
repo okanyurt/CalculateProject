@@ -107,7 +107,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel1">Basic Modal</h4>
+                                    <h4 class="modal-title" id="myModalLabel1">İşlem Oluştur</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -115,40 +115,42 @@
                                 <div class="modal-body">
                                     @using (Html.BeginForm())
                                     {
-                                        <form class="form-group">
+                                        <form class="form-group" autocomplete="off">
                                             <div class="form-body">
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
-                                                        <input style="width:300px !important;" id="ProcessNumber" name="ProcessNumber">
+                                                        <input style="width:300px !important;" id="ProcessNumber" name="ProcessNumber" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        @Html.DropDownList("AccountId",ViewBag.accounts as SelectList,"Lütfen bir hesap seçiniz",new { style = "width:300px !important;" })            
+                                                        @Html.DropDownList("AccountId",ViewBag.accounts as SelectList,"Lütfen bir hesap seçiniz",new { style = "width:300px !important;", required = "required" })            
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="AccountDetailId" name="AccountDetailId" style="width:300px !important;"></select>                   
+                                                        <select id="AccountDetailId" name="AccountDetailId" style="width:300px !important;" required>
+                                                              <option value="" selected>Lütfen bir hesap seçiniz</option>
+                                                        </select>                   
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                        @Html.DropDownList("ProcessTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;" })            
+                                                        @Html.DropDownList("ProcessTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;", required = "required" })            
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label class="col-sm-2 col-form-label">Miktar</label>
-                                                        <input style="width:300px !important;" id="Price" name="Price">
+                                                        <input type='number' step='0.01' value='0.00' placeholder='0.00' min="0" style="width:300px !important;" id="Price" name="Price" required>
                                                     </div>
                                                 </div>
 
@@ -182,7 +184,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel1">Basic Modal</h4>
+                                    <h4 class="modal-title" id="myModalLabel1">İşlem Güncelle</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -196,35 +198,37 @@
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
                                                         <input type="hidden" id="EditId" name="Id">
-                                                        <input style="width:300px !important;" id="EditProcessNumber" name="EditProcessNumber">
+                                                        <input style="width:300px !important;" id="EditProcessNumber" name="EditProcessNumber" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        @Html.DropDownList("EditAccountId",ViewBag.accounts as SelectList,new { style = "width:300px !important;" })
+                                                        @Html.DropDownList("EditAccountId",ViewBag.accounts as SelectList,new { style = "width:300px !important;", required = "required"})
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="EditAccountDetailId" name="EditAccountDetailId" style="width:300px !important;"></select> 
+                                                        <select id="EditAccountDetailId" name="EditAccountDetailId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir hesap seçiniz</option>
+                                                        </select> 
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                         @Html.DropDownList("EditProcessTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;" })                                                  
+                                                         @Html.DropDownList("EditProcessTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;", required = "required" })                                                  
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label class="col-sm-2 col-form-label">Miktar</label>
-                                                        <input style="width:300px !important;" id="EditPrice" name="EditPrice">
+                                                        <input type='number' step='0.01' value='0.00' placeholder='0.00' min="0" style="width:300px !important;" id="EditPrice" name="EditPrice" required>
                                                     </div>
                                                 </div>
 
