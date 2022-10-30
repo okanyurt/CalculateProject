@@ -10,4 +10,10 @@
     <ProjectReference Include="..\Calculate.Data2\Calculate.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="IServices\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="IServices\" />
+  </ItemGroup>
 </Project>
