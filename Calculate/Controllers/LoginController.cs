@@ -48,30 +48,39 @@ namespace Calculate.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string UserId)
         {
             if (Request.Cookies["AuthenticationKey"] == null)
             {
                 return RedirectToAction("Index", "Login");
             }
 
-            return View();
+            if (UserId == null)
+            {
+                TokenViewModel tokenModel = new TokenViewModel();
+                tokenModel.Message = "Uygulama bulunamadı.";
+                return RedirectToAction("Index", tokenModel);
+            }
+
+            SignInViewModel signInModel = new SignInViewModel();
+            signInModel.UserId = UserId;
+            return View(signInModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(SignInViewModel model)
-        {
+        {          
             if (String.IsNullOrEmpty(model.MobilePhone) || String.IsNullOrEmpty(model.Password))
             {
                 model.Message = "Kullanıcı bulunamadı.";
-                return View(model);
+                return RedirectToAction("Login", "Login", new { userId = Request.Cookies["AuthenticationKey"] });
             }
 
             var User = _login.GetUserLogin(model.MobilePhone, model.Password);
             if (User == null)
             {
-                model.Message = "Uygulama bulunamadı.";
-                return View(model);
+                model.Message = "Uygulama bulunamadı.";            
+                return RedirectToAction("Login", "Login", new { userId = Request.Cookies["AuthenticationKey"] });
             }
 
             CookieOptions options = new CookieOptions();

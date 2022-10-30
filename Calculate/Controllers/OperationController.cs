@@ -18,28 +18,30 @@ namespace Calculate.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (Request.Cookies["AuthenticationKey"] == null)
             {
                 return RedirectToAction("Index", "Login");
             }
 
-            var operation = _operationService.GetAll();
+            var operation = await _operationService.GetAllAsync();
        
-            ViewBag.accounts = new SelectList(GetAccount(), "Id", "Name");
+            ViewBag.accounts = new SelectList(await GetAccountAsync(), "Id", "Name");
+
+            ViewBag.processTypes = new SelectList(await GetProcessTypeAsync(), "Id", "Name");
 
             return View(operation);
 
         }
 
         [HttpPost]
-        public IActionResult Index(int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice)
+        public async Task<IActionResult> Index(int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice)
         {
             try
             {
                 string userId = Request.Cookies["AuthenticationKey"];
-                _operationService.Add(ProcessNumber, AccountId, AccountDetailId, ProcessTypeId, Price, ProcessPrice, userId);
+                await _operationService.AddAsync(ProcessNumber, AccountId, AccountDetailId, ProcessTypeId, Price, ProcessPrice, userId);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -48,12 +50,12 @@ namespace Calculate.Controllers
             }
         }
 
-        public IActionResult OperationDelete(int id)
+        public async Task<IActionResult> OperationDelete(int id)
         {
             try
             {
                 string userId = Request.Cookies["AuthenticationKey"];
-                _operationService.Remove(id, userId);
+                await _operationService.RemoveAsync(id, userId);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -63,21 +65,21 @@ namespace Calculate.Controllers
         }
 
         [HttpGet]
-        public Task<Operation> OperationEdit(int id)
+        public async Task<Operation> OperationEdit(int id)
         {
-            var ope =  _operationService.GetByIdAsync(id);
+            var ope = await _operationService.GetByIdAsync(id);
 
             return ope;
         }
 
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public JsonResult OperationEdit([FromBody] OperationUpdate OperationUpdate)
+        public async Task<JsonResult> OperationEdit([FromBody] OperationUpdate OperationUpdate)
         {
             try
             {
                 string userId = Request.Cookies["AuthenticationKey"];
-                _operationService.Update(OperationUpdate, userId);
+                await _operationService.UpdateAsync(OperationUpdate, userId);
                 return Json(new { redirectToUrl = Url.Action("Index", "Operation") });                     
             }
             catch
@@ -86,17 +88,23 @@ namespace Calculate.Controllers
             }
         }
 
-        public List<AccountGetName> GetAccount()
+        public async Task<List<AccountGetName>> GetAccountAsync()
         {
-            var accounts = _operationService.GetAccount();
+            var accounts = await _operationService.GetAccountAsync();
             return accounts;
         }
 
         [HttpGet]
-        public JsonResult GetBank(int id)
+        public async Task<JsonResult> GetBankAsync(int id)
         {
-            var banks = _operationService.GetBank(id);
+            var banks = await _operationService.GetBankAsync(id);
             return Json(new SelectList(banks.ToArray(), "Id", "Name"));
-        }   
+        }
+
+        public async Task<List<ProcessType>> GetProcessTypeAsync()
+        {
+            var processType = await _operationService.GetProcessTypeAsync();
+            return processType;
+        }
     }
 }

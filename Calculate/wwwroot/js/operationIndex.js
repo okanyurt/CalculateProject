@@ -41,6 +41,20 @@
             }
         });
     });
+
+    $('#ProcessTypeId').change(function () {
+        var Id = parseInt($('#ProcessTypeId').val());
+        $.ajax({
+            url: '/Operation/GetProcessType/' + Id,
+            success: function (data) {
+                var items = '<option>Lütfen bir işlem türü seçiniz</option>';
+                $.each(data, function (i, processType) {
+                    items += "<option value='" + processType.value + "'>" + processType.text + "</option>";
+                });
+                $('#ProcessTypeId').html(items);
+            }
+        });
+    });
 });
 
 function edit(Id) {

@@ -14,7 +14,7 @@ namespace Calculate.Service.Services
             _context = context;
         }
 
-        public void Add(int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice, string userId)
+        public async Task<int> AddAsync(int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice, string userId)
         {
             Operation operation = new Operation();
             var date = DateTime.UtcNow;
@@ -30,17 +30,18 @@ namespace Calculate.Service.Services
             operation.UpdatedDate = date;
             operation.IsEnable = true;
 
-            _context.Operations.Add(operation);
-            _context.SaveChanges();
+            await _context.Operations.AddAsync(operation);
+
+            return await _context.SaveChangesAsync();
         }
 
-        public List<AccountGetName> GetAccount()
+        public async Task<List<AccountGetName>> GetAccountAsync()
         {
-            var accountList = _context.Accounts.Where(x => x.IsEnable == true).Select(x => new AccountGetName { Id = x.Id, Name = x.Name }).ToList();
+            var accountList = await _context.Accounts.Where(x => x.IsEnable == true).Select(x => new AccountGetName { Id = x.Id, Name = x.Name }).ToListAsync();
             return accountList;
         }
 
-        public List<OperationGet> GetAll()
+        public async Task<List<OperationGet>> GetAllAsync()
         {
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
@@ -64,10 +65,10 @@ namespace Calculate.Service.Services
                            UpdatedDate = o.UpdatedDate
                        };
 
-            return list.ToList();                        
+            return await list.ToListAsync();                        
         }
 
-        public List<Bank> GetBank(int accountId)
+        public async Task<List<Bank>> GetBankAsync(int accountId)
         {
             var bankList = from b in _context.Banks
                            join ad in _context.AccountDetails on b.Id equals ad.BankId
@@ -78,7 +79,7 @@ namespace Calculate.Service.Services
                                Name = b.Name
                            };
 
-            return bankList.ToList();
+            return await bankList.ToListAsync();
         }
 
         public async Task<Operation> GetByIdAsync(int id)
@@ -86,7 +87,13 @@ namespace Calculate.Service.Services
             return await _context.Operations.Where(x => x.IsEnable == true && x.Id == id).FirstOrDefaultAsync();
         }
 
-        public void Remove(int id, string userId)
+        public async Task<List<ProcessType>> GetProcessTypeAsync()
+        {
+            var processTypeList = await _context.ProcessTypes.Select(x => new ProcessType { Id = x.Id, Name = x.Name }).ToListAsync();
+            return processTypeList;
+        }
+
+        public async Task<int> RemoveAsync(int id, string userId)
         {
             var operation = _context.Operations.Find(id);
             if (operation != null)
@@ -96,11 +103,13 @@ namespace Calculate.Service.Services
                 operation.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
                 operation.UpdatedDate = date;
 
-                _context.SaveChanges();
+                return await _context.SaveChangesAsync();
             }
+
+            return 0;
         }
 
-        public void Update(OperationUpdate OperationUpdate, string userId)
+        public async Task<int> UpdateAsync(OperationUpdate OperationUpdate, string userId)
         {
             var operation = _context.Operations.Find(OperationUpdate.Id);
             var date = DateTime.UtcNow;
@@ -114,7 +123,7 @@ namespace Calculate.Service.Services
             operation.UpdatedDate = date;
             operation.IsEnable = true;
 
-            _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
     }
 }

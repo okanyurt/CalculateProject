@@ -141,7 +141,7 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                        <input style="width:300px !important;" id="ProcessTypeId" name="ProcessTypeId">
+                                                        @Html.DropDownList("ProcessTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;" })            
                                                     </div>
                                                 </div>
 
@@ -217,7 +217,7 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                        <input style="width:300px !important;" id="EditProcessTypeId" name="EditProcessTypeId">
+                                                         @Html.DropDownList("EditProcessTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;" })                                                  
                                                     </div>
                                                 </div>
 

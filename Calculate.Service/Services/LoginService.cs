@@ -23,7 +23,7 @@ namespace Calculate.Service.Services
 
         public User GetUserLogin(string mobilePhone, string password)
         {
-            return _context.Users.FirstOrDefault(x => x.IsEnabled && x.PhoneNumber == mobilePhone && x.PasswordHash == password);
+            return _context.Users.FirstOrDefault(x => x.IsEnabled && x.UserName == mobilePhone && x.PasswordHash == password);
         }
     }
 }
