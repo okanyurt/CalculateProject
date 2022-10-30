@@ -94,6 +94,9 @@ function Update() {
             if (response.isSuccess) {
                 toastr.success("İşlem başarılı.");
                 $('#editPopup').modal('toggle');
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
             } else {
                 toastr.error(result.message);
             }

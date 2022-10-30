@@ -47,36 +47,39 @@
                                                     <th>Banka Adı</th>
                                                     <th>İşlem Tipi</th>
                                                     <th>Miktar</th>
-                                                    <th>Komisyon</th>
+                                                    <th>İşlem Ücreti</th>
                                                     <th>Güncelle</th>
                                                     <th>Sil</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var item in Model)
+                                                @if (Model != null)
                                                 {
-                                                    <tr>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.ProcessNumber)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Account)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.AccountDetail)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.ProcessType)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Price)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.ProcessPrice)
-                                                        </td>
-                                                        <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
-                                                        <td><a class="btn btn-danger btn-sm" href="/Operation/OperationDelete/@item.Id"><i class="la la-trash"></i> Sil</a></td>
-                                                    </tr>
+                                                    @foreach (var item in Model)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProcessNumber)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Account)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.AccountDetail)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProcessType)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Price)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProcessPrice)
+                                                            </td>
+                                                            <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
+                                                            <td><a class="btn btn-danger btn-sm" href="/Operation/OperationDelete/@item.Id"><i class="la la-trash"></i> Sil</a></td>
+                                                        </tr>
+                                                    }
                                                 }
                                             </tbody>
                                             <tfoot>
@@ -86,7 +89,7 @@
                                                     <th>Banka Adı</th>
                                                     <th>İşlem Tipi</th>
                                                     <th>Miktar</th>
-                                                    <th>Komisyon</th>
+                                                    <th>İşlem Ücreti</th>
                                                     <th>Güncelle</th>
                                                     <th>Sil</th>
                                                 </tr>
@@ -127,7 +130,7 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        @Html.DropDownList("AccountId",ViewBag.accounts as SelectList,"Lütfen bir hesap seçiniz",new { style = "width:300px !important;", required = "required" })            
+                                                        @Html.DropDownList("AccountId",ViewBag.accounts as SelectList,"Lütfen bir hesap seçiniz",new { style = "width:300px !important;", required = "required"})            
                                                     </div>
                                                 </div>
 
@@ -156,8 +159,8 @@
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
-                                                        <label class="col-sm-2 col-form-label">Komisyon</label>
-                                                        <input style="width:300px !important;" id="ProcessPrice" name="ProcessPrice">
+                                                        <label class="col-sm-2 col-form-label">İşlem Ücreti</label>
+                                                        <input type='number' step='0.01' value='0.00' placeholder='0.00' min="0" style="width:300px !important;" id="ProcessPrice" name="ProcessPrice">
                                                     </div>
                                                 </div>
                                             </div>
@@ -234,8 +237,8 @@
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
-                                                        <label class="col-sm-2 col-form-label">Komisyon</label>
-                                                        <input style="width:300px !important;" id="EditProcessPrice" name="EditProcessPrice">
+                                                        <label class="col-sm-2 col-form-label">İşlem Ücreti</label>
+                                                        <input type='number' step='0.01' value='0.00' placeholder='0.00' min="0" style="width:300px !important;" id="EditProcessPrice" name="EditProcessPrice">
                                                     </div>
                                                 </div>
                                             </div>

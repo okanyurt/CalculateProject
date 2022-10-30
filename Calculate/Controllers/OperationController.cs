@@ -27,7 +27,7 @@ namespace Calculate.Controllers
             }
 
             var operation = await _operationService.GetAllAsync();
-       
+
             ViewBag.accounts = new SelectList(await GetAccountAsync(), "Id", "Name");
 
             ViewBag.processTypes = new SelectList(await GetProcessTypeAsync(), "Id", "Name");
@@ -41,15 +41,44 @@ namespace Calculate.Controllers
         {
             try
             {
+                bool checkError = false;
+
+                if (ProcessNumber == null || ProcessNumber == 0)
+                {
+                    Error("İşlem Numarası boş gönderilemez");
+                    checkError = true;
+                }
+                else if (AccountId == null || AccountId == 0)
+                {
+                    Error("Hesap adı boş gönderilemez");
+                    checkError = true;
+                }
+                else if (AccountDetailId == null || AccountDetailId == 0)
+                {
+                    Error("Banka adı boş gönderilemez");
+                    checkError = true;
+                }
+                else if (ProcessTypeId == null || ProcessTypeId == 0)
+                {
+                    Error("İşlem tipi boş gönderilemez");
+                    checkError = true;
+                }
+
+                if (checkError)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+
                 string userId = Request.Cookies["AuthenticationKey"];
                 await _operationService.AddAsync(ProcessNumber, AccountId, AccountDetailId, ProcessTypeId, Price, ProcessPrice, userId);
                 Success("İşlem başarılı.");
-                return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Info(ex.ToString());
             }
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> OperationDelete(int id)
@@ -83,7 +112,7 @@ namespace Calculate.Controllers
                 string userId = Request.Cookies["AuthenticationKey"];
                 await _operationService.UpdateAsync(OperationUpdate, userId);
                 Success("İşlem başarılı.");
-                return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = true });                     
+                return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = true });
             }
             catch
             {
