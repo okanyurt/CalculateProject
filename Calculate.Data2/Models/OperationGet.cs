@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Calculate.Data.Models
+﻿namespace Calculate.Data.Models
 {
     public class OperationGet
     {
@@ -21,5 +14,7 @@ namespace Calculate.Data.Models
         public DateTime CreatedDate { get; set; }
         public int UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
+
+        public string CaseName { get; set; }
     }
 }

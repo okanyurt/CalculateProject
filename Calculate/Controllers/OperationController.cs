@@ -20,11 +20,13 @@ namespace Calculate.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index()
-        {
+        {          
             if (Request.Cookies["AuthenticationKey"] == null)
             {
                 return RedirectToAction("Index", "Login");
             }
+
+            var der = Request.Cookies["OfficeIdListKey"];
 
             var operation = await _operationService.GetAllAsync();
 
@@ -32,18 +34,25 @@ namespace Calculate.Controllers
 
             ViewBag.processTypes = new SelectList(await GetProcessTypeAsync(), "Id", "Name");
 
+            ViewBag.cases = new SelectList(await GetCaseAsync(), "Id", "Name");
+
             return View(operation);
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice)
+        public async Task<IActionResult> Index(int caseId, int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice)
         {
             try
             {
                 bool checkError = false;
 
-                if (ProcessNumber == null || ProcessNumber == 0)
+                if (caseId == null || caseId == 0)
+                {
+                    Error("Kasa adı boş gönderilemez");
+                    checkError = true;
+                }
+                else if (ProcessNumber == null || ProcessNumber == 0)
                 {
                     Error("İşlem Numarası boş gönderilemez");
                     checkError = true;
@@ -70,7 +79,7 @@ namespace Calculate.Controllers
                 }
 
                 string userId = Request.Cookies["AuthenticationKey"];
-                await _operationService.AddAsync(ProcessNumber, AccountId, AccountDetailId, ProcessTypeId, Price, ProcessPrice, userId);
+                await _operationService.AddAsync(caseId, ProcessNumber, AccountId, AccountDetailId, ProcessTypeId, Price, ProcessPrice, userId);
                 Success("İşlem başarılı.");
             }
             catch (Exception ex)
@@ -137,6 +146,13 @@ namespace Calculate.Controllers
         {
             var processType = await _operationService.GetProcessTypeAsync();
             return processType;
+        }
+
+        public async Task<List<Case>> GetCaseAsync()
+        {
+            string officeId = Request.Cookies["OfficeIdListKey"];
+            var cases = await _operationService.GetCaseAsync(officeId);
+            return cases;
         }
     }
 }

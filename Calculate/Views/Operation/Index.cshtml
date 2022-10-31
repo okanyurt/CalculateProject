@@ -15,8 +15,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title">File export</h4>
+                                <div class="card-header">                                  
                                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                                     <div class="heading-elements">
                                         <ul class="list-inline mb-0">
@@ -34,14 +33,10 @@
                                 </div>
                                 <div class="card-content collapse show">
                                     <div class="card-body card-dashboard dataTables_wrapper dt-bootstrap">
-                                        <p class="card-text">
-                                            Exporting data from a table can often be a key part of a complex
-                                            application. The Buttons extension for DataTables provides three plug-ins that provide
-                                            overlapping functionality for data export.
-                                        </p>
                                         <table id="example" class="table table-striped table-bordered file-export">
                                             <thead>
                                                 <tr>
+                                                    <th>Kasa Adı</th>
                                                     <th>İşlem No</th>
                                                     <th>Hesap Adı</th>
                                                     <th>Banka Adı</th>
@@ -58,6 +53,9 @@
                                                     @foreach (var item in Model)
                                                     {
                                                         <tr>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.CaseName)
+                                                            </td>
                                                             <td>
                                                                 @Html.DisplayFor(modelItem => item.ProcessNumber)
                                                             </td>
@@ -84,6 +82,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
+                                                    <th>Kasa Adı</th>
                                                     <th>İşlem No</th>
                                                     <th>Hesap Adı</th>
                                                     <th>Banka Adı</th>
@@ -122,45 +121,50 @@
                                             <div class="form-body">
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
-                                                        <input style="width:300px !important;" id="ProcessNumber" name="ProcessNumber" required>
+                                                        <label for="donationinput" class="col-sm-2 col-form-label">Kasa Adı</label>
+                                                        @Html.DropDownList("caseId",ViewBag.cases as SelectList,"Lütfen bir kasa seçiniz",new { style = "width:300px !important;", required = "required"})
                                                     </div>
                                                 </div>
-
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
+                                                        <input style="width:300px !important;" id="processNumber" name="processNumber" required>
+                                                    </div>
+                                                </div>
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        @Html.DropDownList("AccountId",ViewBag.accounts as SelectList,"Lütfen bir hesap seçiniz",new { style = "width:300px !important;", required = "required"})            
+                                                        @Html.DropDownList("accountId",ViewBag.accounts as SelectList,"Lütfen bir hesap seçiniz",new { style = "width:300px !important;", required = "required"})
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="AccountDetailId" name="AccountDetailId" style="width:300px !important;" required>
-                                                              <option value="" selected>Lütfen bir hesap seçiniz</option>
-                                                        </select>                   
+                                                        <select id="accountDetailId" name="accountDetailId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir hesap seçiniz</option>
+                                                        </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                        @Html.DropDownList("ProcessTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;", required = "required" })            
+                                                        @Html.DropDownList("processTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;", required = "required" })
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label class="col-sm-2 col-form-label">Miktar</label>
-                                                        <input type='number' step='0.01' value='0.00' placeholder='0.00' min="0" style="width:300px !important;" id="Price" name="Price" required>
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="price" name="price" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label class="col-sm-2 col-form-label">İşlem Ücreti</label>
-                                                        <input type='number' step='0.01' value='0.00' placeholder='0.00' min="0" style="width:300px !important;" id="ProcessPrice" name="ProcessPrice">
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="processPrice" name="processPrice">
                                                     </div>
                                                 </div>
                                             </div>
@@ -199,46 +203,52 @@
                                             <div class="form-body">
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput" class="col-sm-2 col-form-label">Kasa Adı</label>
+                                                        @Html.DropDownList("editCaseId",ViewBag.cases as SelectList,"Lütfen bir kasa seçiniz",new { style = "width:300px !important;", required = "required"})
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
                                                         <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
-                                                        <input type="hidden" id="EditId" name="Id">
-                                                        <input style="width:300px !important;" id="EditProcessNumber" name="EditProcessNumber" required>
+                                                        <input type="hidden" id="editId" name="Id">
+                                                        <input style="width:300px !important;" id="editProcessNumber" name="editProcessNumber" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        @Html.DropDownList("EditAccountId",ViewBag.accounts as SelectList,new { style = "width:300px !important;", required = "required"})
+                                                        @Html.DropDownList("editAccountId",ViewBag.accounts as SelectList,new { style = "width:300px !important;", required = "required"})
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="EditAccountDetailId" name="EditAccountDetailId" style="width:300px !important;" required>
+                                                        <select id="editAccountDetailId" name="editAccountDetailId" style="width:300px !important;" required>
                                                             <option value="" selected>Lütfen bir hesap seçiniz</option>
-                                                        </select> 
+                                                        </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                         @Html.DropDownList("EditProcessTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;", required = "required" })                                                  
+                                                        @Html.DropDownList("editProcessTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;", required = "required" })
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label class="col-sm-2 col-form-label">Miktar</label>
-                                                        <input type='number' step='0.01' value='0.00' placeholder='0.00' min="0" style="width:300px !important;" id="EditPrice" name="EditPrice" required>
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="editPrice" name="editPrice" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label class="col-sm-2 col-form-label">İşlem Ücreti</label>
-                                                        <input type='number' step='0.01' value='0.00' placeholder='0.00' min="0" style="width:300px !important;" id="EditProcessPrice" name="EditProcessPrice">
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="editProcessPrice" name="editProcessPrice">
                                                     </div>
                                                 </div>
                                             </div>

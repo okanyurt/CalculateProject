@@ -70,8 +70,8 @@ namespace Calculate.Data.Models
         [Column("access_failed_count")]
         public override int AccessFailedCount { get; set; }
 
-        [NotMapped]
-        public string RoleName { get; set; }
+        [Column("office_id_list")]
+        public int officeIdList { get; set; }
 
         //[JsonIgnore]
         //public ICollection<UserRight> UserRights { get; set; }

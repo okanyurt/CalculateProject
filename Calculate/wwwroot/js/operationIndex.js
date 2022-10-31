@@ -14,8 +14,8 @@
     });
 
 
-    $('#AccountId').change(function () {
-        var Id = parseInt($('#AccountId').val());
+    $('#accountId').change(function () {
+        var Id = parseInt($('#accountId').val());
         $.ajax({
             url: '/Operation/GetBank/' + Id,
             success: function (data) {
@@ -23,13 +23,13 @@
                 $.each(data, function (i, bank) {
                     items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
                 });
-                $('#AccountDetailId').html(items);
+                $('#accountDetailId').html(items);
             }
         });
     });
 
-    $('#EditAccountId').change(function () {
-        var Id = parseInt($('#EditAccountId').val());
+    $('#editAccountId').change(function () {
+        var Id = parseInt($('#editAccountId').val());
         $.ajax({
             url: '/Operation/GetBank/' + Id,
             success: function (data) {
@@ -37,7 +37,7 @@
                 $.each(data, function (i, bank) {
                     items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
                 });
-                $('#EditAccountDetailId').html(items);
+                $('#editAccountDetailId').html(items);
             }
         });
     });
@@ -50,7 +50,7 @@ function edit(Id) {
 
             $('#editPopup').modal('show');
 
-            var Id = parseInt($('#EditAccountId').val());
+            var Id = parseInt($('#editAccountId').val());
 
             $.ajax({
                 url: '/Operation/GetBank/' + Id,
@@ -59,15 +59,15 @@ function edit(Id) {
                     $.each(data, function (i, bank) {
                         items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
                     });
-                    $('#EditAccountDetailId').html(items);
+                    $('#editAccountDetailId').html(items);
 
-                    $("#EditId").val(editdata.id);
-                    $("#EditProcessNumber").val(editdata.processNumber);
-                    $("#EditAccountId").val(editdata.accountId);
-                    $("#EditAccountDetailId").val(editdata.accountDetailId);
-                    $("#EditProcessTypeId").val(editdata.processTypeId);
-                    $("#EditPrice").val(editdata.price);
-                    $("#EditProcessPrice").val(editdata.processPrice);
+                    $("#editId").val(editdata.id);
+                    $("#editProcessNumber").val(editdata.processNumber);
+                    $("#editAccountId").val(editdata.accountId);
+                    $("#editAccountDetailId").val(editdata.accountDetailId);
+                    $("#editProcessTypeId").val(editdata.processTypeId);
+                    $("#editPrice").val(editdata.price);
+                    $("#editProcessPrice").val(editdata.processPrice);
                 }
             });           
         }
@@ -76,13 +76,13 @@ function edit(Id) {
 
 function Update() {
     var OperationUpdate = {
-        Id: parseInt($("#EditId").val()),
-        ProcessNumber: parseInt($("#EditProcessNumber").val()),
-        AccountId: parseInt($("#EditAccountId").val()),
-        AccountDetailId: parseInt($("#EditAccountDetailId").val()),
-        ProcessTypeId: parseInt($("#EditProcessTypeId").val()),
-        Price: parseFloat($("#EditPrice").val()),
-        ProcessPrice: parseFloat($("#EditProcessPrice").val())
+        Id: parseInt($("#editId").val()),
+        ProcessNumber: parseInt($("#editProcessNumber").val()),
+        AccountId: parseInt($("#editAccountId").val()),
+        AccountDetailId: parseInt($("#editAccountDetailId").val()),
+        ProcessTypeId: parseInt($("#editProcessTypeId").val()),
+        Price: parseFloat($("#editPrice").val()),
+        ProcessPrice: parseFloat($("#editProcessPrice").val())
     };
 
     $.ajax({

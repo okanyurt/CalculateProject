@@ -1,7 +1,6 @@
 ﻿using Calculate.Data;
 using Calculate.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Calculate.Service.Services
 {
@@ -14,8 +13,9 @@ namespace Calculate.Service.Services
             _context = context;
         }
 
-        public async Task<int> AddAsync(int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice, string userId)
-        {      
+        public async Task<int> AddAsync(int caseId, int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice, string userId)
+        {
+            int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
             Operation operation = new Operation();
             var date = DateTime.UtcNow;
             operation.ProcessNumber = ProcessNumber;
@@ -24,11 +24,12 @@ namespace Calculate.Service.Services
             operation.ProcessTypeId = ProcessTypeId;
             operation.Price = Price;
             operation.ProcessPrice = ProcessPrice;
-            operation.CreatedBy = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
+            operation.CreatedBy = currentUserId;
             operation.CreatedDate = date;
-            operation.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
+            operation.UpdatedBy = currentUserId;
             operation.UpdatedDate = date;
             operation.IsEnable = true;
+            operation.CaseId = caseId;
 
             await _context.Operations.AddAsync(operation);
 
@@ -48,7 +49,9 @@ namespace Calculate.Service.Services
                        join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id
                        join b in _context.Banks on ad.BankId equals b.Id
                        join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
+                       join c in _context.Cases on o.CaseId equals c.Id
                        where o.IsEnable == true
+                       orderby o.UpdatedDate descending
                        select new OperationGet
                        {
                            Id = o.Id,
@@ -62,7 +65,8 @@ namespace Calculate.Service.Services
                            CreatedBy = o.CreatedBy,
                            CreatedDate = o.CreatedDate,
                            UpdatedBy = o.UpdatedBy,
-                           UpdatedDate = o.UpdatedDate
+                           UpdatedDate = o.UpdatedDate,
+                           CaseName = c.Name
                        };
 
             return await list.ToListAsync();                        
@@ -85,6 +89,13 @@ namespace Calculate.Service.Services
         public async Task<Operation> GetByIdAsync(int id)
         {
             return await _context.Operations.Where(x => x.IsEnable == true && x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<List<Case>> GetCaseAsync(string officeId)
+        {
+            int _officeId = Convert.ToInt32(officeId);
+            var caseList = await _context.Cases.Where(x => x.officeId == _officeId).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+            return caseList;
         }
 
         public async Task<List<ProcessType>> GetProcessTypeAsync()
