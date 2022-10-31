@@ -33,7 +33,7 @@ namespace Calculate.Controllers
                 return View(model);
             }
 
-            var User = _login.GetUserIndex(model.Token);
+            var User = await _login.GetUserIndex(model.Token);
             if (User == null)
             {
                 model.Message = "Uygulama bulunamadı.";
@@ -76,7 +76,7 @@ namespace Calculate.Controllers
                 return RedirectToAction("Login", "Login", new { userId = Request.Cookies["AuthenticationKey"] });
             }
 
-            var User = _login.GetUserLogin(model.MobilePhone, model.Password);
+            var User = await _login.GetUserLogin(model.MobilePhone, model.Password);
             if (User == null)
             {
                 model.Message = "Uygulama bulunamadı.";            

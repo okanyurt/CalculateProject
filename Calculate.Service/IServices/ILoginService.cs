@@ -9,8 +9,8 @@ namespace Calculate.Service.Services
 {
     public interface ILoginService
     {
-        User GetUserIndex(string token);
+        Task<User> GetUserIndex(string token);
 
-        User GetUserLogin(string mobilePhone, string password);
+        Task<User> GetUserLogin(string mobilePhone, string password);
     }
 }

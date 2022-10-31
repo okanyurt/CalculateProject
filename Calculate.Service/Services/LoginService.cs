@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Calculate.Service.Services
 {
@@ -16,14 +17,14 @@ namespace Calculate.Service.Services
         {
             _context = context;
         }
-        public User GetUserIndex(string token)
-        {
-           return  _context.Users.Where(x => x.IsEnabled && x.AccessToken == token).FirstOrDefault();
+        public async Task<User> GetUserIndex(string token)
+        {                     
+            return await _context.Users.AsQueryable().Where(x => x.IsEnabled && x.AccessToken == token).FirstOrDefaultAsync();
         }
 
-        public User GetUserLogin(string mobilePhone, string password)
+        public async Task<User> GetUserLogin(string mobilePhone, string password)
         {
-            return _context.Users.FirstOrDefault(x => x.IsEnabled && x.UserName == mobilePhone && x.PasswordHash == password);
+            return await _context.Users.AsQueryable().Where(x => x.IsEnabled && x.UserName == mobilePhone && x.PasswordHash == password).FirstOrDefaultAsync();
         }
     }
 }

@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-header">                                  
+                                <div class="card-header">
                                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                                     <div class="heading-elements">
                                         <ul class="list-inline mb-0">
@@ -122,7 +122,13 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput" class="col-sm-2 col-form-label">Kasa Adı</label>
-                                                        @Html.DropDownList("caseId",ViewBag.cases as SelectList,"Lütfen bir kasa seçiniz",new { style = "width:300px !important;", required = "required"})
+                                                        <select id="caseId" name="caseId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir kasa seçiniz</option>
+                                                            @foreach (var item in ViewBag.cases as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -134,7 +140,13 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        @Html.DropDownList("accountId",ViewBag.accounts as SelectList,"Lütfen bir hesap seçiniz",new { style = "width:300px !important;", required = "required"})
+                                                         <select id="accountId" name="accountId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir hesap seçiniz</option>
+                                                            @foreach (var item in ViewBag.accounts as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>
                                                     </div>
                                                 </div>
 
@@ -150,7 +162,13 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                        @Html.DropDownList("processTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;", required = "required" })
+                                                        <select id="processTypeId" name="processTypeId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir işlem türü seçiniz</option>
+                                                            @foreach (var item in ViewBag.processTypes as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>                                                     
                                                     </div>
                                                 </div>
 
@@ -204,7 +222,13 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput" class="col-sm-2 col-form-label">Kasa Adı</label>
-                                                        @Html.DropDownList("editCaseId",ViewBag.cases as SelectList,"Lütfen bir kasa seçiniz",new { style = "width:300px !important;", required = "required"})
+                                                        <select id="editCaseId" name="editCaseId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir kasa seçiniz</option>
+                                                            @foreach (var item in ViewBag.cases as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>   
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -218,7 +242,13 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        @Html.DropDownList("editAccountId",ViewBag.accounts as SelectList,new { style = "width:300px !important;", required = "required"})
+                                                         <select id="editAccountId" name="editAccountId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir hesap seçiniz</option>
+                                                            @foreach (var item in ViewBag.accounts as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>                      
                                                     </div>
                                                 </div>
 
@@ -226,7 +256,7 @@
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
                                                         <select id="editAccountDetailId" name="editAccountDetailId" style="width:300px !important;" required>
-                                                            <option value="" selected>Lütfen bir hesap seçiniz</option>
+                                                           @* <option value="">Lütfen bir hesap seçiniz</option>*@
                                                         </select>
                                                     </div>
                                                 </div>
@@ -234,7 +264,13 @@
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                        @Html.DropDownList("editProcessTypeId",ViewBag.processTypes as SelectList,"Lütfen bir işlem türü seçiniz",new { style = "width:300px !important;", required = "required" })
+                                                        <select id="editProcessTypeId" name="editProcessTypeId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir işlem türü seçiniz</option>
+                                                            @foreach (var item in ViewBag.processTypes as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>  
                                                     </div>
                                                 </div>
 
