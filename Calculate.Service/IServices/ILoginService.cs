@@ -1,11 +1,11 @@
 ﻿using Calculate.Data.Models;
 
-namespace Calculate.Service.IServices;
-
-public interface ILoginService
+namespace Calculate.Service.Services
 {
-    User GetUserIndex(string token);
+    public interface ILoginService
+    {
+        Task<User> GetUserIndex(string token);
 
-    User GetUserLogin(string mobilePhone, string password);
+        Task<User> GetUserLogin(string mobilePhone, string password);
+    }
 }
-

@@ -14,30 +14,30 @@
     });
 
 
-    $('#AccountId').change(function () {
-        var Id = parseInt($('#AccountId').val());
+    $('#accountId').change(function () {
+        var Id = parseInt($('#accountId').val());
         $.ajax({
             url: '/Operation/GetBank/' + Id,
             success: function (data) {
-                var items = '<option>Lütfen bir banka seçiniz</option>';
+                var items = '<option value="">Lütfen bir banka seçiniz</option>';
                 $.each(data, function (i, bank) {
                     items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
                 });
-                $('#AccountDetailId').html(items);
+                $('#accountDetailId').html(items);
             }
         });
     });
 
-    $('#EditAccountId').change(function () {
-        var Id = parseInt($('#EditAccountId').val());
+    $('#editAccountId').change(function () {
+        var Id = parseInt($('#editAccountId').val());
         $.ajax({
             url: '/Operation/GetBank/' + Id,
             success: function (data) {
-                var items = '<option>Lütfen bir banka seçiniz</option>';
+                var items = '<option value="">Lütfen bir banka seçiniz</option>';
                 $.each(data, function (i, bank) {
                     items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
                 });
-                $('#EditAccountDetailId').html(items);
+                $('#editAccountDetailId').html(items);
             }
         });
     });
@@ -50,7 +50,7 @@ function edit(Id) {
 
             $('#editPopup').modal('show');
 
-            var Id = parseInt($('#EditAccountId').val());
+            var Id = parseInt($('#editAccountId').val());
 
             $.ajax({
                 url: '/Operation/GetBank/' + Id,
@@ -59,15 +59,15 @@ function edit(Id) {
                     $.each(data, function (i, bank) {
                         items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
                     });
-                    $('#EditAccountDetailId').html(items);
+                    $('#editAccountDetailId').html(items);
 
-                    $("#EditId").val(editdata.id);
-                    $("#EditProcessNumber").val(editdata.processNumber);
-                    $("#EditAccountId").val(editdata.accountId);
-                    $("#EditAccountDetailId").val(editdata.accountDetailId);
-                    $("#EditProcessTypeId").val(editdata.processTypeId);
-                    $("#EditPrice").val(editdata.price);
-                    $("#EditProcessPrice").val(editdata.processPrice);
+                    $("#editId").val(editdata.id);
+                    $("#editProcessNumber").val(editdata.processNumber);
+                    $("#editAccountId").val(editdata.accountId);
+                    $("#editAccountDetailId").val(editdata.accountDetailId);
+                    $("#editProcessTypeId").val(editdata.processTypeId);
+                    $("#editPrice").val(editdata.price);
+                    $("#editProcessPrice").val(editdata.processPrice);
                 }
             });           
         }
@@ -76,13 +76,13 @@ function edit(Id) {
 
 function Update() {
     var OperationUpdate = {
-        Id: parseInt($("#EditId").val()),
-        ProcessNumber: parseInt($("#EditProcessNumber").val()),
-        AccountId: parseInt($("#EditAccountId").val()),
-        AccountDetailId: parseInt($("#EditAccountDetailId").val()),
-        ProcessTypeId: parseInt($("#EditProcessTypeId").val()),
-        Price: parseFloat($("#EditPrice").val()),
-        ProcessPrice: parseFloat($("#EditProcessPrice").val())
+        Id: parseInt($("#editId").val()),
+        ProcessNumber: parseInt($("#editProcessNumber").val()),
+        AccountId: parseInt($("#editAccountId").val()),
+        AccountDetailId: parseInt($("#editAccountDetailId").val()),
+        ProcessTypeId: parseInt($("#editProcessTypeId").val()),
+        Price: parseFloat($("#editPrice").val()),
+        ProcessPrice: parseFloat($("#editProcessPrice").val())
     };
 
     $.ajax({
@@ -91,10 +91,50 @@ function Update() {
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(OperationUpdate),
         success: function (response) {
-            window.location.href = response.redirectToUrl;
+            if (response.isSuccess) {
+                toastr.success("İşlem başarılı.");
+                $('#editPopup').modal('toggle');
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                toastr.error(result.message);
+            }
         },
         error: function (response) {
-            window.location.href = response.redirectToUrl;
+        }
+    });
+}
+
+function UploadFile() {
+    var excelFile = document.getElementById('fileUpload');
+    formData = new FormData();
+
+    for (var i = 0; i < excelFile.files.length; i++) {
+        var file = excelFile.files[i];
+        formData.append("excelFile", file);
+    }
+    $.ajax({
+        type: "POST",
+        url: "/Operation/uploadData",
+        data: formData,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            if (data.success) {
+                toastr.success(data.message);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 2000);
+            }
+            else {
+                toastr.error(data.message);
+            }
+        },
+        error: function (data) {
+            toastr.error(data.message);
         }
     });
 }

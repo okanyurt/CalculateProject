@@ -25,27 +25,22 @@
     <link rel="stylesheet" type="text/css" href="~/css/forms/icheck/icheck.css">
     <link rel="stylesheet" type="text/css" href="~/css/forms/icheck/custom.css">
     <!-- END: Vendor CSS-->
-
     <!-- BEGIN: Theme CSS-->
     <link rel="stylesheet" type="text/css" href="~/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="~/css/bootstrap-extended.css">
     <link rel="stylesheet" type="text/css" href="~/css/colors.css">
     <link rel="stylesheet" type="text/css" href="~/css/components.css">
     <!-- END: Theme CSS-->
-
     <!-- BEGIN: Page CSS-->
     <link rel="stylesheet" type="text/css" href="~/css/core/menu/menu-types/vertical-menu-modern.css">
     <link rel="stylesheet" type="text/css" href="~/css/core/colors/palette-gradient.css">
     <link rel="stylesheet" type="text/css" href="~/css/pages/login-register.css">
     <!-- END: Page CSS-->
-
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="~/css/style.css">
     <!-- END: Custom CSS-->
-
 </head>
 <!-- END: Head-->
-
 <!-- BEGIN: Body-->
 
 <body class="vertical-layout vertical-menu-modern 1-column  bg-full-screen-image blank-page" data-open="click" data-menu="vertical-menu-modern" data-col="1-column">
@@ -63,12 +58,12 @@
                                 <div class="card-header border-0">
                                     <div class="card-title text-center">
                                         <img src="~/images/logo/logo-dark.png" alt="branding logo">
-                                    </div>                                   
+                                    </div>
                                 </div>
-                                <div class="card-content">                                
+                                <div class="card-content">
                                     <div class="card-body">
                                         <form class="form-horizontal" action="/login/login" method="post" autocomplete="off" novalidate>
-                                           @if (Model != null && !string.IsNullOrWhiteSpace(Model?.Message))
+                                            @if (Model != null && !string.IsNullOrWhiteSpace(Model?.Message))
                                             {
                                                 <div type="text" class="form-group" style="color: red;">
                                                     * @Model.Message
@@ -85,10 +80,11 @@
                                                 <div class="form-control-position">
                                                     <i class="la la-key"></i>
                                                 </div>
-                                            </fieldset>                                                         
-                                            <button type="submit" class="btn btn-outline-info btn-block"><i class="ft-unlock"></i> Login</button>
+                                            </fieldset>
+                                            @*<a type="button" class="btn btn-outline-info btn-block" onclick="loginPost()"><i class="ft-unlock"></i> Login</a>*@
+                                              <button type="submit" class="btn btn-outline-info btn-block"><i class="ft-unlock"></i> Login</button>
                                         </form>
-                                    </div>                                  
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -99,25 +95,21 @@
         </div>
     </div>
     <!-- END: Content-->
-
-
     <!-- BEGIN: Vendor JS-->
     <script src="~/js/vendors.min.js"></script>
     <!-- BEGIN Vendor JS-->
-
     <!-- BEGIN: Page Vendor JS-->
     <script src="~/js/forms/validation/jqBootstrapValidation.js"></script>
     <script src="~/js/forms/icheck/icheck.min.js"></script>
     <!-- END: Page Vendor JS-->
-
     <!-- BEGIN: Theme JS-->
     <script src="~/js/core/app-menu.js"></script>
     <script src="~/js/core/app.js"></script>
     <!-- END: Theme JS-->
-
     <!-- BEGIN: Page JS-->
     <script src="~/js/scripts/forms/form-login-register.js"></script>
     <!-- END: Page JS-->
+   @* <script src="~/js/login.js"></script>*@
 
 </body>
 <!-- END: Body-->

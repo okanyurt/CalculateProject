@@ -16,10 +16,12 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">File export</h4>
                                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                                     <div class="heading-elements">
                                         <ul class="list-inline mb-0">
+                                            <li>                                               
+                                                <input type="file" class="btn btn-success btn-sm" id="fileUpload" name="fileUpload" onchange="UploadFile();" onselect="UploadFile();" accept=".xlsx">                                                   
+                                            </li>
                                             <li>
                                                 <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createPopup">
                                                     <i class="ft-plus white"></i> Ekle
@@ -34,59 +36,62 @@
                                 </div>
                                 <div class="card-content collapse show">
                                     <div class="card-body card-dashboard dataTables_wrapper dt-bootstrap">
-                                        <p class="card-text">
-                                            Exporting data from a table can often be a key part of a complex
-                                            application. The Buttons extension for DataTables provides three plug-ins that provide
-                                            overlapping functionality for data export.
-                                        </p>
                                         <table id="example" class="table table-striped table-bordered file-export">
                                             <thead>
                                                 <tr>
+                                                    <th>Kasa Adı</th>
                                                     <th>İşlem No</th>
                                                     <th>Hesap Adı</th>
                                                     <th>Banka Adı</th>
                                                     <th>İşlem Tipi</th>
                                                     <th>Miktar</th>
-                                                    <th>Komisyon</th>
+                                                    <th>İşlem Ücreti</th>
                                                     <th>Güncelle</th>
                                                     <th>Sil</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (var item in Model)
+                                                @if (Model != null)
                                                 {
-                                                    <tr>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.ProcessNumber)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Account)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.AccountDetail)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.ProcessType)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.Price)
-                                                        </td>
-                                                        <td>
-                                                            @Html.DisplayFor(modelItem => item.ProcessPrice)
-                                                        </td>
-                                                        <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
-                                                        <td><a class="btn btn-danger btn-sm" href="/Operation/OperationDelete/@item.Id"><i class="la la-trash"></i> Sil</a></td>
-                                                    </tr>
+                                                    @foreach (var item in Model)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.CaseName)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProcessNumber)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Account)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.AccountDetail)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProcessType)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Price)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProcessPrice)
+                                                            </td>
+                                                            <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
+                                                            <td><a class="btn btn-danger btn-sm" href="/Operation/OperationDelete/@item.Id"><i class="la la-trash"></i> Sil</a></td>
+                                                        </tr>
+                                                    }
                                                 }
                                             </tbody>
                                             <tfoot>
                                                 <tr>
+                                                    <th>Kasa Adı</th>
                                                     <th>İşlem No</th>
                                                     <th>Hesap Adı</th>
                                                     <th>Banka Adı</th>
                                                     <th>İşlem Tipi</th>
                                                     <th>Miktar</th>
-                                                    <th>Komisyon</th>
+                                                    <th>İşlem Ücreti</th>
                                                     <th>Güncelle</th>
                                                     <th>Sil</th>
                                                 </tr>
@@ -107,7 +112,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel1">Basic Modal</h4>
+                                    <h4 class="modal-title" id="myModalLabel1">İşlem Oluştur</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -115,47 +120,72 @@
                                 <div class="modal-body">
                                     @using (Html.BeginForm())
                                     {
-                                        <form class="form-group">
+                                        <form class="form-group" autocomplete="off">
                                             <div class="form-body">
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
-                                                        <input style="width:300px !important;" id="ProcessNumber" name="ProcessNumber">
+                                                        <label for="donationinput" class="col-sm-2 col-form-label">Kasa Adı</label>
+                                                        <select id="caseId" name="caseId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir kasa seçiniz</option>
+                                                            @foreach (var item in ViewBag.cases as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>
                                                     </div>
                                                 </div>
-
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
+                                                        <input style="width:300px !important;" id="processNumber" name="processNumber" required>
+                                                    </div>
+                                                </div>
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        @Html.DropDownList("AccountId",ViewBag.accounts as SelectList,"Lütfen bir hesap seçiniz",new { style = "width:300px !important;" })            
+                                                         <select id="accountId" name="accountId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir hesap seçiniz</option>
+                                                            @foreach (var item in ViewBag.accounts as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="AccountDetailId" name="AccountDetailId" style="width:300px !important;"></select>                   
+                                                        <select id="accountDetailId" name="accountDetailId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir hesap seçiniz</option>
+                                                        </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                        <input style="width:300px !important;" id="ProcessTypeId" name="ProcessTypeId">
+                                                        <select id="processTypeId" name="processTypeId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir işlem türü seçiniz</option>
+                                                            @foreach (var item in ViewBag.processTypes as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>                                                     
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label class="col-sm-2 col-form-label">Miktar</label>
-                                                        <input style="width:300px !important;" id="Price" name="Price">
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="price" name="price" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
-                                                        <label class="col-sm-2 col-form-label">Komisyon</label>
-                                                        <input style="width:300px !important;" id="ProcessPrice" name="ProcessPrice">
+                                                        <label class="col-sm-2 col-form-label">İşlem Ücreti</label>
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="processPrice" name="processPrice">
                                                     </div>
                                                 </div>
                                             </div>
@@ -182,7 +212,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel1">Basic Modal</h4>
+                                    <h4 class="modal-title" id="myModalLabel1">İşlem Güncelle</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -194,44 +224,70 @@
                                             <div class="form-body">
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput" class="col-sm-2 col-form-label">Kasa Adı</label>
+                                                        <select id="editCaseId" name="editCaseId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir kasa seçiniz</option>
+                                                            @foreach (var item in ViewBag.cases as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>   
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
                                                         <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
-                                                        <input type="hidden" id="EditId" name="Id">
-                                                        <input style="width:300px !important;" id="EditProcessNumber" name="EditProcessNumber">
+                                                        <input type="hidden" id="editId" name="Id">
+                                                        <input style="width:300px !important;" id="editProcessNumber" name="editProcessNumber" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        @Html.DropDownList("EditAccountId",ViewBag.accounts as SelectList,new { style = "width:300px !important;" })
+                                                         <select id="editAccountId" name="editAccountId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir hesap seçiniz</option>
+                                                            @foreach (var item in ViewBag.accounts as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>                      
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="EditAccountDetailId" name="EditAccountDetailId" style="width:300px !important;"></select> 
+                                                        <select id="editAccountDetailId" name="editAccountDetailId" style="width:300px !important;" required>
+                                                           @* <option value="">Lütfen bir hesap seçiniz</option>*@
+                                                        </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                        <input style="width:300px !important;" id="EditProcessTypeId" name="EditProcessTypeId">
+                                                        <select id="editProcessTypeId" name="editProcessTypeId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir işlem türü seçiniz</option>
+                                                            @foreach (var item in ViewBag.processTypes as SelectList)
+                                                            {
+                                                               <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>  
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
                                                         <label class="col-sm-2 col-form-label">Miktar</label>
-                                                        <input style="width:300px !important;" id="EditPrice" name="EditPrice">
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="editPrice" name="editPrice" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
-                                                        <label class="col-sm-2 col-form-label">Komisyon</label>
-                                                        <input style="width:300px !important;" id="EditProcessPrice" name="EditProcessPrice">
+                                                        <label class="col-sm-2 col-form-label">İşlem Ücreti</label>
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="editProcessPrice" name="editProcessPrice">
                                                     </div>
                                                 </div>
                                             </div>

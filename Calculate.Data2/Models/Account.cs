@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Calculate.Data.Models
 {
@@ -20,10 +15,10 @@ namespace Calculate.Data.Models
         public string PhoneNumber { get; set; }
 
         [Column("identity_number")]
-        public string IdentityNumber { get; set; }
+        public string? IdentityNumber { get; set; }
 
         [Column("note")]
-        public string Note { get; set; }
+        public string? Note { get; set; }
 
         [Column("is_enable")]
         public bool IsEnable { get; set; }

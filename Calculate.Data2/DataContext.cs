@@ -78,6 +78,8 @@ namespace Calculate.Data
 
         public DbSet<ProcessType> ProcessTypes { get; set; }
 
+        public DbSet<Case> Cases { get; set; }
+
         //public DbSet<Login> Logins { get; set; }
     }
 }

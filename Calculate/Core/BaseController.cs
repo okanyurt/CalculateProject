@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Calculate.Core
 {
-    [Authorize]
+    //[Authorize]
     public abstract class BaseController : Controller
     {
         private UserManager<User> _userManager;

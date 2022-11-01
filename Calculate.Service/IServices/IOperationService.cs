@@ -1,21 +1,36 @@
 ﻿using Calculate.Data.Models;
 
-namespace Calculate.Service.IServices;
-
-public interface IOperationService
+namespace Calculate.Service.Services
 {
-    Task<Operation> GetByIdAsync(int id);
+  public interface IOperationService
+  {
+       Task<Operation> GetByIdAsync(int id);
 
-    List<OperationGet> GetAll();
+        Task<List<OperationGet>> GetAllAsync();
 
-    void Add(int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice, string userId);
+        Task<int> AddAsync(int caseId, int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice, string userId);
 
-    void Update(OperationUpdate OperationUpdate, string userId);
+        Task<int> UpdateAsync(OperationUpdate OperationUpdate, string userId);
 
-    void Remove(int id, string userId);
+        Task<int> RemoveAsync(int id, string userId);
 
-    List<AccountGetName> GetAccount();
+        Task<List<AccountGetName>> GetAccountAsync();
 
-    List<Bank> GetBank(int accountId);
+        Task<List<Bank>> GetBankAsync(int accountId);
+
+        Task<List<ProcessType>> GetProcessTypeAsync();
+
+        Task<List<Case>> GetCaseAsync(string officeId);
+
+        Task<List<Bank>> GetBankIdAsync(string accountName);
+
+        Task<List<ProcessType>> GetProcessTypeIdAsync(string processTypeName);
+
+        Task<List<Case>> GetCaseIdAsync(string caseName);
+
+        Task<List<AccountGetName>> GetAccountIdAsync(string accountName);
+
+        Task<bool> SaveUploadExcelAsync(List<OperationUploadExcel> operationUploadExcels, string userId);
+    }
 }
 

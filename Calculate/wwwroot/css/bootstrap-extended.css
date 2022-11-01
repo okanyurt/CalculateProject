@@ -2103,7 +2103,9 @@ body.vertical-layout.menu-open .main-menu .navigation .navigation-header .nav-me
   background-color: transparent; }
 
 .alert {
-  position: relative; }
+    position: relative;
+    text-align: right;
+}
   .alert .alert-link:hover {
     text-decoration: underline; }
   .alert.alert-icon-left {
