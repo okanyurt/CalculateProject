@@ -1,11 +1,12 @@
 ﻿using Calculate.Data.Models;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Calculate.Core
 {
     //[Authorize]
+    [EnableCors("AnotherPolicy")]
     public abstract class BaseController : Controller
     {
         private UserManager<User> _userManager;

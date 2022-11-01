@@ -1,11 +1,10 @@
-﻿using Calculate.Data;
-using Calculate.Data.Models;
+﻿using Calculate.Data.Models;
 using Calculate.Models;
+using Calculate.Service.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Calculate.Service.Services;
 
+[EnableCors("_myAllowSpecificOrigins")]
 namespace Calculate.Controllers
 {
     [AllowAnonymous]
