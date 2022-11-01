@@ -28,6 +28,7 @@
         });
     });
 
+
     $('#editAccountId').change(function () {
         var Id = parseInt($('#editAccountId').val());
         $.ajax({
@@ -43,12 +44,20 @@
     });
 });
 
-function edit(Id) {
+function edit(id) {
     $.ajax({
-        url: '/Operation/OperationEdit/' + Id,
+        url: '/Operation/OperationEdit/' + id,
         success: function (editdata) {
 
             $('#editPopup').modal('show');
+
+            $("#editId").val(editdata.id);
+            $("#editProcessNumber").val(editdata.processNumber);
+            $("#editAccountId").val(editdata.accountId);
+            $("#editAccountDetailId").val(editdata.accountDetailId);
+            $("#editProcessTypeId").val(editdata.processTypeId);
+            $("#editPrice").val(editdata.price);
+            $("#editProcessPrice").val(editdata.processPrice);
 
             var Id = parseInt($('#editAccountId').val());
 
@@ -60,14 +69,9 @@ function edit(Id) {
                         items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
                     });
                     $('#editAccountDetailId').html(items);
-
-                    $("#editId").val(editdata.id);
-                    $("#editProcessNumber").val(editdata.processNumber);
-                    $("#editAccountId").val(editdata.accountId);
+                 
                     $("#editAccountDetailId").val(editdata.accountDetailId);
-                    $("#editProcessTypeId").val(editdata.processTypeId);
-                    $("#editPrice").val(editdata.price);
-                    $("#editProcessPrice").val(editdata.processPrice);
+                   
                 }
             });           
         }
