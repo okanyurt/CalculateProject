@@ -127,13 +127,14 @@ function UploadFile() {
                 toastr.success(data.message);
                 setTimeout(function () {
                     window.location.reload();
-                }, 5000);
+                }, 2000);
             }
             else {
                 toastr.error(data.message);
             }
         },
         error: function (data) {
+            toastr.error(data.message);
         }
     });
 }

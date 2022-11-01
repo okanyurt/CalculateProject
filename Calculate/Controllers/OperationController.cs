@@ -156,7 +156,7 @@ namespace Calculate.Controllers
         }
 
         public async Task<int> GetBankIdAsync(string name)
-        {           
+        {
             var list = await _operationService.GetBankIdAsync(name);
             return list.FirstOrDefault().Id;
         }
@@ -169,7 +169,7 @@ namespace Calculate.Controllers
         }
 
         public async Task<int> GetCaseIdAsync(string name)
-        {            
+        {
             var list = await _operationService.GetCaseIdAsync(name);
             int Id = list.FirstOrDefault().Id;
             return Id;
@@ -185,42 +185,55 @@ namespace Calculate.Controllers
         [HttpPost]
         public async Task<JsonResult> uploadData(IFormFile excelFile)
         {
-            var list = new List<OperationUploadExcel>();
-            using (var stream = new MemoryStream())
+            try
             {
-                await excelFile.CopyToAsync(stream);
-                ExcelPackage.LicenseContext = LicenseContext.Commercial;
-                using (var package = new ExcelPackage(stream))
+                var list = new List<OperationUploadExcel>();
+                using (var stream = new MemoryStream())
                 {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                    var rowcount = worksheet.Dimension.Rows;
-                    for (int row = 3; row < rowcount; row++)
+                    await excelFile.CopyToAsync(stream);
+                    ExcelPackage.LicenseContext = LicenseContext.Commercial;
+                    using (var package = new ExcelPackage(stream))
                     {
-                        list.Add(new OperationUploadExcel
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+                        var rowcount = worksheet.Dimension.Rows;
+                        for (int row = 3; row < rowcount; row++)
                         {
-                            CaseName = worksheet.Cells[row,1].Value.ToString().Trim(),
-                            ProcessNumber = worksheet.Cells[row, 2].Value.ToString().Trim(),
-                            Account = worksheet.Cells[row, 3].Value.ToString().Trim(),
-                            BankName = worksheet.Cells[row,4].Value.ToString().Trim(),
-                            ProcessType = worksheet.Cells[row, 5].Value.ToString().Trim(),
-                            Price = worksheet.Cells[row,6].Value.ToString().Trim(),
-                            ProcessPrice = worksheet.Cells[row, 7].Value.ToString().Trim(),
-                        });
+                            list.Add(new OperationUploadExcel
+                            {
+                                CaseName = worksheet.Cells[row, 1].Value.ToString().Trim(),
+                                ProcessNumber = worksheet.Cells[row, 2].Value.ToString().Trim(),
+                                Account = worksheet.Cells[row, 3].Value.ToString().Trim(),
+                                BankName = worksheet.Cells[row, 4].Value.ToString().Trim(),
+                                ProcessType = worksheet.Cells[row, 5].Value.ToString().Trim(),
+                                Price = worksheet.Cells[row, 6].Value.ToString().Trim(),
+                                ProcessPrice = worksheet.Cells[row, 7].Value.ToString().Trim(),
+                            });
+                        }
                     }
                 }
-            }
-            var userId = Request.Cookies["AuthenticationKey"];
-            bool result = false;
-            if (list == null)
-                result = true;
-            else
-                result = await _operationService.SaveUploadExcelAsync(list, userId);
 
-            return Json(new
+                var userId = Request.Cookies["AuthenticationKey"];
+                bool result = false;
+                if (list == null)
+                    result = true;
+                else
+                    result = await _operationService.SaveUploadExcelAsync(list, userId);
+
+                return Json(new
+                {
+                    Success = result,
+                    Message = result ? "İşlem başarılı" : "Dosyayı kontrol ediniz."
+                });
+            }
+            catch
             {
-                Success = result,
-                Message = result ? "İşlem başarılı" : "Dosyayı kontrol ediniz."
-            });
+                return Json(new
+                {
+                    Success = false,
+                    Message = "Dosyayı kontrol ediniz."
+                });
+
+            }
         }
     }
 }
