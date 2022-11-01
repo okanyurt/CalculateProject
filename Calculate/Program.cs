@@ -6,14 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: "MyPolicy",
-                policy =>
-                {
-                    policy.WithOrigins("http://localhost:5000");
-                });
-});
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
@@ -31,6 +24,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                     option.LoginPath = "/Login/Index";
                 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("policy",
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:5000").AllowAnyMethod().AllowAnyHeader();
+                });
+});
 
 var app = builder.Build();
 
@@ -42,7 +43,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseCors();
+app.UseCors("policy");
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
