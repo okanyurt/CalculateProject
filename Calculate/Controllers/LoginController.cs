@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Calculate.Controllers
 {
-
-    [EnableCors("_myAllowSpecificOrigins")]
     [AllowAnonymous]
     public class LoginController : Controller
     {

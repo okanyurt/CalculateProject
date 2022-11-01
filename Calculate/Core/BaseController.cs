@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Calculate.Core
 {
     //[Authorize]
-    [EnableCors("AnotherPolicy")]
     public abstract class BaseController : Controller
     {
         private UserManager<User> _userManager;

@@ -3,10 +3,18 @@ using Calculate.Service.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "MyPolicy",
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:5000")
+                            .WithMethods("PUT", "DELETE", "GET", "PUSH");
+                });
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connectionString));
@@ -34,11 +42,11 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 app.UseRouting();
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}").RequireCors(MyAllowSpecificOrigins);
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
 
