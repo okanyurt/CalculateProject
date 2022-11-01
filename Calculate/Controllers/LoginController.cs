@@ -2,11 +2,14 @@
 using Calculate.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
-[EnableCors("_myAllowSpecificOrigins")]
+
 namespace Calculate.Controllers
 {
+
+    [EnableCors("_myAllowSpecificOrigins")]
     [AllowAnonymous]
     public class LoginController : Controller
     {
