@@ -105,3 +105,35 @@ function Update() {
         }
     });
 }
+
+function UploadFile() {
+    var excelFile = document.getElementById('fileUpload');
+    formData = new FormData();
+
+    for (var i = 0; i < excelFile.files.length; i++) {
+        var file = excelFile.files[i];
+        formData.append("excelFile", file);
+    }
+    $.ajax({
+        type: "POST",
+        url: "/Operation/uploadData",
+        data: formData,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            if (data.success) {
+                toastr.success(data.message);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 5000);
+            }
+            else {
+                toastr.error(data.message);
+            }
+        },
+        error: function (data) {
+        }
+    });
+}

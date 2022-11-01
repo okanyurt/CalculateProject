@@ -42,6 +42,12 @@ namespace Calculate.Service.Services
             return accountList;
         }
 
+        public async Task<List<AccountGetName>> GetAccountIdAsync(string accountName)
+        {
+            var accountList = await _context.Accounts.Where(x => x.Name == accountName).Select(x => new AccountGetName { Id = x.Id, Name = x.Name }).ToListAsync();
+            return accountList;
+        }
+
         public async Task<List<OperationGet>> GetAllAsync()
         {
             var list = from o in _context.Operations
@@ -86,6 +92,19 @@ namespace Calculate.Service.Services
             return await bankList.ToListAsync();
         }
 
+        public async Task<List<Bank>> GetBankIdAsync(string accountName)
+        {
+            var bankList = from b in _context.Banks
+                           join ad in _context.AccountDetails on b.Id equals ad.BankId
+                           where b.Name == accountName && ad.IsEnable == true
+                           select new Bank
+                           {
+                               Id = b.Id,
+                               Name = b.Name
+                           };
+            return await bankList.ToListAsync();
+        }
+
         public async Task<Operation> GetByIdAsync(int id)
         {
             return await _context.Operations.Where(x => x.IsEnable == true && x.Id == id).FirstOrDefaultAsync();
@@ -98,9 +117,21 @@ namespace Calculate.Service.Services
             return caseList;
         }
 
+        public async Task<List<Case>> GetCaseIdAsync(string caseName)
+        {
+            var caseList = await _context.Cases.Where(x => x.Name == caseName).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+            return caseList;
+        }
+
         public async Task<List<ProcessType>> GetProcessTypeAsync()
         {
             var processTypeList = await _context.ProcessTypes.Select(x => new ProcessType { Id = x.Id, Name = x.Name }).ToListAsync();
+            return processTypeList;
+        }
+
+        public async Task<List<ProcessType>> GetProcessTypeIdAsync(string processTypeName)
+        {
+            var processTypeList = await _context.ProcessTypes.Where(x => x.Name == processTypeName).Select(x => new ProcessType { Id = x.Id, Name = x.Name }).ToListAsync();
             return processTypeList;
         }
 
@@ -118,6 +149,46 @@ namespace Calculate.Service.Services
             }
 
             return 0;
+        }
+
+        public async Task<bool> SaveUploadExcelAsync(List<OperationUploadExcel> data, string userId)
+        {
+            try
+            {
+                var dateTimeNow = DateTime.UtcNow;
+                int currentUserId =  _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
+                var valuee = data.AsEnumerable();
+                var query = valuee.Join(_context.Banks, d => d.BankName, b => b.Name, (d, b) => new { d, BankId = b.Id })
+                            .Join(_context.Cases, dbb => dbb.d.CaseName, c => c.Name, (dbb, c) => new { dbb, CaseId= c.Id })
+                            .Join(_context.Accounts, dbbc => dbbc.dbb.d.Account, a => a.Name, (dbbc, a) => new { dbbc, AccountId=a.Id })
+                            .Join(_context.ProcessTypes, dbbca => dbbca.dbbc.dbb.d.ProcessType, p => p.Name, (dbbca, p) => new { dbbca,ProcessTypeId= p.Id })
+                            .Select(x => new Operation
+                            {
+                                ProcessNumber = Convert.ToInt32(x.dbbca.dbbc.dbb.d.ProcessNumber),
+                                AccountId = x.dbbca.AccountId,
+                                AccountDetailId = x.dbbca.dbbc.dbb.BankId,
+                                ProcessTypeId = x.ProcessTypeId,
+                                Price = Convert.ToDecimal(x.dbbca.dbbc.dbb.d.Price),
+                                ProcessPrice = Convert.ToDecimal(x.dbbca.dbbc.dbb.d.ProcessPrice),
+                                IsEnable = true,
+                                CreatedDate = dateTimeNow,
+                                CreatedBy = currentUserId,
+                                UpdatedDate = dateTimeNow,
+                                UpdatedBy = currentUserId,
+                                CaseId = x.dbbca.dbbc.CaseId
+                            });
+                var resultData =  query.ToList();
+                await _context.Operations.AddRangeAsync(resultData);
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                string s = ex.ToString();
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<int> UpdateAsync(OperationUpdate OperationUpdate, string userId)
