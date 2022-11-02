@@ -52,6 +52,7 @@ function edit(id) {
             $('#editPopup').modal('show');
 
             $("#editId").val(editdata.id);
+            $("#editCaseId").val(editdata.caseId);
             $("#editProcessNumber").val(editdata.processNumber);
             $("#editAccountId").val(editdata.accountId);
             $("#editAccountDetailId").val(editdata.accountDetailId);
