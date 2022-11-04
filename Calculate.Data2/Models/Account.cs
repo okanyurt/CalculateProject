@@ -34,5 +34,8 @@ namespace Calculate.Data.Models
 
         [Column("updated_date")]
         public DateTime UpdatedDate { get; set; }
+
+        [Column("case_id")]
+        public int CaseId { get; set; }
     }
 }

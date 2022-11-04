@@ -30,7 +30,7 @@ namespace Calculate.Controllers
 
             var operation = await _operationService.GetAllAsync();
 
-            ViewBag.accounts = new SelectList(await GetAccountAsync(), "Id", "Name");
+            //ViewBag.accounts = new SelectList(await GetAccountAsync(), "Id", "Name");
 
             ViewBag.processTypes = new SelectList(await GetProcessTypeAsync(), "Id", "Name");
 
@@ -129,9 +129,10 @@ namespace Calculate.Controllers
             }
         }
 
-        public async Task<List<AccountGetName>> GetAccountAsync()
+        [HttpGet]
+        public async Task<List<AccountGetName>> GetAccountAsync(int id)
         {
-            var accounts = await _operationService.GetAccountAsync();
+            var accounts = await _operationService.GetAccountAsync(id);
             return accounts;
         }
 
