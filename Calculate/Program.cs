@@ -13,7 +13,7 @@ builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connecti
 
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IOperationService, OperationService>();
-
+builder.Services.AddScoped<IReportService, ReportService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

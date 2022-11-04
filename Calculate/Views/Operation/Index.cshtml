@@ -144,11 +144,7 @@
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
                                                          <select id="accountId" name="accountId" style="width:300px !important;" required>
-                                                            <option value="" selected>Lütfen bir hesap seçiniz</option>
-                                                            @foreach (var item in ViewBag.accounts as SelectList)
-                                                            {
-                                                               <option value="@item.Value">@item.Text</option>
-                                                            }
+                                                             <option value="" selected>Lütfen bir kasa seçiniz</option>                                   
                                                         </select>
                                                     </div>
                                                 </div>
@@ -246,11 +242,7 @@
                                                     <div class="form-group col-12 mb-2">
                                                         <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
                                                          <select id="editAccountId" name="editAccountId" style="width:300px !important;" required>
-                                                            <option value="" selected>Lütfen bir hesap seçiniz</option>
-                                                            @foreach (var item in ViewBag.accounts as SelectList)
-                                                            {
-                                                               <option value="@item.Value">@item.Text</option>
-                                                            }
+                                                            <option value="" selected>Lütfen bir kasa seçiniz</option>                           
                                                         </select>                      
                                                     </div>
                                                 </div>

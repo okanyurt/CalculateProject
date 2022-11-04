@@ -36,9 +36,9 @@ namespace Calculate.Service.Services
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<AccountGetName>> GetAccountAsync()
+        public async Task<List<AccountGetName>> GetAccountAsync(int caseId)
         {
-            var accountList = await _context.Accounts.Where(x => x.IsEnable == true).Select(x => new AccountGetName { Id = x.Id, Name = x.Name }).ToListAsync();
+            var accountList = await _context.Accounts.Where(x => x.IsEnable == true && x.CaseId == caseId).Select(x => new AccountGetName { Id = x.Id, Name = x.Name }).ToListAsync();
             return accountList;
         }
 
@@ -75,7 +75,7 @@ namespace Calculate.Service.Services
                            CaseName = c.Name
                        };
 
-            return await list.ToListAsync();                        
+            return await list.ToListAsync();
         }
 
         public async Task<List<Bank>> GetBankAsync(int accountId)
@@ -85,7 +85,7 @@ namespace Calculate.Service.Services
                            where ad.AccountId == accountId && ad.IsEnable == true
                            select new Bank
                            {
-                               Id = b.Id,
+                               Id = ad.Id,
                                Name = b.Name
                            };
 
@@ -156,12 +156,12 @@ namespace Calculate.Service.Services
             try
             {
                 var dateTimeNow = DateTime.UtcNow;
-                int currentUserId =  _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
+                int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
                 var valuee = data.AsEnumerable();
                 var query = valuee.Join(_context.Banks, d => d.BankName, b => b.Name, (d, b) => new { d, BankId = b.Id })
-                            .Join(_context.Cases, dbb => dbb.d.CaseName, c => c.Name, (dbb, c) => new { dbb, CaseId= c.Id })
-                            .Join(_context.Accounts, dbbc => dbbc.dbb.d.Account, a => a.Name, (dbbc, a) => new { dbbc, AccountId=a.Id })
-                            .Join(_context.ProcessTypes, dbbca => dbbca.dbbc.dbb.d.ProcessType, p => p.Name, (dbbca, p) => new { dbbca,ProcessTypeId= p.Id })
+                            .Join(_context.Cases, dbb => dbb.d.CaseName, c => c.Name, (dbb, c) => new { dbb, CaseId = c.Id })
+                            .Join(_context.Accounts, dbbc => dbbc.dbb.d.Account, a => a.Name, (dbbc, a) => new { dbbc, AccountId = a.Id })
+                            .Join(_context.ProcessTypes, dbbca => dbbca.dbbc.dbb.d.ProcessType, p => p.Name, (dbbca, p) => new { dbbca, ProcessTypeId = p.Id })
                             .Select(x => new Operation
                             {
                                 ProcessNumber = Convert.ToInt32(x.dbbca.dbbc.dbb.d.ProcessNumber),
@@ -177,7 +177,7 @@ namespace Calculate.Service.Services
                                 UpdatedBy = currentUserId,
                                 CaseId = x.dbbca.dbbc.CaseId
                             });
-                var resultData =  query.ToList();
+                var resultData = query.ToList();
                 await _context.Operations.AddRangeAsync(resultData);
 
                 await _context.SaveChangesAsync();

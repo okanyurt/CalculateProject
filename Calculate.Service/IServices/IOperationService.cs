@@ -2,9 +2,9 @@
 
 namespace Calculate.Service.Services
 {
-  public interface IOperationService
-  {
-       Task<Operation> GetByIdAsync(int id);
+    public interface IOperationService
+    {
+        Task<Operation> GetByIdAsync(int id);
 
         Task<List<OperationGet>> GetAllAsync();
 
@@ -14,7 +14,7 @@ namespace Calculate.Service.Services
 
         Task<int> RemoveAsync(int id, string userId);
 
-        Task<List<AccountGetName>> GetAccountAsync();
+        Task<List<AccountGetName>> GetAccountAsync(int caseId);
 
         Task<List<Bank>> GetBankAsync(int accountId);
 

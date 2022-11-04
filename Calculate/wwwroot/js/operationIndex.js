@@ -13,6 +13,34 @@
         }
     });
 
+    $('#caseId').change(function () {
+        var Id = parseInt($('#caseId').val());
+        $.ajax({
+            url: '/Operation/GetAccount/' + Id,
+            success: function (data) {
+                var items = '<option value="">Lütfen bir hesap seçiniz</option>';
+                $.each(data, function (i, account) {
+                    items += "<option value='" + account.id + "'>" + account.name + "</option>";
+                });
+                $('#accountId').html(items);
+            }
+        });
+    });
+
+
+    $('#editCaseId').change(function () {
+        var Id = parseInt($('#editCaseId').val());
+        $.ajax({
+            url: '/Operation/GetAccount/' + Id,
+            success: function (data) {
+                var items = '<option value="">Lütfen bir hesap seçiniz</option>';
+                $.each(data, function (i, account) {
+                    items += "<option value='" + account.id + "'>" + account.name + "</option>";
+                });
+                $('#editAccountId').html(items);
+            }
+        });
+    });
 
     $('#accountId').change(function () {
         var Id = parseInt($('#accountId').val());
@@ -52,6 +80,7 @@ function edit(id) {
             $('#editPopup').modal('show');
 
             $("#editId").val(editdata.id);
+            $("#editCaseId").val(editdata.caseId);
             $("#editProcessNumber").val(editdata.processNumber);
             $("#editAccountId").val(editdata.accountId);
             $("#editAccountDetailId").val(editdata.accountDetailId);
@@ -59,21 +88,35 @@ function edit(id) {
             $("#editPrice").val(editdata.price);
             $("#editProcessPrice").val(editdata.processPrice);
 
-            var Id = parseInt($('#editAccountId').val());
+            var Id = parseInt($('#editCaseId').val());
 
             $.ajax({
-                url: '/Operation/GetBank/' + Id,
+                url: '/Operation/GetAccount/' + Id,
                 success: function (data) {
-                    var items = '<option>Lütfen bir banka seçiniz</option>';
-                    $.each(data, function (i, bank) {
-                        items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
+                    var items = '<option value="">Lütfen bir hesap seçiniz</option>';
+                    $.each(data, function (i, account) {
+                        items += "<option value='" + account.id + "'>" + account.name + "</option>";
                     });
-                    $('#editAccountDetailId').html(items);
-                 
-                    $("#editAccountDetailId").val(editdata.accountDetailId);
-                   
+                    $('#editAccountId').html(items);
+                    $("#editAccountId").val(editdata.accountId);
+
+                    var Id = parseInt($('#editAccountId').val());
+
+                    $.ajax({
+                        url: '/Operation/GetBank/' + Id,
+                        success: function (data) {
+                            var items = '<option>Lütfen bir banka seçiniz</option>';
+                            $.each(data, function (i, bank) {
+                                items += "<option value='" + bank.value + "'>" + bank.text + "</option>";
+                            });
+                            $('#editAccountDetailId').html(items);
+
+                            $("#editAccountDetailId").val(editdata.accountDetailId);
+
+                        }
+                    });
                 }
-            });           
+            });                    
         }
     });
 }

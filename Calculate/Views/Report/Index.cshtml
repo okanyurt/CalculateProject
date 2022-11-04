@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Report Page";
+}
+
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <div id="crypto-stats-3" class="row">
+                @foreach (var item in ViewBag.cases)
+                {
+                    <div class="col-xl-4 col-12" onclick="show(@item.Value)">
+                        <div class="card crypto-card-3 pull-up">
+                            <div class="card-content">
+
+                                <div class="card-body pb-0">
+                                    <div class="row">
+                                        <div class="col-5 pl-2">
+                                            <h4>@item.Text</h4>
+                                            <h4 class="text-muted">Team</h4>
+                                        </div>
+                                        <div class="col-5 text-right">
+                                            <h4>9,980 TL</h4>
+                                            <h6 class="success darken-4">31% <i class="la la-arrow-up"></i></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12"><canvas id="btc-chartjs" class="height-75"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    function show(Id){
+         debugger;
+
+        $.ajax({
+            url: '/Report/GetAll/' + Id,
+            success: function (data) {
+               
+            }
+        });
+      }
+</script>
