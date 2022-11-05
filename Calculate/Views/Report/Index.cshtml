@@ -2,6 +2,8 @@
     ViewData["Title"] = "Report Page";
 }
 
+<link rel="stylesheet" type="text/css" href="~/css/tables/datatable/datatables.min.css">
+
 <div class="app-content content">
     <div class="content-overlay"></div>
     <div class="content-wrapper">
@@ -9,31 +11,61 @@
         </div>
         <div class="content-body">
             <div id="crypto-stats-3" class="row">
-                @foreach (var item in ViewBag.cases)
-                {
-                    <div class="col-xl-4 col-12" onclick="show(@item.Value)">
+                @{int i = 0;}
+                @foreach(var item in ViewBag.cases)
+                {                  
+                    <div class="col-xl-4 col-12" onclick="show(@item[0])">
                         <div class="card crypto-card-3 pull-up">
                             <div class="card-content">
 
                                 <div class="card-body pb-0">
                                     <div class="row">
                                         <div class="col-5 pl-2">
-                                            <h4>@item.Text</h4>
-                                            <h4 class="text-muted">Team</h4>
+                                            <h5>@item[1]</h5>
+                                            <h5 class="text-muted">Team</h5>
                                         </div>
                                         <div class="col-5 text-right">
-                                            <h4>9,980 TL</h4>
-                                            <h6 class="success darken-4">31% <i class="la la-arrow-up"></i></h6>
+                                            <h5>@item[2] TL</h5>
+                                            @* <h6 class="success darken-4">31% <i class="la la-arrow-up"></i></h6>*@
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12"><canvas id="btc-chartjs" class="height-75"></canvas></div>
+                                    <div class="col-12"><canvas id="@i" class="height-75"></canvas></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    { i++; }
                 }
+            </div>
+
+            <div class="row" id="tableCard" style="display:none !important;">
+                <section id="file-export">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                                    <div class="heading-elements">
+                                        <ul class="list-inline mb-0">
+                                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-content collapse show">
+                                    <div class="card-body card-dashboard dataTables_wrapper dt-bootstrap">
+                                        <table id="reportTable" class="table table-striped table-bordered file-export">
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
     </div>
@@ -41,16 +73,153 @@
 
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/tables/datatable/datatables.min.js"></script>
+<script src="~/js/tables/datatable/dataTables.buttons.min.js"></script>
+<script src="~/js/tables/buttons.flash.min.js"></script>
+<script src="~/js/tables/jszip.min.js"></script>
+<script src="~/js/tables/pdfmake.min.js"></script>
+<script src="~/js/tables/vfs_fonts.js"></script>
+<script src="~/js/tables/buttons.html5.min.js"></script>
+<script src="~/js/tables/buttons.print.min.js"></script>
 
 <script>
-    function show(Id){
-         debugger;
+      $(document).ready(function () {
+          $('#tableCard').hide();
 
-        $.ajax({
-            url: '/Report/GetAll/' + Id,
-            success: function (data) {
-               
-            }
-        });
+          $( "div>canvas" ).each(function( index ) {
+                   draw(index);
+          });
+      });
+      function show(Id){
+          $.ajax({
+              url: '/Report/GetAll/' + Id,
+              success: function (data) {
+                  $('#tableCard').show();
+                  var dataset = [];
+                  data.forEach((d,i) => {
+                      if(d.processType.toString() == "ÇEKİM"){
+                          price =  "-"+ d.price.toString();
+                      }
+                      else{
+                          price = d.price.toString();
+                      }
+                      var row = [d.account.toString(),
+                          d.accountDetail.toString(),
+                          d.processType.toString(),
+                          price,
+                          d.processCount.toString(),
+                      ];
+                      dataset.push(row);
+                  });
+
+                  if($("#reportTable tbody").length > 0){
+                      table.rows().remove().draw();
+                      table.rows.add(dataset).draw();
+                  }
+                  else{
+                  $.noConflict();
+                  table = $('#reportTable').DataTable( {
+                  "order": [[ 1, 'asc' ], [ 2, 'asc' ]],
+                  rowGroup: {
+                      startRender: null,
+                      endRender: function ( rows, group ) {
+                               var total = rows
+                                       .data()
+                                       .pluck(3)
+                                       .reduce( function (a, b) {
+                                                return parseFloat(a) + parseFloat(b);
+                                       }, 0) ;
+
+                               return group + ' GENEL TOPLAM: ' + total + ' TL ' + '- TOPLAM İŞLEM ADEDİ: ' + rows.count();
+                  },
+                  dataSrc: [1,2]
+                  },
+                  data: dataset,
+                  columns: [
+                      { title: 'Hesap Adı' },
+                      { title: 'Banka Adı' },
+                      { title: 'İşlem Tipi' },
+                      { title: 'Miktar' },
+                      { title: 'İşlem Adedi' }
+                   ],
+                   deferLoading: 57
+                });
+                  }
+              }
+          });
+        }
+
+        function draw(Id){
+              var btcChartjs = document.getElementById(Id).getContext("2d");
+  // Create Linear Gradient
+  var blue_trans_gradient = btcChartjs.createLinearGradient(0, 0, 0, 100);
+  blue_trans_gradient.addColorStop(0, "rgba(255, 145, 73,0.4)");
+  blue_trans_gradient.addColorStop(1, "rgba(255,255,255,0)");
+  // Chart Options
+  var BTCStats = {
+    responsive: true,
+    maintainAspectRatio: false,
+    datasetStrokeWidth: 3,
+    pointDotStrokeWidth: 4,
+    tooltipFillColor: "rgba(255, 145, 73,0.8)",
+    legend: {
+      display: false
+    },
+    hover: {
+      mode: "label"
+    },
+    scales: {
+      xAxes: [
+        {
+          display: false
+        }
+      ],
+      yAxes: [
+        {
+          display: false,
+          ticks: {
+            min: 0,
+            max: 85
+          }
+        }
+      ]
+    },
+    title: {
+      display: false,
+      fontColor: "#FFF",
+      fullWidth: false,
+      fontSize: 30,
+      text: "52%"
+    }
+  };
+
+  // Chart Data
+  var BTCMonthData = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    datasets: [
+      {
+        label: "BTC",
+        data: [20, 18, 35, 60, 38, 40, 70],
+        backgroundColor: blue_trans_gradient,
+        borderColor: "#FF9149",
+        borderWidth: 1.5,
+        strokeColor: "#FF9149",
+        pointRadius: 0
       }
+    ]
+  };
+
+  var BTCCardconfig = {
+    type: "line",
+
+    // Chart Options
+    options: BTCStats,
+
+    // Chart Data
+    data: BTCMonthData
+  };
+
+  // Create the chart
+  var BTCAreaChart = new Chart(btcChartjs, BTCCardconfig);
+        }
 </script>

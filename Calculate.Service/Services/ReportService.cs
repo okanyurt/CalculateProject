@@ -29,24 +29,43 @@ namespace Calculate.Service.Services
                        join c in _context.Cases on o.CaseId equals c.Id
                        where o.IsEnable == true && o.CaseId == Id
                        orderby o.UpdatedDate descending
-                       group new {a,b,pt,o} by new
+                       group new { a, b, pt, o } by new
                        {
-                           Id = o.Id,
+                           //Id = o.Id,
                            Account = a.Name,
-                           AccountDetail = b.Name,                         
+                           AccountDetail = b.Name,
                            ProcessType = pt.Name,
-                           Price = o.Price
+                           //Price = o.Price
                        } into g
                        select new ReportGet
                        {
-                           Id = g.Key.Id,
+                          // Id = g.Key.Id,
                            Account = g.Key.Account,
                            AccountDetail = g.Key.AccountDetail,
                            ProcessType = g.Key.ProcessType,
-                           Price = g.Key.Price
+                           Price = g.Sum(x => x.o.Price),
+                           ProcessCount = g.Count()
                        };
 
+
             return await list.ToListAsync();
+        }
+
+        public async Task<Operation> GetCaseTotalAsync(int Id)
+        {
+            var caseList = from o in _context.Operations                      
+                       where o.IsEnable == true && o.CaseId == Id
+                       group o  by new
+                       {
+                           Case = o.CaseId
+                       } into g
+                       select new Operation
+                       {
+                           Price = g.Sum(x => x.Price)
+                       };
+
+
+            return await caseList.FirstOrDefaultAsync();
         }
     }
 }

@@ -26,11 +26,7 @@ namespace Calculate.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            var der = Request.Cookies["OfficeIdListKey"];
-
             var operation = await _operationService.GetAllAsync();
-
-            //ViewBag.accounts = new SelectList(await GetAccountAsync(), "Id", "Name");
 
             ViewBag.processTypes = new SelectList(await GetProcessTypeAsync(), "Id", "Name");
 
@@ -90,17 +86,17 @@ namespace Calculate.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> OperationDelete(int id)
+        public async Task<JsonResult> OperationDelete(int id)
         {
             try
             {
                 string userId = Request.Cookies["AuthenticationKey"];
                 await _operationService.RemoveAsync(id, userId);
-                return RedirectToAction(nameof(Index));
+                return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = true });
             }
             catch
             {
-                return View();
+                return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = false });
             }
         }
 
@@ -113,7 +109,6 @@ namespace Calculate.Controllers
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public async Task<JsonResult> OperationEdit([FromBody] OperationUpdate OperationUpdate)
         {
             try
@@ -154,33 +149,6 @@ namespace Calculate.Controllers
             string officeId = Request.Cookies["OfficeIdListKey"];
             var cases = await _operationService.GetCaseAsync(officeId);
             return cases;
-        }
-
-        public async Task<int> GetBankIdAsync(string name)
-        {
-            var list = await _operationService.GetBankIdAsync(name);
-            return list.FirstOrDefault().Id;
-        }
-
-        public async Task<int> GetProcessTypeIdAsync(string name)
-        {
-            var list = await _operationService.GetProcessTypeIdAsync(name);
-            int Id = list.FirstOrDefault().Id;
-            return Id;
-        }
-
-        public async Task<int> GetCaseIdAsync(string name)
-        {
-            var list = await _operationService.GetCaseIdAsync(name);
-            int Id = list.FirstOrDefault().Id;
-            return Id;
-        }
-
-        public async Task<int> GetAccountIdAsync(string name)
-        {
-            var list = await _operationService.GetAccountIdAsync(name);
-            int Id = list.FirstOrDefault().Id;
-            return Id;
         }
 
         [HttpPost]

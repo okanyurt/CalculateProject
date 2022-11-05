@@ -22,14 +22,6 @@ namespace Calculate.Service.Services
 
         Task<List<Case>> GetCaseAsync(string officeId);
 
-        Task<List<Bank>> GetBankIdAsync(string accountName);
-
-        Task<List<ProcessType>> GetProcessTypeIdAsync(string processTypeName);
-
-        Task<List<Case>> GetCaseIdAsync(string caseName);
-
-        Task<List<AccountGetName>> GetAccountIdAsync(string accountName);
-
         Task<bool> SaveUploadExcelAsync(List<OperationUploadExcel> operationUploadExcels, string userId);
     }
 }
