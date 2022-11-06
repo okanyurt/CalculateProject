@@ -8,10 +8,12 @@ namespace Calculate.Data.Models
 {
     public class ReportGet
     {  
-        public int Id { get; set; }
+       // public int Id { get; set; }
         public string Account { get; set; }
         public string AccountDetail { get; set; }
         public string ProcessType { get; set; }
         public decimal Price { get; set; }
+
+        public int ProcessCount { get; set; }
     }
 }

@@ -78,7 +78,7 @@
                                                                 @Html.DisplayFor(modelItem => item.ProcessPrice)
                                                             </td>
                                                             <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
-                                                            <td><a class="btn btn-danger btn-sm" href="/Operation/OperationDelete/@item.Id"><i class="la la-trash"></i> Sil</a></td>
+                                                            <td><a class="btn btn-danger btn-sm" onclick="remove(@item.Id)"><i class="la la-trash"></i> Sil</a></td>
                                                         </tr>
                                                     }
                                                 }

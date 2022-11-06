@@ -143,7 +143,7 @@ function Update() {
                 $('#editPopup').modal('toggle');
                 setTimeout(function () {
                     window.location.reload();
-                }, 2000);
+                }, 1000);
             } else {
                 toastr.error(result.message);
             }
@@ -184,4 +184,25 @@ function UploadFile() {
             toastr.error(data.message);
         }
     });
+}
+
+function remove(id) {
+    if (confirm("Kayıt silinecektir. Emin misiniz?")) {
+        $.ajax({
+            url: '/Operation/OperationDelete/' + id,
+            success: function (data) {
+                if (data.isSuccess) {
+                    toastr.success("İşlem başarılı.");                 
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    toastr.error(result.message);
+                }
+            }
+        });
+    }
+    else {
+        return false;
+    }  
 }

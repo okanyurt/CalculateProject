@@ -23,7 +23,30 @@ namespace Calculate.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            ViewBag.cases = new SelectList(await GetCaseAsync(), "Id", "Name");
+            var caseList = await GetCaseAsync();
+            //ViewBag.cases = new SelectList(await GetCaseAsync(), "Id", "Name");
+
+            object[] cases = new object[caseList.Count];
+            int index = 0;
+            foreach (var item in caseList)
+            {
+                var total = await GetCaseTotalAsync(item.Id);
+                if(total != null)
+                {
+                    string[] c = { item.Id.ToString(), item.Name, total.Price.ToString()};
+                    cases[index] = c;
+                }
+                else
+                {
+                    string[] c = { item.Id.ToString(), item.Name, "0" };
+                    cases[index] = c;
+                }
+               
+                
+                index++;
+            }
+
+            ViewBag.cases = cases;
 
             return View();
         }
@@ -33,6 +56,12 @@ namespace Calculate.Controllers
             string officeId = Request.Cookies["OfficeIdListKey"];
             var cases = await _reportService.GetCaseAsync(officeId);
             return cases;
+        }
+
+        public async Task<Operation> GetCaseTotalAsync(int id)
+        {
+            var casesTotal = await _reportService.GetCaseTotalAsync(id);
+            return casesTotal;
         }
 
         [HttpGet]

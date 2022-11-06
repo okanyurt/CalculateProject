@@ -38,13 +38,7 @@ namespace Calculate.Service.Services
 
         public async Task<List<AccountGetName>> GetAccountAsync(int caseId)
         {
-            var accountList = await _context.Accounts.Where(x => x.IsEnable == true && x.CaseId == caseId).Select(x => new AccountGetName { Id = x.Id, Name = x.Name }).ToListAsync();
-            return accountList;
-        }
-
-        public async Task<List<AccountGetName>> GetAccountIdAsync(string accountName)
-        {
-            var accountList = await _context.Accounts.Where(x => x.Name == accountName).Select(x => new AccountGetName { Id = x.Id, Name = x.Name }).ToListAsync();
+            var accountList = await _context.Accounts.Where(x => x.IsEnable == true && x.CaseId == caseId).Select(x => new AccountGetName { Id = x.Id, Name = x.Name }).OrderBy(y => y.Name).ToListAsync();
             return accountList;
         }
 
@@ -83,25 +77,13 @@ namespace Calculate.Service.Services
             var bankList = from b in _context.Banks
                            join ad in _context.AccountDetails on b.Id equals ad.BankId
                            where ad.AccountId == accountId && ad.IsEnable == true
+                           orderby b.Name ascending
                            select new Bank
                            {
                                Id = ad.Id,
                                Name = b.Name
                            };
 
-            return await bankList.ToListAsync();
-        }
-
-        public async Task<List<Bank>> GetBankIdAsync(string accountName)
-        {
-            var bankList = from b in _context.Banks
-                           join ad in _context.AccountDetails on b.Id equals ad.BankId
-                           where b.Name == accountName && ad.IsEnable == true
-                           select new Bank
-                           {
-                               Id = b.Id,
-                               Name = b.Name
-                           };
             return await bankList.ToListAsync();
         }
 
@@ -117,21 +99,9 @@ namespace Calculate.Service.Services
             return caseList;
         }
 
-        public async Task<List<Case>> GetCaseIdAsync(string caseName)
-        {
-            var caseList = await _context.Cases.Where(x => x.Name == caseName).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
-            return caseList;
-        }
-
         public async Task<List<ProcessType>> GetProcessTypeAsync()
         {
             var processTypeList = await _context.ProcessTypes.Select(x => new ProcessType { Id = x.Id, Name = x.Name }).ToListAsync();
-            return processTypeList;
-        }
-
-        public async Task<List<ProcessType>> GetProcessTypeIdAsync(string processTypeName)
-        {
-            var processTypeList = await _context.ProcessTypes.Where(x => x.Name == processTypeName).Select(x => new ProcessType { Id = x.Id, Name = x.Name }).ToListAsync();
             return processTypeList;
         }
 
