@@ -2,8 +2,8 @@
 
 namespace Calculate.Data.Models
 {
-    [Table("operations")]
-    public class Operation
+    [Table("operations_arsiv")]
+    public class OperationArsiv
     {
         [Column("id")]
         public int Id { get; set; }
@@ -13,7 +13,7 @@ namespace Calculate.Data.Models
 
         [Column("account_id")]
         public int AccountId { get; set; }
-        
+
         [Column("account_detail_id")]
         public int AccountDetailId { get; set; }
 
@@ -34,7 +34,7 @@ namespace Calculate.Data.Models
 
         [Column("created_date")]
         public DateTime CreatedDate { get; set; }
-       
+
         [Column("updated_by")]
         public int UpdatedBy { get; set; }
 
@@ -45,3 +45,4 @@ namespace Calculate.Data.Models
         public int CaseId { get; set; }
     }
 }
+

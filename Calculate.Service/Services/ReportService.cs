@@ -67,5 +67,36 @@ namespace Calculate.Service.Services
 
             return await caseList.FirstOrDefaultAsync();
         }
+
+
+        public async Task<List<ReportGet>> GetAllForCaseAsync(int Id)
+        {
+            var list = from o in _context.Operations
+                       join a in _context.Accounts on o.AccountId equals a.Id
+                       join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id
+                       join b in _context.Banks on ad.BankId equals b.Id
+                       join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
+                       join c in _context.Cases on o.CaseId equals c.Id
+                       where o.IsEnable == true && o.CaseId == Id
+                       orderby o.UpdatedDate descending
+                       group new { a, b, pt, o } by new
+                       {
+                           Account = a.Name,
+                           AccountDetail = b.Name,
+                           ProcessType = pt.Name
+                       } into g
+                       select new ReportGet
+                       {
+                           Account = g.Key.Account,
+                           AccountDetail = g.Key.AccountDetail,
+                           ProcessType = g.Key.ProcessType,
+                           Price = g.Sum(x => x.o.Price),
+                           ProcessCount = g.Count()
+                       };
+
+
+            return await list.ToListAsync();
+        }
+        
     }
 }

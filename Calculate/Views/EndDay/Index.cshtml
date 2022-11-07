@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "EndDay Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">             
+            <div class="float-right">       
+                 <label for="donationinput" class="col-sm-5 col-form-label">Kasa Adı</label>
+                 <select id="caseId" name="caseId" style="width:300px !important;" required>
+                    <option value="" selected>Lütfen bir kasa seçiniz</option>
+                    @foreach (var item in ViewBag.cases as SelectList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+                <button id="endDay" type="button" class="btn btn-success btn-sm" onclick="endDay()" disabled>
+                    <i class="ft-plus white"></i> Gün Sonu Al
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+     var enableDisable = function(){
+        var UTC_hours = new Date().getUTCHours() +3;
+        if (UTC_hours >= 14 && UTC_hours < 24){
+            document.getElementById('endDay').disabled = false;
+        }
+        else
+        {
+            document.getElementById('endDay').disabled = true;
+        }
+    };
+    setInterval(enableDisable, 1000*60);
+    enableDisable();
+
+    function endDay(){   
+        $.ajax({
+        url: '/EndDay/GetAll',
+        type: 'GET',
+        data: {
+            //Passing Input parameter
+            id: parseInt($('#caseId').val())
+        },
+        success: function (response) {
+             if(data == true){
+                   toastr.success("İşlem başarılı.");
+               }
+        },
+        error: function (response) {
+        }
+    });
+    }
+</script>
