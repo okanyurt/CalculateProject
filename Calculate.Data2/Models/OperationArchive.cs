@@ -2,8 +2,8 @@
 
 namespace Calculate.Data.Models
 {
-    [Table("operations_arsiv")]
-    public class OperationArsiv
+    [Table("operations_archive")]
+    public class OperationArchive
     {
         [Column("id")]
         public int Id { get; set; }
@@ -43,6 +43,18 @@ namespace Calculate.Data.Models
 
         [Column("case_id")]
         public int CaseId { get; set; }
+
+        [Column("archive_by")]
+        public int ArchiveBy { get; set; }
+
+        [Column("archive_date")]
+        public DateTime ArchiveDate { get; set; }
+
+
+        [Column("operation_id")]
+        public int OperationId { get; set; }
+
+        [Column("is_system")]
+        public bool IsSystem { get; set; } = false;
     }
 }
-

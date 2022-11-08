@@ -43,5 +43,8 @@ namespace Calculate.Data.Models
 
         [Column("case_id")]
         public int CaseId { get; set; }
+
+        [Column("is_system")]
+        public bool IsSystem { get; set; }
     }
 }
