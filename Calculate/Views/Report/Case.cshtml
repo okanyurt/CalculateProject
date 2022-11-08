@@ -1,0 +1,679 @@
+﻿@{
+    ViewData["Title"] = "Report Case Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <div id="crypto-stats-3" class="row">
+                @{
+                    int i = 0;
+                }
+                @foreach (var item in ViewBag.cases)
+                {
+                    <div class="col-xl-4 col-12" onclick="show(@item[0])">
+                        <div class="card crypto-card-3 pull-up">
+                            <div class="card-content">
+
+                                <div class="card-body pb-0">
+                                    <div class="row">
+                                        <div class="col-5 pl-2">
+                                            <h5>@item[1]</h5>
+                                            <h5 class="text-muted">Team</h5>
+                                        </div>
+                                        <div class="col-5 text-right">
+                                            <h5>@item[2] TL</h5>
+                                            @* <h6 class="success darken-4">31% <i class="la la-arrow-up"></i></h6>*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12"><canvas id="@i" class="height-75"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    { i++; }
+                }
+            </div>
+
+            <div class="row" id="tableCard" style="display:none !important;">
+                <section id="file-export">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                                    <div class="heading-elements">
+                                        <ul class="list-inline mb-0">
+                                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-content collapse show">
+                                    <div class="card-body card-dashboard dataTables_wrapper dt-bootstrap">
+                                        <table id="reportTable" class="table table-striped table-bordered file-export">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th colspan="6">Akbank</th>
+                                                    <th colspan="6">Albaraka</th>
+                                                    <th colspan="6">DenizBank</th>
+                                                    <th colspan="6">Garanti Bankası</th>
+                                                    <th colspan="6">HalkBank</th>
+                                                    <th colspan="6">ING</th>
+                                                    <th colspan="6">KuveytTürk</th>
+                                                    <th colspan="6">MFT</th>
+                                                    <th colspan="6">QNB FinansBank</th>
+                                                    <th colspan="6">SAHA</th>
+                                                    <th colspan="6">TEB</th>
+                                                    <th colspan="6">Türkiye Finans</th>
+                                                    <th colspan="6">Vakıfbank</th>
+                                                    <th colspan="6">YapıKredi Bankası</th>
+                                                    <th colspan="6">Ziraat Bankası</th>
+                                                    <th colspan="6">İş Bankası</th>
+                                                    <th colspan="2">Genel Toplam</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/tables/datatable/datatables.min.js"></script>
+<script src="~/js/tables/datatable/dataTables.buttons.min.js"></script>
+<script src="~/js/tables/buttons.flash.min.js"></script>
+<script src="~/js/tables/jszip.min.js"></script>
+<script src="~/js/tables/pdfmake.min.js"></script>
+<script src="~/js/tables/vfs_fonts.js"></script>
+<script src="~/js/tables/buttons.html5.min.js"></script>
+<script src="~/js/tables/buttons.print.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#tableCard').hide();
+
+        $( "div>canvas" ).each(function( index ) {
+                 draw(index);
+        });
+    });
+    function show(Id){
+        $.ajax({
+            url: '/Report/GetAllForCase/' + Id,
+            success: function (data) {
+                $('#tableCard').show();
+                var dataset = [];
+                var accountName = "";
+                var alignments = [];
+                var row = [];
+                var totalRow = [];
+                var toplam = 0;
+                var islemAdediToplam = 0;
+                row.push("");
+                totalRow.push(":Genel Toplam");
+                for(var i= 0; i < 98; i++){
+                    if(i % 2){
+                        row.push("0");
+                        totalRow.push("0");
+                    }                    
+                    else{
+                        row.push("0 TL");
+                        totalRow.push("0 TL");
+                    }                     
+                    alignments.push(i+1);                   
+                }
+
+                data.forEach((d,i) => {
+                    if(i == 0){
+                       accountName = d.account;                      
+                    }
+
+                    if(accountName != d.account)
+                    {
+                        dataset.push(row);
+                        accountName = d.account;
+                        row = [];
+                        row.push("");
+                        toplam = 0;
+                        islemAdediToplam = 0;
+                        for(var i= 0; i < 96; i++){
+                            if(i % 2)
+                              row.push("0");
+                            else
+                              row.push("0 TL");
+                        }
+                    }
+
+                    if(d.processType.toString() == "ÇEKİM" || d.processType.toString() == "TRANSFER"){
+                        price =  "-"+ d.price.toString();
+                        toplam -= d.price;
+                        islemAdediToplam += d.processCount;
+                    }
+                    else{
+                        price = d.price.toString();
+                        toplam += d.price;
+                        islemAdediToplam += d.processCount;
+                    }
+
+                    if(accountName == d.account)
+                    {
+                        row[0] = d.account;
+                        if(d.accountDetail == "AkBank"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[1] = price + " TL";
+                                row[2] = d.processCount;
+
+                                totalRow[1] = (parseFloat(totalRow[1].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[2] = (parseFloat(totalRow[2]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[3] = price + " TL";
+                                row[4] = d.processCount;
+
+                                totalRow[3] = (parseFloat(totalRow[3].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[4] = (parseFloat(totalRow[4]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[5] = price + " TL";;
+                                row[6] = d.processCount;
+
+                                totalRow[5] = (parseFloat(totalRow[5].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[6] = (parseFloat(totalRow[6]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "Albaraka"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[7] = price + " TL";
+                                row[8] = d.processCount;
+
+                                totalRow[7] = (parseFloat(totalRow[7].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[8] = (parseFloat(totalRow[8]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[9] = price + " TL";
+                                row[10] = d.processCount;
+
+                                totalRow[9] = (parseFloat(totalRow[9].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[10] = (parseFloat(totalRow[10]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[11] = price + " TL";
+                                row[12] = d.processCount;
+
+                                totalRow[11] = (parseFloat(totalRow[11].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[12] = (parseFloat(totalRow[12]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "DenizBank"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[13] = price + " TL";
+                                row[14] = d.processCount;
+
+                                totalRow[13] = (parseFloat(totalRow[13].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[14] = (parseFloat(totalRow[14]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[15] = price + " TL";
+                                row[16] = d.processCount;
+
+                                totalRow[15] = (parseFloat(totalRow[15].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[16] = (parseFloat(totalRow[16]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[17] = price + " TL";
+                                row[18] = d.processCount;
+
+                                totalRow[17] = (parseFloat(totalRow[17].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[18] = (parseFloat(totalRow[18]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "Garanti Bankası"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[19] = price + " TL";
+                                row[20] = d.processCount;
+
+                                totalRow[19] = (parseFloat(totalRow[19].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[20] = (parseFloat(totalRow[20]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[21] = price + " TL";
+                                row[22] = d.processCount;
+
+                                totalRow[21] = (parseFloat(totalRow[21].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[22] = (parseFloat(totalRow[22]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[23] = price + " TL";
+                                row[24] = d.processCount;
+
+                                totalRow[23] = (parseFloat(totalRow[23].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[24] = (parseFloat(totalRow[24]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "HalkBank"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[25] = price + " TL";
+                                row[26] = d.processCount;
+
+                                totalRow[25] = (parseFloat(totalRow[25].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[26] = (parseFloat(totalRow[26]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[27] = price + " TL";
+                                row[28] = d.processCount;
+
+                                totalRow[27] = (parseFloat(totalRow[27].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[28] = (parseFloat(totalRow[28]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[29] = price + " TL";
+                                row[30] = d.processCount;
+
+                                totalRow[29] = (parseFloat(totalRow[29].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[30] = (parseFloat(totalRow[30]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "ING"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[31] = price + " TL";
+                                row[32] = d.processCount;
+
+                                totalRow[31] = (parseFloat(totalRow[31].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[32] = (parseFloat(totalRow[32]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[33] = price + " TL";
+                                row[34] = d.processCount;
+
+                                totalRow[33] = (parseFloat(totalRow[33].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[34] = (parseFloat(totalRow[34]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[35] = price + " TL";
+                                row[36] = d.processCount;
+
+                                totalRow[35] = (parseFloat(totalRow[35].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[36] = (parseFloat(totalRow[36]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "Kuveyt Türk"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[37] = price + " TL";
+                                row[38] = d.processCount;
+
+                                totalRow[37] = (parseFloat(totalRow[37].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[38] = (parseFloat(totalRow[38]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[39] = price + " TL";
+                                row[40] = d.processCount;
+
+                                totalRow[39] = (parseFloat(totalRow[39].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[40] = (parseFloat(totalRow[40]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[41] = price + " TL";
+                                row[42] = d.processCount;
+
+                                totalRow[41] = (parseFloat(totalRow[41].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[42] = (parseFloat(totalRow[42]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "MFT"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[43] = price + " TL";
+                                row[44] = d.processCount;
+
+                                totalRow[43] = (parseFloat(totalRow[43].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[44] = (parseFloat(totalRow[44]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[45] = price + " TL";
+                                row[46] = d.processCount;
+
+                                totalRow[45] = (parseFloat(totalRow[45].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[46] = (parseFloat(totalRow[46]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[47] = price + " TL";
+                                row[48] = d.processCount;
+
+                                totalRow[47] = (parseFloat(totalRow[47].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[48] = (parseFloat(totalRow[48]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "QNB FinansBank"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[49] = price + " TL";
+                                row[50] = d.processCount;
+
+                                totalRow[49] = (parseFloat(totalRow[49].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[50] = (parseFloat(totalRow[50]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[51] = price + " TL";
+                                row[52] = d.processCount;
+
+                                totalRow[51] = (parseFloat(totalRow[51].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[52] = (parseFloat(totalRow[52]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[53] = price + " TL";
+                                row[54] = d.processCount;
+
+                                totalRow[53] = (parseFloat(totalRow[53].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[54] = (parseFloat(totalRow[54]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "SAHA"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[55] = price + " TL";
+                                row[56] = d.processCount;
+
+                                totalRow[55] = (parseFloat(totalRow[55].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[56] = (parseFloat(totalRow[56]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[57] = price + " TL";
+                                row[58] = d.processCount;
+
+                                totalRow[57] = (parseFloat(totalRow[57].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[58] = (parseFloat(totalRow[58]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[59] = price + " TL";
+                                row[60] = d.processCount;
+
+                                totalRow[59] = (parseFloat(totalRow[59].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[60] = (parseFloat(totalRow[60]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "TEB"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[61] = price + " TL";
+                                row[62] = d.processCount;
+
+                                totalRow[61] = (parseFloat(totalRow[61].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[62] = (parseFloat(totalRow[62]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[63] = price + " TL";
+                                row[64] = d.processCount;
+
+                                totalRow[63] = (parseFloat(totalRow[63].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[64] = (parseFloat(totalRow[64]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[65] = price + " TL";
+                                row[66] = d.processCount;
+
+                                totalRow[65] = (parseFloat(totalRow[65].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[66] = (parseFloat(totalRow[66]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "Türkiye Finans"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[67] = price + " TL";
+                                row[68] = d.processCount;
+
+                                totalRow[67] = (parseFloat(totalRow[67].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[68] = (parseFloat(totalRow[68]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[69] = price + " TL";
+                                row[70] = d.processCount;
+
+                                totalRow[69] = (parseFloat(totalRow[69].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[70] = (parseFloat(totalRow[70]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[71] = price + " TL";
+                                row[72] = d.processCount;
+
+                                totalRow[71] = (parseFloat(totalRow[71].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[72] = (parseFloat(totalRow[72]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "VakıfBank"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[73] = price + " TL";
+                                row[74] = d.processCount;
+
+                                totalRow[73] = (parseFloat(totalRow[73].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[74] = (parseFloat(totalRow[74]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[75] = price + " TL";
+                                row[76] = d.processCount;
+
+                                totalRow[75] = (parseFloat(totalRow[75].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[76] = (parseFloat(totalRow[76]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[77] = price + " TL";
+                                row[78] = d.processCount;
+
+                                totalRow[77] = (parseFloat(totalRow[77].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[78] = (parseFloat(totalRow[78]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "Yapı Kredi Bankası"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[79] = price + " TL";
+                                row[80] = d.processCount;
+
+                                totalRow[79] = (parseFloat(totalRow[79].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[80] = (parseFloat(totalRow[80]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[81] = price + " TL";
+                                row[82] = d.processCount;
+
+                                totalRow[81] = (parseFloat(totalRow[81].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[82] = (parseFloat(totalRow[82]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[83] = price + " TL";
+                                row[84] = d.processCount;
+
+                                totalRow[83] = (parseFloat(totalRow[83].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[84] = (parseFloat(totalRow[84]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "Ziraat Bankası"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[85] = price + " TL";
+                                row[86] = d.processCount;
+
+                                totalRow[85] = (parseFloat(totalRow[85].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[86] = (parseFloat(totalRow[86]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[87] = price + " TL";
+                                row[88] = d.processCount;
+
+                                totalRow[87] = (parseFloat(totalRow[87].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[88] = (parseFloat(totalRow[88]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[89] = price + " TL";
+                                row[90] = d.processCount;
+
+                                totalRow[89] = (parseFloat(totalRow[89].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[90] = (parseFloat(totalRow[90]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+                        else if(d.accountDetail == "İş Bankası"){
+                            if(d.processType.toString() == "YATIRIM"){
+                                row[91] = price + " TL";
+                                row[92] = d.processCount;
+
+                                totalRow[91] = (parseFloat(totalRow[91].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[92] = (parseFloat(totalRow[92]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "ÇEKİM"){
+                                row[93] = price + " TL";
+                                row[94] = d.processCount;
+
+                                totalRow[93] = (parseFloat(totalRow[93].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[94] = (parseFloat(totalRow[94]) + parseFloat(d.processCount)).toString();
+                            }
+                            else if(d.processType.toString() == "TRANSFER"){
+                                row[95] = price + " TL";
+                                row[96] = d.processCount;
+
+                                totalRow[95] = (parseFloat(totalRow[95].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                                totalRow[96] = (parseFloat(totalRow[96]) + parseFloat(d.processCount)).toString();
+                            }
+                        }
+
+                        row[97] = toplam.toString() + " TL";
+                        row[98] = islemAdediToplam.toString();
+
+                        totalRow[97] = (parseFloat(totalRow[97].replace("TL","")) + parseFloat(price)).toString() + "TL";
+                        totalRow[98] = (parseFloat(totalRow[98]) + parseFloat(d.processCount)).toString();
+                    }
+
+                    if(i == data.length-1)
+                    {
+                        dataset.push(row); 
+                        dataset.push(totalRow);
+                    }
+                });
+
+                var appendtr = "<tr>";
+                appendtr += "<th>Hesap Adı</th>";
+                for (var i=0; i <16; i++)
+                {
+                  appendtr += "<th>Yatırım Toplamı</th>";
+                  appendtr += "<th>Yatırım İşlem Adedi Toplamı</th>";
+                  appendtr += "<th>Çekim Toplamı</th>";
+                  appendtr += "<th>Çekim İşlem Adedi Toplamı</th>";
+                  appendtr += "<th>Transfer Toplamı</th>";
+                  appendtr += "<th>Transfer İşlem Adedi Toplamı</th>";
+                }
+                appendtr += "<th>Toplam Tutar</th><th>İşlem Adedi</th></tr>";
+
+                $("#reportTable thead").append(appendtr);
+
+                if($("#reportTable tbody").length > 0){
+                    table.rows().remove().draw();
+                    table.rows.add(dataset).draw();
+                }
+                else{
+                    $.noConflict();
+                    table = $('#reportTable').DataTable( {
+                          "scrollX": true,
+                           buttons: [
+                                 'copy', 'csv', 'excel', 'pdf', 'print'
+                          ],
+                          "order": [[ 0, 'desc' ]],                       
+                           data: dataset,                     
+                           columnDefs: [
+                                {
+                                    targets: alignments,
+                                    className: 'dt-body-right'
+                                },
+                                {
+                                    targets: 0,
+                                    className: 'dt-body-left',
+                                    width: 300
+                                }
+                           ],
+                           deferLoading: 57
+                      });
+                }
+            }
+        });
+      }
+
+    function draw(Id){
+        var btcChartjs = document.getElementById(Id).getContext("2d");
+        // Create Linear Gradient
+        var blue_trans_gradient = btcChartjs.createLinearGradient(0, 0, 0, 100);
+        blue_trans_gradient.addColorStop(0, "rgba(255, 145, 73,0.4)");
+        blue_trans_gradient.addColorStop(1, "rgba(255,255,255,0)");
+        // Chart Options
+        var BTCStats = {
+              responsive: true,
+              maintainAspectRatio: false,
+              datasetStrokeWidth: 3,
+              pointDotStrokeWidth: 4,
+              tooltipFillColor: "rgba(255, 145, 73,0.8)",
+              legend: {
+                display: false
+              },
+              hover: {
+                mode: "label"
+              },
+              scales: {
+                xAxes: [
+                  {
+                    display: false
+                  }
+                ],
+                yAxes: [
+                  {
+                    display: false,
+                    ticks: {
+                      min: 0,
+                      max: 85
+                    }
+                  }
+                ]
+              },
+              title: {
+                display: false,
+                fontColor: "#FFF",
+                fullWidth: false,
+                fontSize: 30,
+                text: "52%"
+              }
+        };
+
+        // Chart Data
+        var BTCMonthData = {
+              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+              datasets: [
+                {
+                  label: "BTC",
+                  data: [20, 18, 35, 60, 38, 40, 70],
+                  backgroundColor: blue_trans_gradient,
+                  borderColor: "#FF9149",
+                  borderWidth: 1.5,
+                  strokeColor: "#FF9149",
+                  pointRadius: 0
+                }
+              ]
+        };
+
+        var BTCCardconfig = {
+          type: "line",
+
+          // Chart Options
+          options: BTCStats,
+
+          // Chart Data
+          data: BTCMonthData
+        };
+
+        // Create the chart
+        var BTCAreaChart = new Chart(btcChartjs, BTCCardconfig);
+      }
+</script>

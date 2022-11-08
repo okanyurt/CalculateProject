@@ -9,5 +9,7 @@ namespace Calculate.Service.Services
         Task<List<ReportGet>> GetAllAsync(int Id);
 
         Task<Operation> GetCaseTotalAsync(int Id);
+
+        Task<List<ReportGet>> GetAllForCaseAsync(int Id);
     }
 }

@@ -1,8 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Report Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<link rel="stylesheet" type="text/css" href="~/css/tables/datatable/datatables.min.css">
 
 <div class="app-content content">
     <div class="content-overlay"></div>
@@ -97,7 +96,7 @@
                   $('#tableCard').show();
                   var dataset = [];
                   data.forEach((d,i) => {
-                      if(d.processType.toString() == "ÇEKİM"){
+                      if(d.processType.toString() == "ÇEKİM" || d.processType.toString() == "KOMİSYON" || d.processType.toString() == "TRANSFER"){
                           price =  "-"+ d.price.toString();
                       }
                       else{
@@ -119,6 +118,9 @@
                   else{
                   $.noConflict();
                   table = $('#reportTable').DataTable( {
+                      buttons: [
+                         'copy', 'csv', 'excel', 'pdf', 'print'
+                  ],
                   "order": [[ 1, 'asc' ], [ 2, 'asc' ]],
                   rowGroup: {
                       startRender: null,
@@ -149,77 +151,77 @@
           });
         }
 
-        function draw(Id){
-              var btcChartjs = document.getElementById(Id).getContext("2d");
-  // Create Linear Gradient
-  var blue_trans_gradient = btcChartjs.createLinearGradient(0, 0, 0, 100);
-  blue_trans_gradient.addColorStop(0, "rgba(255, 145, 73,0.4)");
-  blue_trans_gradient.addColorStop(1, "rgba(255,255,255,0)");
-  // Chart Options
-  var BTCStats = {
-    responsive: true,
-    maintainAspectRatio: false,
-    datasetStrokeWidth: 3,
-    pointDotStrokeWidth: 4,
-    tooltipFillColor: "rgba(255, 145, 73,0.8)",
-    legend: {
-      display: false
-    },
-    hover: {
-      mode: "label"
-    },
-    scales: {
-      xAxes: [
-        {
-          display: false
-        }
-      ],
-      yAxes: [
-        {
-          display: false,
-          ticks: {
-            min: 0,
-            max: 85
-          }
-        }
-      ]
-    },
-    title: {
-      display: false,
-      fontColor: "#FFF",
-      fullWidth: false,
-      fontSize: 30,
-      text: "52%"
-    }
-  };
-
-  // Chart Data
-  var BTCMonthData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-    datasets: [
-      {
-        label: "BTC",
-        data: [20, 18, 35, 60, 38, 40, 70],
-        backgroundColor: blue_trans_gradient,
-        borderColor: "#FF9149",
-        borderWidth: 1.5,
-        strokeColor: "#FF9149",
-        pointRadius: 0
-      }
-    ]
-  };
-
-  var BTCCardconfig = {
-    type: "line",
-
-    // Chart Options
-    options: BTCStats,
-
-    // Chart Data
-    data: BTCMonthData
-  };
-
-  // Create the chart
-  var BTCAreaChart = new Chart(btcChartjs, BTCCardconfig);
+      function draw(Id){
+          var btcChartjs = document.getElementById(Id).getContext("2d");
+          // Create Linear Gradient
+          var blue_trans_gradient = btcChartjs.createLinearGradient(0, 0, 0, 100);
+          blue_trans_gradient.addColorStop(0, "rgba(255, 145, 73,0.4)");
+          blue_trans_gradient.addColorStop(1, "rgba(255,255,255,0)");
+          // Chart Options
+          var BTCStats = {
+                responsive: true,
+                maintainAspectRatio: false,
+                datasetStrokeWidth: 3,
+                pointDotStrokeWidth: 4,
+                tooltipFillColor: "rgba(255, 145, 73,0.8)",
+                legend: {
+                  display: false
+                },
+                hover: {
+                  mode: "label"
+                },
+                scales: {
+                  xAxes: [
+                    {
+                      display: false
+                    }
+                  ],
+                  yAxes: [
+                    {
+                      display: false,
+                      ticks: {
+                        min: 0,
+                        max: 85
+                      }
+                    }
+                  ]
+                },
+                title: {
+                  display: false,
+                  fontColor: "#FFF",
+                  fullWidth: false,
+                  fontSize: 30,
+                  text: "52%"
+                }
+          };
+          
+          // Chart Data
+          var BTCMonthData = {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+                datasets: [
+                  {
+                    label: "BTC",
+                    data: [20, 18, 35, 60, 38, 40, 70],
+                    backgroundColor: blue_trans_gradient,
+                    borderColor: "#FF9149",
+                    borderWidth: 1.5,
+                    strokeColor: "#FF9149",
+                    pointRadius: 0
+                  }
+                ]
+          };
+          
+          var BTCCardconfig = {
+            type: "line",
+          
+            // Chart Options
+            options: BTCStats,
+          
+            // Chart Data
+            data: BTCMonthData
+          };
+          
+          // Create the chart
+          var BTCAreaChart = new Chart(btcChartjs, BTCCardconfig);
         }
 </script>

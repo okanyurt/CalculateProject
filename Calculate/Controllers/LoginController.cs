@@ -88,7 +88,7 @@ namespace Calculate.Controllers
             Response.Cookies.Append("AuthenticationKey", $"{User.UserId}", options);
             Response.Cookies.Append("OfficeIdListKey", $"{User.officeIdList}", options);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Operation");
         }
     }
 }

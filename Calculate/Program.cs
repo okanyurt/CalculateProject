@@ -14,6 +14,7 @@ builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connecti
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IOperationService, OperationService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IEndDayService, EndDayService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -42,7 +43,7 @@ if (!app.Environment.IsDevelopment())
 }
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Operation}/{action=Index}/{id?}");
 
 app.UseStaticFiles();
 app.UseRouting();
