@@ -3,7 +3,6 @@ using Calculate.Data.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
 using OfficeOpenXml;
 
 namespace Calculate.Controllers
