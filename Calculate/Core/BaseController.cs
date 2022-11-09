@@ -1,5 +1,4 @@
 ﻿using Calculate.Data.Models;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
