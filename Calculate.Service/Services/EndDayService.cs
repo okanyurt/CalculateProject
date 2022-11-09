@@ -17,6 +17,7 @@ namespace Calculate.Service.Services
         public async Task<bool> CalculateEndDayAsync(int caseId, string userId, bool isCheckDay)
         {
             bool result = false;
+            var trans = _context.Database.BeginTransaction();
             try
             {
                 var today = DateTime.UtcNow.Date;
@@ -27,9 +28,14 @@ namespace Calculate.Service.Services
                     today = today.AddDays(-1);
                     date = date.AddDays(-1);
                 }
-                                      
+
                 int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
                 List<int> minusAccount = new List<int>() { (int)EnumProcessType.CEKIM, (int)EnumProcessType.KOMISYON, (int)EnumProcessType.TRANSFER };
+
+                var deleteOperationList = await _context.Operations.Where(x => x.IsSystem == true && x.UpdatedDate.Date == date.AddDays(1).Date).ToListAsync();
+
+                var deleteOperationArchiveList = await _context.OperationsArchive.Where(x => x.UpdatedDate.Date == date.Date).ToListAsync();
+
                 var list = await _context.Operations.Where(x => x.CaseId == caseId && x.IsEnable == true && x.UpdatedDate.Date == today).Select(item => new OperationArchive
                 {
                     ProcessNumber = item.ProcessNumber,
@@ -73,16 +79,23 @@ namespace Calculate.Service.Services
                 }).Where(x => x.Price > 0).ToList();
 
 
+                _context.OperationsArchive.RemoveRange(deleteOperationArchiveList);
+
+                _context.Operations.RemoveRange(deleteOperationList);
+
                 await _context.OperationsArchive.AddRangeAsync(list);
 
                 await _context.Operations.AddRangeAsync(devirList);
 
                 await _context.SaveChangesAsync();
 
+                trans.Commit();
+
                 result = true;
             }
             catch (Exception ex)
             {
+                trans.Rollback();
                 result = false;
             }
 
