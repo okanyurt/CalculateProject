@@ -1,4 +1,5 @@
 ﻿using Calculate.Data;
+using Calculate.Data.Enums;
 using Calculate.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,131 +14,92 @@ namespace Calculate.Service.Services
             _context = context;
         }
 
-        public async Task<int> AddOperationArsivAsync(List<Operation> operations, string userId)
+        public async Task<bool> CalculateEndDayAsync(int caseId, string userId, bool isCheckDay)
         {
-            int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
-            int result = 0;
-            foreach (var item in operations)
+            bool result = false;
+            var trans = _context.Database.BeginTransaction();
+            try
             {
-                OperationArsiv operationArsiv = new OperationArsiv();
+                var today = DateTime.UtcNow.Date;
                 var date = DateTime.UtcNow;
-                operationArsiv.ProcessNumber = item.ProcessNumber;
-                operationArsiv.AccountId = item.AccountId;
-                operationArsiv.AccountDetailId = item.AccountDetailId;
-                operationArsiv.ProcessTypeId = item.ProcessTypeId;
-                operationArsiv.Price = item.Price;
-                operationArsiv.ProcessPrice = item.ProcessPrice;
-                operationArsiv.CreatedBy = currentUserId;
-                operationArsiv.CreatedDate = date;
-                operationArsiv.UpdatedBy = currentUserId;
-                operationArsiv.UpdatedDate = date;
-                operationArsiv.IsEnable = item.IsEnable;
-                operationArsiv.CaseId = item.CaseId;
 
-                await _context.OperationsArsiv.AddAsync(operationArsiv);
-                result = await _context.SaveChangesAsync();
-            } 
-
-            return result;
-        }
-         
-        public async Task<int> AddOperationAsync(int caseId, string userId)
-        {
-
-            var list =  _context.OperationsArsiv.Where(x => x.CaseId == caseId && x.IsEnable == true).GroupBy(y => new { y.AccountId, y.AccountDetailId, y.ProcessTypeId,y.UpdatedDate }).Select(group => new OperationArsiv
-            {
-                AccountId = group.Key.AccountId,
-                AccountDetailId = group.Key.AccountDetailId,
-                ProcessTypeId = group.Key.ProcessTypeId,
-                Price = group.Sum(x => x.Price),
-                UpdatedDate = group.Key.UpdatedDate
-            });
-
-            var groupList = await list.ToListAsync();
-            var today = DateTime.Today.Date.ToString("dd-MM-yyyy");
-            List<OperationArsiv> operations = new List<OperationArsiv>();
-            foreach (var item in groupList)
-            {
-                if (item.UpdatedDate.ToString("dd-MM-yyyy") == today)
+                if (isCheckDay)
                 {
-                    operations.Add(item);
+                    today = today.AddDays(-1);
+                    date = date.AddDays(-1);
                 }
+
+                int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
+                List<int> minusAccount = new List<int>() { (int)EnumProcessType.CEKIM, (int)EnumProcessType.KOMISYON, (int)EnumProcessType.TRANSFER };
+
+                var deleteOperationList = await _context.Operations.Where(x => x.IsSystem == true && x.UpdatedDate.Date == date.AddDays(1).Date).ToListAsync();
+
+                var deleteOperationArchiveList = await _context.OperationsArchive.Where(x => x.UpdatedDate.Date == date.Date).ToListAsync();
+
+                var list = await _context.Operations.Where(x => x.CaseId == caseId && x.IsEnable == true && x.UpdatedDate.Date == today).Select(item => new OperationArchive
+                {
+                    ProcessNumber = item.ProcessNumber,
+                    AccountId = item.AccountId,
+                    AccountDetailId = item.AccountDetailId,
+                    ProcessTypeId = item.ProcessTypeId,
+                    Price = minusAccount.Contains(item.ProcessTypeId) ? -1 * item.Price : item.Price,
+                    ProcessPrice = -1 * item.ProcessPrice,
+                    CreatedBy = item.CreatedBy,
+                    CreatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.CreatedDate, DateTimeKind.Utc), "Turkey Standard Time", "UTC"),
+                    UpdatedBy = item.UpdatedBy,
+                    UpdatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.UpdatedDate, DateTimeKind.Utc), "Turkey Standard Time", "UTC"), 
+                    IsEnable = item.IsEnable,
+                    CaseId = item.CaseId,
+                    ArchiveBy = currentUserId,
+                    ArchiveDate = date,
+                    OperationId = item.Id,
+                    IsSystem = item.IsSystem
+                }).ToListAsync();
+
+                if (list == null)
+                {
+                    return result;
+                }
+
+                var devirList = list.GroupBy(x => new { x.CaseId, x.AccountId, x.AccountDetailId }).Select(x => new Operation
+                {
+                    ProcessNumber = 0,
+                    AccountId = x.Key.AccountId,
+                    AccountDetailId = x.Key.AccountDetailId,
+                    ProcessTypeId = (int)EnumProcessType.DEVİR,
+                    Price = x.Sum(y => y.Price) + x.Sum(y => y.ProcessPrice),
+                    ProcessPrice = 0,
+                    CreatedBy = currentUserId,
+                    CreatedDate = date.AddDays(1),
+                    UpdatedBy = currentUserId,
+                    UpdatedDate = date.AddDays(1),
+                    IsEnable = true,
+                    CaseId = caseId,
+                    IsSystem = true
+                }).Where(x => x.Price > 0).ToList();
+
+
+                _context.OperationsArchive.RemoveRange(deleteOperationArchiveList);
+
+                _context.Operations.RemoveRange(deleteOperationList);
+
+                await _context.OperationsArchive.AddRangeAsync(list);
+
+                await _context.Operations.AddRangeAsync(devirList);
+
+                await _context.SaveChangesAsync();
+
+                trans.Commit();
+
+                result = true;
             }
-
-
-            int AccountId = 0;
-            int AccountDetailId = 0;
-            decimal price = 0;
-            int result = 0;
-            int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
-            int index = 0;
-            foreach (var item in operations)
-            {               
-                if (AccountId == 0 && AccountDetailId == 0)
-                {
-                    AccountId = item.AccountId;
-                    AccountDetailId = item.AccountDetailId;
-                }
-
-                if (item.AccountId == AccountId && item.AccountDetailId == AccountDetailId)
-                {
-                    if (item.ProcessTypeId == 1 || item.ProcessTypeId == 5 || item.ProcessTypeId == 6)
-                    {
-                        price += item.Price;
-                    }
-                    else
-                    {
-                        price -= item.Price;
-                    }
-                }
-
-                if ((item.AccountId != AccountId && item.AccountDetailId != AccountDetailId) || operations.Count -1 == index )
-                {                  
-                    Operation operation = new Operation();
-                    var date = DateTime.UtcNow;
-                    operation.ProcessNumber = item.ProcessNumber;
-                    operation.AccountId = item.AccountId;
-                    operation.AccountDetailId = item.AccountDetailId;
-                    operation.ProcessTypeId = 5;
-                    operation.Price = price;
-                    operation.ProcessPrice = item.ProcessPrice;
-                    operation.CreatedBy = currentUserId;
-                    operation.CreatedDate = date;
-                    operation.UpdatedBy = currentUserId;
-                    operation.UpdatedDate = date;
-                    operation.IsEnable = item.IsEnable;
-                    operation.CaseId = item.CaseId;
-
-                    await _context.Operations.AddAsync(operation);
-                    result = await _context.SaveChangesAsync();
-
-                    AccountId = item.AccountId;
-                    AccountDetailId = item.AccountDetailId;
-                    price = 0;
-                }
-
-                index++;
+            catch (Exception ex)
+            {
+                trans.Rollback();
+                result = false;
             }
 
             return result;
-        }
-
-        public async Task<List<Operation>> GetAllAsync(int caseId)
-        {
-            var today = DateTime.Today.Date.ToString("dd-MM-yyyy");
-            List<Operation> operations = new List<Operation>();
-
-            var list = await _context.Operations.Where(x => x.CaseId == caseId && x.IsEnable == true).ToListAsync();
-
-            foreach (var item in list)
-            {
-                if (item.UpdatedDate.ToString("dd-MM-yyyy") == today)
-                {
-                    operations.Add(item);
-                }
-            }
-
-            return operations;
         }
 
         public async Task<List<Case>> GetCaseAsync(string officeId)

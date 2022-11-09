@@ -14,6 +14,8 @@ namespace Calculate.Data.Models
         public string ProcessType { get; set; }
         public decimal Price { get; set; }
 
+        public decimal ProcessPrice { get; set; }
+
         public int ProcessCount { get; set; }
     }
 }

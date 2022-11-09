@@ -80,6 +80,6 @@ namespace Calculate.Data
 
         public DbSet<Case> Cases { get; set; }
 
-        public DbSet<OperationArsiv> OperationsArsiv { get; set; }
+        public DbSet<OperationArchive> OperationsArchive { get; set; }
     }
 }
