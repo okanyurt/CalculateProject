@@ -96,12 +96,15 @@
                   $('#tableCard').show();
                   var dataset = [];
                   data.forEach((d,i) => {
-                      if(d.processType.toString() == "ÇEKİM" || d.processType.toString() == "KOMİSYON" || d.processType.toString() == "TRANSFER"){
-                          price =  "-"+ d.price.toString();
-                      }
-                      else{
-                          price = d.price.toString();
-                      }
+                      //if(d.processType.toString() == "ÇEKİM" || d.processType.toString() == "KOMİSYON" || d.processType.toString() == "TRANSFER"){
+                      //    price =  "-"+ d.price.toString();
+                      //}
+                      //else{
+                      //    price = d.price.toString();
+                      //}
+
+                      price = d.price.toString();
+
                       var row = [d.account.toString(),
                           d.accountDetail.toString(),
                           d.processType.toString(),

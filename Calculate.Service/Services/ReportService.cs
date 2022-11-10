@@ -14,10 +14,22 @@ namespace Calculate.Service.Services
         {
             _context = context;
         }
-        public async Task<List<Case>> GetCaseAsync(string officeId)
+        public async Task<List<Case>> GetCaseAsync(string officeId, string userId)
         {
             int _officeId = Convert.ToInt32(officeId);
-            var caseList = await _context.Cases.Where(x => x.officeId == _officeId).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+            int roleId = _context.Users.FirstOrDefault(x => x.UserId == userId).RoleID;
+            var caseList = new List<Case>();
+            int admin = (int)EnumRole.ADMIN;
+            if (admin == roleId)
+            {
+                caseList = await _context.Cases.Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+            }
+            else
+            {
+                caseList = await _context.Cases.Where(x => x.officeId == _officeId).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+            }
+
+            
             return caseList;
         }
 
@@ -41,7 +53,7 @@ namespace Calculate.Service.Services
                        } into g
                        select new ReportGet
                        {
-                          // Id = g.Key.Id,
+                           // Id = g.Key.Id,
                            Account = g.Key.Account,
                            AccountDetail = g.Key.AccountDetail,
                            ProcessType = g.Key.ProcessType,
@@ -55,17 +67,17 @@ namespace Calculate.Service.Services
 
         public async Task<Operation> GetCaseTotalAsync(int Id)
         {
-            var caseList = from o in _context.Operations                      
-                       where o.IsEnable == true && o.CaseId == Id
-                       group o  by new
-                       {
-                           Case = o.CaseId
-                       } into g
-                       select new Operation
-                       {
-                           Price = g.Sum(x => x.Price)
-                       };
-
+            var date = DateTime.UtcNow.Date;
+            var caseList = from o in _context.Operations
+                           where o.UpdatedDate.Date == date && o.IsEnable == true && o.CaseId == Id
+                           group o by new
+                           {
+                               Case = o.CaseId
+                           } into g
+                           select new Operation
+                           {
+                               Price = g.Sum(x => x.Price)
+                           };
 
             return await caseList.FirstOrDefaultAsync();
         }
@@ -80,7 +92,7 @@ namespace Calculate.Service.Services
                        join b in _context.Banks on ad.BankId equals b.Id
                        join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
                        join c in _context.Cases on o.CaseId equals c.Id
-                       where o.IsEnable == true && o.CaseId == Id && o.UpdatedDate.Date == today                    
+                       where o.IsEnable == true && o.CaseId == Id && o.UpdatedDate.Date == today
                        group new { a, b, pt, o } by new
                        {
                            Account = a.Name,
@@ -99,7 +111,7 @@ namespace Calculate.Service.Services
 
             var raporList = await list.ToListAsync();
 
-            List<string> minusAccount = new List<string>() { "ÇEKİM", "KOMİSYON", "TRANSFER" };
+            //List<string> minusAccount = new List<string>() { "ÇEKİM", "KOMİSYON", "TRANSFER" };
 
             List<string> minusProcessCount = new List<string>() { "YATIRIM" };
 
@@ -108,21 +120,21 @@ namespace Calculate.Service.Services
                 Account = item.Account,
                 AccountDetail = item.AccountDetail,
                 ProcessType = item.ProcessType,
-                Price = minusAccount.Contains(item.ProcessType) ? -1 * item.Price : item.Price,
-                ProcessPrice = -1 * item.ProcessPrice,
+                Price = item.Price,//minusAccount.Contains(item.ProcessType) ? -1 * item.Price : item.Price,
+                ProcessPrice = item.ProcessPrice,//-1 * item.ProcessPrice,
                 ProcessCount = minusProcessCount.Contains(item.ProcessType) ? item.ProcessCount : 0 * item.ProcessCount
             }).ToList();
 
             raporList = raporList.GroupBy(x => new { x.Account, x.AccountDetail }).Select(x => new ReportGet
             {
                 Account = x.Key.Account,
-                AccountDetail = x.Key.AccountDetail,               
+                AccountDetail = x.Key.AccountDetail,
                 Price = x.Sum(y => y.Price) + x.Sum(y => y.ProcessPrice),
                 ProcessPrice = 0,
                 ProcessCount = x.Sum(y => y.ProcessCount)
             }).OrderBy(x => x.Account).ToList();
 
             return raporList;
-        }    
+        }
     }
 }
