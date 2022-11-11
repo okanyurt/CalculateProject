@@ -45,7 +45,7 @@ namespace Calculate.Service.Services
             return accountList;
         }
 
-        public async Task<List<OperationGet>> GetAllAsync()
+        public async Task<List<OperationGet>> GetAllAsync(string _officeId)
         {
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
@@ -53,7 +53,7 @@ namespace Calculate.Service.Services
                        join b in _context.Banks on ad.BankId equals b.Id
                        join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
                        join c in _context.Cases on o.CaseId equals c.Id
-                       where o.IsEnable == true
+                       where o.IsEnable == true && c.officeId==Convert.ToInt32(_officeId)
                        orderby o.UpdatedDate descending
                        select new OperationGet
                        {

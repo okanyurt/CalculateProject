@@ -2,7 +2,6 @@
 using Calculate.Data.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Calculate.Controllers
 {
@@ -24,30 +23,16 @@ namespace Calculate.Controllers
             }
 
             var caseList = await GetCaseAsync();
-            //ViewBag.cases = new SelectList(await GetCaseAsync(), "Id", "Name");
-
             object[] cases = new object[caseList.Count];
             int index = 0;
             foreach (var item in caseList)
             {
-                var total = await GetCaseTotalAsync(item.Id);
-                if(total != null)
-                {
-                    string[] c = { item.Id.ToString(), item.Name, total.Price.ToString()};
-                    cases[index] = c;
-                }
-                else
-                {
-                    string[] c = { item.Id.ToString(), item.Name, "0" };
-                    cases[index] = c;
-                }
-               
-                
+                var total = await _reportService.GetCaseTotalAsync(item.Id);
+                string[] c = { item.Id.ToString(), item.Name, total != null ? total.Price.ToString(): "0" };
+                cases[index] = c;
                 index++;
             }
-
             ViewBag.cases = cases;
-
             return View();
         }
 
@@ -60,30 +45,17 @@ namespace Calculate.Controllers
             }
 
             var caseList = await GetCaseAsync();
-            //ViewBag.cases = new SelectList(await GetCaseAsync(), "Id", "Name");
-
             object[] cases = new object[caseList.Count];
             int index = 0;
             foreach (var item in caseList)
             {
-                var total = await GetCaseTotalAsync(item.Id);
-                if (total != null)
-                {
-                    string[] c = { item.Id.ToString(), item.Name, total.Price.ToString() };
-                    cases[index] = c;
-                }
-                else
-                {
-                    string[] c = { item.Id.ToString(), item.Name, "0" };
-                    cases[index] = c;
-                }
-
-
+                var total = await _reportService.GetCaseTotalAsync(item.Id);
+                string[] c = { item.Id.ToString(), item.Name, total != null ? total.Price.ToString() : "0" };
+                cases[index] = c;
                 index++;
             }
 
             ViewBag.cases = cases;
-
             return View();
         }
 
@@ -95,11 +67,11 @@ namespace Calculate.Controllers
             return cases;
         }
 
-        public async Task<Operation> GetCaseTotalAsync(int id)
+        /*public async Task<Operation> GetCaseTotalAsync(int id)
         {
             var casesTotal = await _reportService.GetCaseTotalAsync(id);
             return casesTotal;
-        }
+        } */
 
         [HttpGet]
         public async Task<List<ReportGet>> GetAllAsync(int Id)

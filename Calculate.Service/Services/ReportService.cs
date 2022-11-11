@@ -76,7 +76,7 @@ namespace Calculate.Service.Services
                            } into g
                            select new Operation
                            {
-                               Price = g.Sum(x => x.Price)
+                               Price = g.Sum(x => (x.Price+x.ProcessPrice))
                            };
 
             return await caseList.FirstOrDefaultAsync();
@@ -111,8 +111,7 @@ namespace Calculate.Service.Services
 
             var raporList = await list.ToListAsync();
 
-            //List<string> minusAccount = new List<string>() { "ÇEKİM", "KOMİSYON", "TRANSFER" };
-
+            // TODO minusProcess ama yatırım var.Neden kullanıldığı da bakılmalı
             List<string> minusProcessCount = new List<string>() { "YATIRIM" };
 
             raporList = raporList.Select(item => new ReportGet
@@ -120,8 +119,8 @@ namespace Calculate.Service.Services
                 Account = item.Account,
                 AccountDetail = item.AccountDetail,
                 ProcessType = item.ProcessType,
-                Price = item.Price,//minusAccount.Contains(item.ProcessType) ? -1 * item.Price : item.Price,
-                ProcessPrice = item.ProcessPrice,//-1 * item.ProcessPrice,
+                Price = item.Price,
+                ProcessPrice = item.ProcessPrice,
                 ProcessCount = minusProcessCount.Contains(item.ProcessType) ? item.ProcessCount : 0 * item.ProcessCount
             }).ToList();
 
