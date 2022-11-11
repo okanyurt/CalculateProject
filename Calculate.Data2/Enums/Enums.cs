@@ -18,3 +18,11 @@ public enum EnumProcessType
     [Description("TR DEVİR")]
     TRDEVİR = 6
 }
+
+public enum EnumRole
+{
+    [Description("AGENT")]
+    AGENT = 1,
+    [Description("ADMİN")]
+    ADMIN = 2,
+}

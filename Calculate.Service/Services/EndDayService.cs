@@ -30,7 +30,7 @@ namespace Calculate.Service.Services
                 }
 
                 int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
-                List<int> minusAccount = new List<int>() { (int)EnumProcessType.CEKIM, (int)EnumProcessType.KOMISYON, (int)EnumProcessType.TRANSFER };
+                //List<int> minusAccount = new List<int>() { (int)EnumProcessType.CEKIM, (int)EnumProcessType.KOMISYON, (int)EnumProcessType.TRANSFER };
 
                 var deleteOperationList = await _context.Operations.Where(x => x.IsSystem == true && x.UpdatedDate.Date == date.AddDays(1).Date).ToListAsync();
 
@@ -42,8 +42,8 @@ namespace Calculate.Service.Services
                     AccountId = item.AccountId,
                     AccountDetailId = item.AccountDetailId,
                     ProcessTypeId = item.ProcessTypeId,
-                    Price = minusAccount.Contains(item.ProcessTypeId) ? -1 * item.Price : item.Price,
-                    ProcessPrice = -1 * item.ProcessPrice,
+                    Price = item.Price,//minusAccount.Contains(item.ProcessTypeId) ? -1 * item.Price : item.Price,
+                    ProcessPrice = item.ProcessPrice,//-1 * item.ProcessPrice,
                     CreatedBy = item.CreatedBy,
                     CreatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.CreatedDate, DateTimeKind.Utc), "Turkey Standard Time", "UTC"),
                     UpdatedBy = item.UpdatedBy,

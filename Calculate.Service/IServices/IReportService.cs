@@ -4,7 +4,7 @@ namespace Calculate.Service.Services
 {
     public interface IReportService
     {
-        Task<List<Case>> GetCaseAsync(string officeId);
+        Task<List<Case>> GetCaseAsync(string officeId, string userId);
 
         Task<List<ReportGet>> GetAllAsync(int Id);
 

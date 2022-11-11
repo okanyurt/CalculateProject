@@ -1,4 +1,5 @@
 ﻿using Calculate.Data;
+using Calculate.Data.Enums;
 using Calculate.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,8 @@ namespace Calculate.Service.Services
 
         public async Task<int> AddAsync(int caseId, int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice, string userId)
         {
+            List<int> minusAccount = new List<int>() { (int)EnumProcessType.CEKIM, (int)EnumProcessType.KOMISYON, (int)EnumProcessType.TRANSFER };
+
             int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
             Operation operation = new Operation();
             var date = DateTime.UtcNow;
@@ -22,8 +25,8 @@ namespace Calculate.Service.Services
             operation.AccountId = AccountId;
             operation.AccountDetailId = AccountDetailId;
             operation.ProcessTypeId = ProcessTypeId;
-            operation.Price = Price;
-            operation.ProcessPrice = ProcessPrice;
+            operation.Price = minusAccount.Contains(ProcessTypeId) ? -1 * Price : Price;
+            operation.ProcessPrice = -1 * ProcessPrice;
             operation.CreatedBy = currentUserId;
             operation.CreatedDate = date;
             operation.UpdatedBy = currentUserId;
@@ -125,6 +128,8 @@ namespace Calculate.Service.Services
         {
             try
             {
+                List<int> minusAccount = new List<int>() { (int)EnumProcessType.CEKIM, (int)EnumProcessType.KOMISYON, (int)EnumProcessType.TRANSFER };
+
                 var dateTimeNow = DateTime.UtcNow;
                 int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
                 var valuee = data.AsEnumerable();
@@ -138,8 +143,8 @@ namespace Calculate.Service.Services
                                 AccountId = x.dbbca.AccountId,
                                 AccountDetailId = x.dbbca.dbbc.dbb.BankId,
                                 ProcessTypeId = x.ProcessTypeId,
-                                Price = Convert.ToDecimal(x.dbbca.dbbc.dbb.d.Price),
-                                ProcessPrice = Convert.ToDecimal(x.dbbca.dbbc.dbb.d.ProcessPrice),
+                                Price = minusAccount.Contains(x.ProcessTypeId) ? -1 * Convert.ToDecimal(x.dbbca.dbbc.dbb.d.Price) : Convert.ToDecimal(x.dbbca.dbbc.dbb.d.Price),
+                                ProcessPrice = -1 * Convert.ToDecimal(x.dbbca.dbbc.dbb.d.ProcessPrice),
                                 IsEnable = true,
                                 CreatedDate = dateTimeNow,
                                 CreatedBy = currentUserId,
@@ -163,14 +168,16 @@ namespace Calculate.Service.Services
 
         public async Task<int> UpdateAsync(OperationUpdate OperationUpdate, string userId)
         {
+            List<int> minusAccount = new List<int>() { (int)EnumProcessType.CEKIM, (int)EnumProcessType.KOMISYON, (int)EnumProcessType.TRANSFER };
+
             var operation = _context.Operations.Find(OperationUpdate.Id);
             var date = DateTime.UtcNow;
             operation.ProcessNumber = OperationUpdate.ProcessNumber;
             operation.AccountId = OperationUpdate.AccountId;
             operation.AccountDetailId = OperationUpdate.AccountDetailId;
             operation.ProcessTypeId = OperationUpdate.ProcessTypeId;
-            operation.Price = OperationUpdate.Price;
-            operation.ProcessPrice = OperationUpdate.ProcessPrice;
+            operation.Price = minusAccount.Contains(OperationUpdate.ProcessTypeId) ? -1 * OperationUpdate.Price : OperationUpdate.Price;
+            operation.ProcessPrice = -1 * OperationUpdate.ProcessPrice;
             operation.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
             operation.UpdatedDate = date;
             operation.IsEnable = true;
