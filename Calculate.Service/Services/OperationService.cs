@@ -47,13 +47,14 @@ namespace Calculate.Service.Services
 
         public async Task<List<OperationGet>> GetAllAsync(string _officeId)
         {
+            var date = DateTime.UtcNow.Date;
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
                        join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id
                        join b in _context.Banks on ad.BankId equals b.Id
                        join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
                        join c in _context.Cases on o.CaseId equals c.Id
-                       where o.IsEnable == true && c.officeId==Convert.ToInt32(_officeId)
+                       where o.IsEnable == true && c.officeId == Convert.ToInt32(_officeId) && o.UpdatedDate.Date == date
                        orderby o.UpdatedDate descending
                        select new OperationGet
                        {
