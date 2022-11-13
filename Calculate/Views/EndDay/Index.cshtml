@@ -10,9 +10,10 @@
     <div class="content-wrapper">
         <div class="content-header row">
         </div>
-        <div class="content-body">
-            <div class="float-right">
-                <label for="donationinput" class="col-sm-5 col-form-label">Kasa Adı</label>
+        <div class="content-body">       
+             <div class="row">
+                  <div class="float-right">
+                <label for="donationinput" class="col-sm-1 col-form-label">Kasa Adı</label>
                 <select id="caseId" name="caseId" style="width:300px !important;" required>
                     <option value="" selected>Lütfen bir kasa seçiniz</option>
                     @foreach (var item in ViewBag.cases as SelectList)
@@ -23,10 +24,9 @@
                 <button id="endDay" type="button" class="btn btn-success btn-sm" onclick="endDay()">
                     <i class="ft-plus white"></i> Gün Sonu Al
                 </button>
-            </div>
-            <br />
-
-            <div class="row">
+            </div>  
+             </div>
+             <div class="row">
                 <section id="file-export">
                     <div class="row">
                         <div class="col-12">
@@ -106,7 +106,7 @@
                     </div>
                 </section>
             </div>
-        </div>
+        </div>       
     </div>
 </div>
 
