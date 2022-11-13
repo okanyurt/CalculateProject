@@ -17,11 +17,11 @@ namespace Calculate.Service.Services
         public async Task<bool> CalculateEndDayAsync(int caseId, string userId, bool isCheckDay)
         {
             bool result = false;
-            var trans = _context.Database.BeginTransaction();
+            
             try
             {
-                var today = DateTime.UtcNow.Date;
-                var date = DateTime.UtcNow;
+                var today = DateTime.UtcNow.AddHours(3).Date;
+                var date = DateTime.UtcNow.AddHours(3);
 
                 if (isCheckDay)
                 {
@@ -30,7 +30,6 @@ namespace Calculate.Service.Services
                 }
 
                 int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
-                //List<int> minusAccount = new List<int>() { (int)EnumProcessType.CEKIM, (int)EnumProcessType.KOMISYON, (int)EnumProcessType.TRANSFER };
 
                 var deleteOperationList = await _context.Operations.Where(x => x.IsSystem == true && x.UpdatedDate.Date == date.AddDays(1).Date).ToListAsync();
 
@@ -42,12 +41,12 @@ namespace Calculate.Service.Services
                     AccountId = item.AccountId,
                     AccountDetailId = item.AccountDetailId,
                     ProcessTypeId = item.ProcessTypeId,
-                    Price = item.Price,//minusAccount.Contains(item.ProcessTypeId) ? -1 * item.Price : item.Price,
-                    ProcessPrice = item.ProcessPrice,//-1 * item.ProcessPrice,
+                    Price = item.Price,
+                    ProcessPrice = item.ProcessPrice,
                     CreatedBy = item.CreatedBy,
-                    CreatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.CreatedDate, DateTimeKind.Utc), "Turkey Standard Time", "UTC"),
+                    CreatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.CreatedDate, DateTimeKind.Utc), "Frankfurt Standard Time", "UTC"),
                     UpdatedBy = item.UpdatedBy,
-                    UpdatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.UpdatedDate, DateTimeKind.Utc), "Turkey Standard Time", "UTC"), 
+                    UpdatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.UpdatedDate, DateTimeKind.Utc), "Frankfurt Standard Time", "UTC"), 
                     IsEnable = item.IsEnable,
                     CaseId = item.CaseId,
                     ArchiveBy = currentUserId,
@@ -78,24 +77,25 @@ namespace Calculate.Service.Services
                     IsSystem = true
                 }).Where(x => x.Price > 0).ToList();
 
-
-                _context.OperationsArchive.RemoveRange(deleteOperationArchiveList);
-
-                _context.Operations.RemoveRange(deleteOperationList);
-
-                await _context.OperationsArchive.AddRangeAsync(list);
-
-                await _context.Operations.AddRangeAsync(devirList);
-
-                await _context.SaveChangesAsync();
-
-                trans.Commit();
+                var trans = _context.Database.BeginTransaction();
+                try
+                {
+                    _context.OperationsArchive.RemoveRange(deleteOperationArchiveList);
+                    _context.Operations.RemoveRange(deleteOperationList);
+                    await _context.OperationsArchive.AddRangeAsync(list);
+                    await _context.Operations.AddRangeAsync(devirList);
+                    await _context.SaveChangesAsync();
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                }
 
                 result = true;
             }
             catch (Exception ex)
             {
-                trans.Rollback();
                 result = false;
             }
 
@@ -104,7 +104,7 @@ namespace Calculate.Service.Services
 
         public async Task<List<OperationGet>> GetAllAsync(string _officeId)
         {
-            var date = DateTime.UtcNow.Date;
+            var date = DateTime.UtcNow.AddHours(3).Date;
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
                        join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id

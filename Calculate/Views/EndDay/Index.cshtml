@@ -125,10 +125,17 @@
     });
 
     var isCheckDay = false;
-    /*var isDisable = false;
-     var enableDisable = function(){
+    var isDisable = false;
+    debugger;
+    Date.prototype.addHours = function (h) {
+        this.setTime(this.getTime() + (h * 60 * 60 * 1000));
+        return this;
+    }
+
+    var enableDisable = function () {
+        debugger;
          if(isDisable == false){
-            var UTC_hours = new Date().getUTCHours() +3;
+             var UTC_hours = new Date().addHours(3).getUTCHours();
             if (UTC_hours >= 23 && UTC_hours <=24){
                 document.getElementById('endDay').disabled = false;
                 isCheckDay = false;
@@ -143,8 +150,7 @@
             }
          }
      };
-    setInterval(enableDisable, 1000*60);
-    enableDisable(); */
+    enableDisable(); 
 
     function endDay(isCheckDay){
       var id = parseInt($('#caseId').val());

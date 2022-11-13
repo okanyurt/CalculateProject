@@ -20,7 +20,7 @@ namespace Calculate.Service.Services
 
             int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
             Operation operation = new Operation();
-            var date = DateTime.UtcNow;
+            var date = DateTime.UtcNow.AddHours(3);
             operation.ProcessNumber = OperationCreate.ProcessNumber;
             operation.AccountId = OperationCreate.AccountId;
             operation.AccountDetailId = OperationCreate.AccountDetailId;
@@ -47,7 +47,7 @@ namespace Calculate.Service.Services
 
         public async Task<List<OperationGet>> GetAllAsync(string _officeId)
         {
-            var date = DateTime.UtcNow.Date;
+            var date = DateTime.UtcNow.AddHours(3).Date;
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
                        join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id
@@ -67,9 +67,9 @@ namespace Calculate.Service.Services
                            ProcessPrice = o.ProcessPrice,
                            IsEnable = o.IsEnable,
                            CreatedBy = o.CreatedBy,
-                           CreatedDate = o.CreatedDate.AddHours(3),
+                           CreatedDate = o.CreatedDate,
                            UpdatedBy = o.UpdatedBy,
-                           UpdatedDate = o.UpdatedDate.AddHours(3),
+                           UpdatedDate = o.UpdatedDate,
                            CaseName = c.Name
                        };
 

@@ -2,7 +2,6 @@
 using Calculate.Data.Enums;
 using Calculate.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 
 namespace Calculate.Service.Services
 {
@@ -45,15 +44,12 @@ namespace Calculate.Service.Services
                        orderby o.UpdatedDate descending
                        group new { a, b, pt, o } by new
                        {
-                           //Id = o.Id,
                            Account = a.Name,
                            AccountDetail = b.Name,
                            ProcessType = pt.Name,
-                           //Price = o.Price
                        } into g
                        select new ReportGet
                        {
-                           // Id = g.Key.Id,
                            Account = g.Key.Account,
                            AccountDetail = g.Key.AccountDetail,
                            ProcessType = g.Key.ProcessType,
@@ -67,7 +63,7 @@ namespace Calculate.Service.Services
 
         public async Task<Operation> GetCaseTotalAsync(int Id)
         {
-            var date = DateTime.UtcNow.Date;
+            var date = DateTime.UtcNow.AddHours(3).Date;
             var caseList = from o in _context.Operations
                            where o.UpdatedDate.Date == date && o.IsEnable == true && o.CaseId == Id
                            group o by new
@@ -85,7 +81,7 @@ namespace Calculate.Service.Services
 
         public async Task<Operation> GetInvestmentTotalAsync(int Id)
         {
-            var date = DateTime.UtcNow.Date;
+            var date = DateTime.UtcNow.AddHours(3).Date;
             var investmentList = from o in _context.Operations
                            where o.UpdatedDate.Date == date && o.IsEnable == true && o.CaseId == Id && o.ProcessTypeId == 1
                            group o by new
@@ -102,7 +98,7 @@ namespace Calculate.Service.Services
 
         public async Task<Operation> GetWithdrawalTotalAsync(int Id)
         {
-            var date = DateTime.UtcNow.Date;
+            var date = DateTime.UtcNow.AddHours(3).Date;
             var withdrawalList = from o in _context.Operations
                            where o.UpdatedDate.Date == date && o.IsEnable == true && o.CaseId == Id && o.ProcessTypeId == 2
                            group o by new
@@ -119,7 +115,7 @@ namespace Calculate.Service.Services
 
         public async Task<List<ReportGet>> GetAllForCaseAsync(int Id)
         {
-            var today = DateTime.UtcNow.Date;
+            var today = DateTime.UtcNow.AddHours(3).Date;
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
                        join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id
@@ -172,7 +168,7 @@ namespace Calculate.Service.Services
 
         public async Task<List<ReportGet>> GetAllInvestmentAsync(int Id)
         {
-            var today = DateTime.UtcNow.Date;
+            var today = DateTime.UtcNow.AddHours(3).Date;
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
                        join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id
@@ -212,7 +208,7 @@ namespace Calculate.Service.Services
 
         public async Task<List<ReportGet>> GetAllWithdrawalAsync(int Id)
         {
-            var today = DateTime.UtcNow.Date;
+            var today = DateTime.UtcNow.AddHours(3).Date;
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
                        join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id
