@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<Calculate.Data.Models.OperationGet>
+@{
     ViewData["Title"] = "EndDay Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -19,9 +20,91 @@
                         <option value="@item.Value">@item.Text</option>
                     }
                 </select>
-                <button id="endDay" type="button" class="btn btn-success btn-sm" onclick="endDay()" >
+                <button id="endDay" type="button" class="btn btn-success btn-sm" onclick="endDay()">
                     <i class="ft-plus white"></i> Gün Sonu Al
                 </button>
+            </div>
+            <br />
+
+            <div class="row">
+                <section id="file-export">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                                    <div class="heading-elements">
+                                        <ul class="list-inline mb-0">
+                                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-content collapse show">
+                                    <div class="card-body card-dashboard dataTables_wrapper dt-bootstrap">
+                                        <table id="example" class="table table-striped table-bordered file-export">
+                                            <thead>
+                                                <tr>
+                                                    <th>Kasa Adı</th>
+                                                    <th>İşlem No</th>
+                                                    <th>Hesap Adı</th>
+                                                    <th>Banka Adı</th>
+                                                    <th>İşlem Tipi</th>
+                                                    <th>Miktar</th>
+                                                    <th>İşlem Ücreti</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (Model != null)
+                                                {
+                                                    @foreach (var item in Model)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.CaseName)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProcessNumber)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Account)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.AccountDetail)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProcessType)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.Price)
+                                                            </td>
+                                                            <td>
+                                                                @Html.DisplayFor(modelItem => item.ProcessPrice)
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Kasa Adı</th>
+                                                    <th>İşlem No</th>
+                                                    <th>Hesap Adı</th>
+                                                    <th>Banka Adı</th>
+                                                    <th>İşlem Tipi</th>
+                                                    <th>Miktar</th>
+                                                    <th>İşlem Ücreti</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
         </div>
     </div>
@@ -31,6 +114,16 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
+    $(document).ready(function () {
+    $.noConflict();
+    table = $('#example').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]     
+    });
+    });
+
     var isCheckDay = false;
     /*var isDisable = false;
      var enableDisable = function(){
@@ -53,12 +146,12 @@
     setInterval(enableDisable, 1000*60);
     enableDisable(); */
 
-    function endDay(isCheckDay){   
+    function endDay(isCheckDay){
       var id = parseInt($('#caseId').val());
       if(!Number.isNaN(id)){
          isDisable = true;
          document.getElementById('endDay').disabled = true;
-        
+
          $.ajax({
          url: '/EndDay/CalculateEndDay',
          type: 'GET',
@@ -76,11 +169,37 @@
              if(response == true){
                     toastr.success("İşlem başarılı.");
              }
+
+              $.ajax({
+               url: '/EndDay/GetAll',
+               type: 'GET',
+               success: function (response) {
+                if($("#example tbody").length > 0){
+                   var dataset = [];
+                   response.forEach((element, index) => {
+                       var row = [];
+                       row.push(element.caseName);
+                       row.push(element.processNumber);
+                       row.push(element.account);
+                       row.push(element.accountDetail);
+                       row.push(element.processType);
+                       row.push(element.price.toFixed(2));
+                       row.push(element.processPrice.toFixed(2));
+                       dataset.push(row);
+                   });
+                   table.rows().remove().draw();
+                   table.rows.add(dataset).draw();
+                }
+               },
+               error: function (response) {
+               isDisable = false;
+              }
+            });
          },
          error: function (response) {
              isDisable = false;
          }
         });
-      }      
-    } 
+      }
+    }
 </script>

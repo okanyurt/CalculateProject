@@ -59,6 +59,50 @@ namespace Calculate.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Investment()
+        {
+            if (Request.Cookies["AuthenticationKey"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            var caseList = await GetCaseAsync();
+            object[] cases = new object[caseList.Count];
+            int index = 0;
+            foreach (var item in caseList)
+            {
+                var total = await _reportService.GetInvestmentTotalAsync(item.Id);
+                string[] c = { item.Id.ToString(), item.Name, total != null ? total.Price.ToString() : "0" };
+                cases[index] = c;
+                index++;
+            }
+
+            ViewBag.cases = cases;
+            return View();
+        }
+
+        public async Task<IActionResult> Withdrawal()
+        {
+            if (Request.Cookies["AuthenticationKey"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            var caseList = await GetCaseAsync();
+            object[] cases = new object[caseList.Count];
+            int index = 0;
+            foreach (var item in caseList)
+            {
+                var total = await _reportService.GetWithdrawalTotalAsync(item.Id);
+                string[] c = { item.Id.ToString(), item.Name, total != null ? total.Price.ToString() : "0" };
+                cases[index] = c;
+                index++;
+            }
+
+            ViewBag.cases = cases;
+            return View();
+        }
+
         public async Task<List<Case>> GetCaseAsync()
         {
             string officeId = Request.Cookies["OfficeIdListKey"];
@@ -84,6 +128,20 @@ namespace Calculate.Controllers
         public async Task<List<ReportGet>> GetAllForCaseAsync(int Id)
         {
             var list = await _reportService.GetAllForCaseAsync(Id);
+            return list;
+        }
+
+        [HttpGet]
+        public async Task<List<ReportGet>> GetAllInvestmentAsync(int Id)
+        {
+            var list = await _reportService.GetAllInvestmentAsync(Id);
+            return list;
+        }
+
+        [HttpGet]
+        public async Task<List<ReportGet>> GetAllWithdrawalAsync(int Id)
+        {
+            var list = await _reportService.GetAllWithdrawalAsync(Id);
             return list;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Calculate.Core;
+using Calculate.Data.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -26,7 +27,9 @@ namespace Calculate.Controllers
           
             ViewBag.cases = new SelectList(caseList, "Id", "Name");
 
-            return View();
+            var operation = await _endDayService.GetAllAsync(officeId);
+
+            return View(operation);
         }
 
         [HttpGet]
@@ -34,6 +37,14 @@ namespace Calculate.Controllers
         {
             string userId = Request.Cookies["AuthenticationKey"];                  
             bool result = await _endDayService.CalculateEndDayAsync(id, userId, isCheckDay);
+            return result;
+        }
+
+        [HttpGet]
+        public async Task<List<OperationGet>> GetAllAsync()
+        {
+            string officeId = Request.Cookies["OfficeIdListKey"];
+            var result = await _endDayService.GetAllAsync(officeId);
             return result;
         }
     }

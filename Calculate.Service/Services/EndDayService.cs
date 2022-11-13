@@ -102,6 +102,37 @@ namespace Calculate.Service.Services
             return result;
         }
 
+        public async Task<List<OperationGet>> GetAllAsync(string _officeId)
+        {
+            var date = DateTime.UtcNow.Date;
+            var list = from o in _context.Operations
+                       join a in _context.Accounts on o.AccountId equals a.Id
+                       join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id
+                       join b in _context.Banks on ad.BankId equals b.Id
+                       join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
+                       join c in _context.Cases on o.CaseId equals c.Id
+                       where o.IsEnable == true && c.officeId == Convert.ToInt32(_officeId) && o.UpdatedDate.Date == date && o.ProcessTypeId == 5
+                       orderby o.UpdatedDate descending
+                       select new OperationGet
+                       {
+                           Id = o.Id,
+                           ProcessNumber = o.ProcessNumber,
+                           Account = a.Name,
+                           AccountDetail = b.Name,
+                           ProcessType = pt.Name,
+                           Price = o.Price,
+                           ProcessPrice = o.ProcessPrice,
+                           IsEnable = o.IsEnable,
+                           CreatedBy = o.CreatedBy,
+                           CreatedDate = o.CreatedDate,
+                           UpdatedBy = o.UpdatedBy,
+                           UpdatedDate = o.UpdatedDate,
+                           CaseName = c.Name
+                       };
+
+            return await list.ToListAsync();
+        }
+
         public async Task<List<Case>> GetCaseAsync(string officeId)
         {
             int _officeId = Convert.ToInt32(officeId);

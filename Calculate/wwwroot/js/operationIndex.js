@@ -121,6 +121,42 @@ function edit(id) {
     });
 }
 
+function Save() {
+    $("#save").attr('disabled', true);
+    var OperationCreate = {
+        CaseId: parseInt($("#caseId").val()),
+        ProcessNumber: parseInt($("#processNumber").val()),
+        AccountId: parseInt($("#accountId").val()),
+        AccountDetailId: parseInt($("#accountDetailId").val()),
+        ProcessTypeId: parseInt($("#processTypeId").val()),
+        Price: parseFloat($("#price").val() == "" ? 0 : $("#price").val().replace(",", ".")),
+        ProcessPrice: parseFloat($("#processPrice").val() == "" ? 0 : $("#processPrice").val().replace(",", "."))
+    };
+
+    $.ajax({
+        url: '/Operation/OperationCreate',
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify(OperationCreate),
+        success: function (response) {
+            if (response.isSuccess) {
+                toastr.success("İşlem başarılı.");
+                $('#createPopup').modal('toggle');
+               
+                setTimeout(function () {
+                    $("#save").attr('disabled', false);
+                    window.location.reload();
+                }, 1000);
+            } else {
+                toastr.error(response.message);
+            }
+        },
+        error: function (response) {
+            $("#save").attr('disabled', false);
+        }
+    });
+}
+
 function Update() {
     var OperationUpdate = {
         Id: parseInt($("#editId").val()),
@@ -128,8 +164,8 @@ function Update() {
         AccountId: parseInt($("#editAccountId").val()),
         AccountDetailId: parseInt($("#editAccountDetailId").val()),
         ProcessTypeId: parseInt($("#editProcessTypeId").val()),
-        Price: parseFloat($("#editPrice").val()),
-        ProcessPrice: parseFloat($("#editProcessPrice").val())
+        Price: parseFloat($("#editPrice").val().replace(",", ".")),
+        ProcessPrice: parseFloat($("#editProcessPrice").val().replace(",", "."))
     };
 
     $.ajax({
@@ -145,7 +181,7 @@ function Update() {
                     window.location.reload();
                 }, 1000);
             } else {
-                toastr.error(result.message);
+                toastr.error(response.message);
             }
         },
         error: function (response) {

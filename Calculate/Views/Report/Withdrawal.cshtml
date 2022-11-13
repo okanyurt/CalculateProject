@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Report Case Page";
+    ViewData["Title"] = "Report Investment Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -114,7 +114,7 @@
     });
     function show(Id){
         $.ajax({
-            url: '/Report/GetAllForCase/' + Id,
+            url: '/Report/GetAllWithdrawal/' + Id,
             success: function (data) {
                 $('#tableCard').show();
                 var dataset = [];
@@ -302,7 +302,7 @@
                 appendtr += "<th>Hesap Adı</th>";
                 for (var i=0; i <16; i++)
                 {
-                  appendtr += "<th>Gelir Toplamı</th>";
+                  appendtr += "<th>Çekim Toplamı</th>";
                   appendtr += "<th>İşlem Adedi Toplamı</th>";
                 }
                 appendtr += "<th>Toplam Tutar</th><th>İşlem Adedi</th><th>Satır No</th></tr>";
@@ -426,3 +426,5 @@
         var BTCAreaChart = new Chart(btcChartjs, BTCCardconfig);
       }
 </script>
+
+
