@@ -67,9 +67,9 @@ namespace Calculate.Service.Services
                            ProcessPrice = o.ProcessPrice,
                            IsEnable = o.IsEnable,
                            CreatedBy = o.CreatedBy,
-                           CreatedDate = o.CreatedDate,
+                           CreatedDate = o.CreatedDate.AddHours(3),
                            UpdatedBy = o.UpdatedBy,
-                           UpdatedDate = o.UpdatedDate,
+                           UpdatedDate = o.UpdatedDate.AddHours(3),
                            CaseName = c.Name
                        };
 

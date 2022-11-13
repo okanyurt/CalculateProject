@@ -5,6 +5,7 @@
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
+        order: [[0, 'desc']],
         "createdRow": function (row, data, dataIndex) {
             if (data[2] == "London") {
                 $(row).addClass('red');

@@ -27,9 +27,11 @@ namespace Calculate.Controllers
             string officeId = Request.Cookies["OfficeIdListKey"];
             var operation = await _operationService.GetAllAsync(officeId);
 
-            ViewBag.processTypes = new SelectList(await GetProcessTypeAsync(), "Id", "Name");
+            var processType = await GetProcessTypeAsync();
+            ViewBag.processTypes = new SelectList(processType, "Id", "Name");
 
-            ViewBag.cases = new SelectList(await GetCaseAsync(), "Id", "Name");
+            var casess = await GetCaseAsync();
+            ViewBag.cases = new SelectList(casess, "Id", "Name");
 
             return View(operation);
 

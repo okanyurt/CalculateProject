@@ -39,6 +39,7 @@
                                         <table id="example" class="table table-striped table-bordered file-export">
                                             <thead>
                                                 <tr>
+                                                    <th>Tarih</th>
                                                     <th>Kasa Adı</th>
                                                     <th>İşlem No</th>
                                                     <th>Hesap Adı</th>
@@ -57,25 +58,28 @@
                                                     {
                                                         <tr>
                                                             <td>
-                                                                @Html.DisplayFor(modelItem => item.CaseName)
+                                                                @item.UpdatedDate
                                                             </td>
                                                             <td>
-                                                                @Html.DisplayFor(modelItem => item.ProcessNumber)
+                                                                @item.CaseName
                                                             </td>
                                                             <td>
-                                                                @Html.DisplayFor(modelItem => item.Account)
+                                                                @item.ProcessNumber
                                                             </td>
                                                             <td>
-                                                                @Html.DisplayFor(modelItem => item.AccountDetail)
+                                                                @item.Account
                                                             </td>
                                                             <td>
-                                                                @Html.DisplayFor(modelItem => item.ProcessType)
+                                                                @item.AccountDetail
                                                             </td>
                                                             <td>
-                                                                @Html.DisplayFor(modelItem => item.Price)
+                                                                @item.ProcessType
                                                             </td>
                                                             <td>
-                                                                @Html.DisplayFor(modelItem => item.ProcessPrice)
+                                                                @item.Price
+                                                            </td>
+                                                            <td>
+                                                                @item.ProcessPrice
                                                             </td>
                                                             <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
                                                             <td><a class="btn btn-danger btn-sm" onclick="remove(@item.Id)"><i class="la la-trash"></i> Sil</a></td>
