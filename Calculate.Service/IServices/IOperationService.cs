@@ -8,7 +8,7 @@ namespace Calculate.Service.Services
 
         Task<List<OperationGet>> GetAllAsync(string _officeId);
 
-        Task<int> AddAsync(int caseId, int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice, string userId);
+        Task<int> AddAsync(OperationCreate OperationCreate, string userId);
 
         Task<int> UpdateAsync(OperationUpdate OperationUpdate, string userId);
 

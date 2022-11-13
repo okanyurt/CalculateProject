@@ -36,33 +36,33 @@ namespace Calculate.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(int caseId, int ProcessNumber, int AccountId, int AccountDetailId, int ProcessTypeId, decimal Price, decimal ProcessPrice)
+        public async Task<JsonResult> OperationCreate([FromBody] OperationCreate OperationCreate)
         {
             try
             {
                 bool checkError = false;
 
-                if (caseId == null || caseId == 0)
+                if (OperationCreate.CaseId == null || OperationCreate.CaseId == 0)
                 {
                     Error("Kasa adı boş gönderilemez");
                     checkError = true;
                 }
-                else if (ProcessNumber == null || ProcessNumber == 0)
+                else if (OperationCreate.ProcessNumber == null || OperationCreate.ProcessNumber == 0)
                 {
                     Error("İşlem Numarası boş gönderilemez");
                     checkError = true;
                 }
-                else if (AccountId == null || AccountId == 0)
+                else if (OperationCreate.AccountId == null || OperationCreate.AccountId == 0)
                 {
                     Error("Hesap adı boş gönderilemez");
                     checkError = true;
                 }
-                else if (AccountDetailId == null || AccountDetailId == 0)
+                else if (OperationCreate.AccountDetailId == null || OperationCreate.AccountDetailId == 0)
                 {
                     Error("Banka adı boş gönderilemez");
                     checkError = true;
                 }
-                else if (ProcessTypeId == null || ProcessTypeId == 0)
+                else if (OperationCreate.ProcessTypeId == null || OperationCreate.ProcessTypeId == 0)
                 {
                     Error("İşlem tipi boş gönderilemez");
                     checkError = true;
@@ -70,19 +70,20 @@ namespace Calculate.Controllers
 
                 if (checkError)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = false });
                 }
 
                 string userId = Request.Cookies["AuthenticationKey"];
-                await _operationService.AddAsync(caseId, ProcessNumber, AccountId, AccountDetailId, ProcessTypeId, Price, ProcessPrice, userId);
-                Success("İşlem başarılı.");
+                await _operationService.AddAsync(OperationCreate, userId);
+                Success("İşlem başarılı.");               
             }
             catch (Exception ex)
             {
                 Info(ex.ToString());
+                return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = false });
             }
 
-            return RedirectToAction(nameof(Index));
+            return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = true });
         }
 
         public async Task<JsonResult> OperationDelete(int id)

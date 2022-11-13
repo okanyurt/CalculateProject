@@ -6,5 +6,6 @@ namespace Calculate.Service.Services
     {
         Task<bool> CalculateEndDayAsync(int caseId, string userId, bool isCheckDay);
         Task<List<Case>> GetCaseAsync(string officeId);
+        Task<List<OperationGet>> GetAllAsync(string _officeId);
     }
 }
