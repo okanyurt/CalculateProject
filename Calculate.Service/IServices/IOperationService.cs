@@ -23,6 +23,10 @@ namespace Calculate.Service.Services
         Task<List<Case>> GetCaseAsync(string officeId);
 
         Task<bool> SaveUploadExcelAsync(List<OperationUploadExcel> operationUploadExcels, string userId);
+
+        string GetMaxDate();
+
+        Task<List<OperationGet>> GetAllSelectDateAsync(string _officeId, string _date);
     }
 }
 

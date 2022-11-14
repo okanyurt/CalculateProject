@@ -185,5 +185,46 @@ namespace Calculate.Service.Services
 
             return await _context.SaveChangesAsync();
         }
+
+        public string GetMaxDate()
+        {
+            var date = _context.Operations.Select(x => x.UpdatedDate.Date).Distinct().FirstOrDefault();
+            return date.ToString("yyyy-MM-dd");
+        }
+
+        public async Task<List<OperationGet>> GetAllSelectDateAsync(string _officeId, string _date)
+        {
+            var date = Convert.ToDateTime(_date);
+            var unspecified = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, DateTimeKind.Unspecified);
+            var specified = DateTime.SpecifyKind(unspecified, DateTimeKind.Utc);
+
+            var list = from o in _context.Operations
+                       join a in _context.Accounts on o.AccountId equals a.Id
+                       join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id
+                       join b in _context.Banks on ad.BankId equals b.Id
+                       join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
+                       join c in _context.Cases on o.CaseId equals c.Id
+                       where o.IsEnable == true && c.officeId == Convert.ToInt32(_officeId) && o.UpdatedDate.Date == specified.Date
+                       orderby o.UpdatedDate descending
+                       select new OperationGet
+                       {
+                           Id = o.Id,
+                           ProcessNumber = o.ProcessNumber,
+                           Account = a.Name,
+                           AccountDetail = b.Name,
+                           ProcessType = pt.Name,
+                           Price = o.Price,
+                           ProcessPrice = o.ProcessPrice,
+                           IsEnable = o.IsEnable,
+                           CreatedBy = o.CreatedBy,
+                           CreatedDate = o.CreatedDate,
+                           UpdatedBy = o.UpdatedBy,
+                           UpdatedDate = o.UpdatedDate,
+                           CaseName = c.Name
+                       };
+
+            var result = await list.ToListAsync();
+            return result;
+        }
     }
 }

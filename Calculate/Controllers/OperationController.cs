@@ -33,6 +33,8 @@ namespace Calculate.Controllers
             var casess = await GetCaseAsync();
             ViewBag.cases = new SelectList(casess, "Id", "Name");
 
+            ViewBag.maxdate = _operationService.GetMaxDate();
+
             return View(operation);
 
         }
@@ -205,6 +207,14 @@ namespace Calculate.Controllers
                 });
 
             }
+        }
+
+        [HttpGet]
+        public async Task<List<OperationGet>> GetAllSelectDateAsync(string _date)
+        {
+            string _officeId = Request.Cookies["OfficeIdListKey"];
+            var list = await _operationService.GetAllSelectDateAsync(_officeId, _date);
+            return list;
         }
     }
 }

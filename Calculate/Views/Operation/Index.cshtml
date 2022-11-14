@@ -13,6 +13,17 @@
             <div class="row">
                 <section id="file-export">
                     <div class="row">
+                        <div class="col-sm-2">
+                            <input type="date" id="searchDate" name="searchDate" value="@ViewBag.maxdate">                         
+                        </div>    
+                        <div class="col-sm-1">
+                            <button type="button" class="btn btn-success btn-sm" id="searchRecord">
+                                <i class="white"></i> Kayıt Ara
+                            </button>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
@@ -89,6 +100,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
+                                                    <th>Tarih</th>
                                                     <th>Kasa Adı</th>
                                                     <th>İşlem No</th>
                                                     <th>Hesap Adı</th>

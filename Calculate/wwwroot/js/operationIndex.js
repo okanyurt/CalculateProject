@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     $.noConflict();
     $('#example').DataTable({
+        "scrollX": true,
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
@@ -71,6 +72,52 @@
             }
         });
     });
+
+    $("#searchRecord").click(function () {
+        var date = $("#searchDate").val();
+        $.ajax({
+            url: '/Operation/GetAllSelectDate',
+            type: 'GET',
+            data: {
+                _date: date
+            },
+            success: function (response) {
+                if ($("#example tbody").length > 0) {
+                    var dataset = [];
+                    response.forEach((element, index) => {
+                        var m = new Date(element.updatedDate);
+                        m.setHours(m.getHours() + 3);
+                        var dateString =
+                            ("0" + m.getUTCDate()).slice(-2) + "." +
+                            ("0" + (m.getUTCMonth() + 1)).slice(-2) + "." +                          
+                             m.getUTCFullYear() + " " +
+                            ("0" + m.getUTCHours()).slice(-2) + ":" +
+                            ("0" + m.getUTCMinutes()).slice(-2) + ":" +
+                            ("0" + m.getUTCSeconds()).slice(-2);
+
+                        var row = [];
+                        row.push(dateString);
+                        row.push(element.caseName);
+                        row.push(element.processNumber);
+                        row.push(element.account);
+                        row.push(element.accountDetail);
+                        row.push(element.processType);
+                        row.push(element.price);
+                        row.push(element.processPrice);
+                        row.push("<td><a class='btn btn-warning btn-sm' onclick='edit(" + element.id + ")'><i class='la la-pencil'></i> Güncelle</a></td>");
+                        row.push("<td><a class='btn btn-danger btn-sm' onclick='remove(" + element.id + ")'><i class='la la-trash'></i> Sil</a></td>");
+                        dataset.push(row);
+                    });
+                    table = $("#example").DataTable();
+                    table.rows().remove().draw();
+                    table.rows.add(dataset).draw();
+                }
+
+            },
+            error: function (response) {
+            }
+        });
+    });
 });
 
 function edit(id) {
@@ -117,7 +164,7 @@ function edit(id) {
                         }
                     });
                 }
-            });                    
+            });
         }
     });
 }
@@ -143,7 +190,7 @@ function Save() {
             if (response.isSuccess) {
                 toastr.success("İşlem başarılı.");
                 $('#createPopup').modal('toggle');
-               
+
                 setTimeout(function () {
                     $("#save").attr('disabled', false);
                     window.location.reload();
@@ -229,7 +276,7 @@ function remove(id) {
             url: '/Operation/OperationDelete/' + id,
             success: function (data) {
                 if (data.isSuccess) {
-                    toastr.success("İşlem başarılı.");                 
+                    toastr.success("İşlem başarılı.");
                     setTimeout(function () {
                         window.location.reload();
                     }, 1000);
@@ -241,5 +288,5 @@ function remove(id) {
     }
     else {
         return false;
-    }  
+    }
 }
