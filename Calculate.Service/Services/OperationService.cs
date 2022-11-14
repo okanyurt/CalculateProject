@@ -172,7 +172,7 @@ namespace Calculate.Service.Services
             List<int> minusAccount = new List<int>() { (int)EnumProcessType.CEKIM, (int)EnumProcessType.KOMISYON, (int)EnumProcessType.TRANSFER };
 
             var operation = _context.Operations.Find(OperationUpdate.Id);
-            var date = DateTime.UtcNow;
+            var date = DateTime.UtcNow.AddHours(3);
             operation.ProcessNumber = OperationUpdate.ProcessNumber;
             operation.AccountId = OperationUpdate.AccountId;
             operation.AccountDetailId = OperationUpdate.AccountDetailId;

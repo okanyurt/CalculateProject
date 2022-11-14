@@ -31,9 +31,9 @@ namespace Calculate.Service.Services
 
                 int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
 
-                var deleteOperationList = await _context.Operations.Where(x => x.IsSystem == true && x.UpdatedDate.Date == date.AddDays(1).Date).ToListAsync();
+                var deleteOperationList = await _context.Operations.Where(x => x.IsSystem == true && x.UpdatedDate.Date == date.AddDays(1).Date && x.CaseId==caseId).ToListAsync();
 
-                var deleteOperationArchiveList = await _context.OperationsArchive.Where(x => x.UpdatedDate.Date == date.Date).ToListAsync();
+                var deleteOperationArchiveList = await _context.OperationsArchive.Where(x => x.UpdatedDate.Date == date.Date && x.CaseId == caseId).ToListAsync();
 
                 var list = await _context.Operations.Where(x => x.CaseId == caseId && x.IsEnable == true && x.UpdatedDate.Date == today).Select(item => new OperationArchive
                 {
@@ -44,9 +44,9 @@ namespace Calculate.Service.Services
                     Price = item.Price,
                     ProcessPrice = item.ProcessPrice,
                     CreatedBy = item.CreatedBy,
-                    CreatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.CreatedDate, DateTimeKind.Utc), "Frankfurt Standard Time", "UTC"),
+                    CreatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.CreatedDate, DateTimeKind.Utc), "Turkey Standard Time", "UTC"),
                     UpdatedBy = item.UpdatedBy,
-                    UpdatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.UpdatedDate, DateTimeKind.Utc), "Frankfurt Standard Time", "UTC"),
+                    UpdatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.UpdatedDate, DateTimeKind.Utc), "Turkey Standard Time", "UTC"),
                     IsEnable = item.IsEnable,
                     CaseId = item.CaseId,
                     ArchiveBy = currentUserId,
