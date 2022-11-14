@@ -46,7 +46,7 @@ namespace Calculate.Service.Services
                     CreatedBy = item.CreatedBy,
                     CreatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.CreatedDate, DateTimeKind.Utc), "Frankfurt Standard Time", "UTC"),
                     UpdatedBy = item.UpdatedBy,
-                    UpdatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.UpdatedDate, DateTimeKind.Utc), "Frankfurt Standard Time", "UTC"), 
+                    UpdatedDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.SpecifyKind(item.UpdatedDate, DateTimeKind.Utc), "Frankfurt Standard Time", "UTC"),
                     IsEnable = item.IsEnable,
                     CaseId = item.CaseId,
                     ArchiveBy = currentUserId,
@@ -77,6 +77,11 @@ namespace Calculate.Service.Services
                     IsSystem = true
                 }).Where(x => x.Price > 0).ToList();
 
+                if (devirList.Count == 0)
+                {
+                    return false;
+                }
+
                 var trans = _context.Database.BeginTransaction();
                 try
                 {
@@ -104,7 +109,7 @@ namespace Calculate.Service.Services
 
         public async Task<List<OperationGet>> GetAllAsync(string _officeId)
         {
-            var date = DateTime.UtcNow.AddHours(3).Date;
+            var date = DateTime.UtcNow.AddDays(1).AddHours(3).Date;
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
                        join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id

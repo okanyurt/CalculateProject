@@ -126,14 +126,12 @@
 
     var isCheckDay = false;
     var isDisable = false;
-    debugger;
     Date.prototype.addHours = function (h) {
         this.setTime(this.getTime() + (h * 60 * 60 * 1000));
         return this;
     }
 
     var enableDisable = function () {
-        debugger;
          if(isDisable == false){
              var UTC_hours = new Date().addHours(3).getUTCHours();
             if (UTC_hours >= 23 && UTC_hours <=24){
@@ -152,7 +150,7 @@
      };
     enableDisable(); 
 
-    function endDay(isCheckDay){
+    function endDay(){
       var id = parseInt($('#caseId').val());
       if(!Number.isNaN(id)){
          isDisable = true;
@@ -174,6 +172,9 @@
              document.getElementById('endDay').disabled = false;
              if(response == true){
                     toastr.success("İşlem başarılı.");
+             }
+             else{
+                  toastr.error("İşlem başarısız.");
              }
 
               $.ajax({
