@@ -15,6 +15,7 @@ builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IOperationService, OperationService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IEndDayService, EndDayService>();
+builder.Services.AddScoped<IEndDayReportService, EndDayReportService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
