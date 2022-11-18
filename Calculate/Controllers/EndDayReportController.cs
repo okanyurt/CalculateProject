@@ -20,7 +20,9 @@ namespace Calculate.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-          
+
+            ViewBag.reportmaxdate = _endDayReportService.GetMaxDate();
+
             return View();
         }
 
@@ -31,6 +33,14 @@ namespace Calculate.Controllers
             var operation = await _endDayReportService.GetAllAsync(officeId);
 
             return operation;
+        }
+
+        [HttpGet]
+        public async Task<List<EndDayReport>> GetAllSelectDateAsync(string _date)
+        {
+            string _officeId = Request.Cookies["OfficeIdListKey"];
+            var list = await _endDayReportService.GetAllSelectDateAsync(_officeId, _date);
+            return list;
         }
     }
 }
