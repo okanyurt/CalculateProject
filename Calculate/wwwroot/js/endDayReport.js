@@ -1,5 +1,50 @@
 ﻿$(document).ready(function () {
     show();
+
+    $("#searchRecord").click(function () {
+        var date = $("#searchDate").val();
+        $.ajax({
+            url: '/EndDayReport/GetAllSelectDate',
+            type: 'GET',
+            data: {
+                _date: date
+            },
+            success: function (response) {
+                if ($("#reportTable tbody").length > 0) {
+                    var dataset = [];
+                    response.forEach((element, index) => {
+                        var m = new Date(element.updatedDate);
+                        m.setHours(m.getHours() + 3);
+                        var dateString =
+                            ("0" + m.getUTCDate()).slice(-2) + "." +
+                            ("0" + (m.getUTCMonth() + 1)).slice(-2) + "." +
+                            m.getUTCFullYear() + " " +
+                            ("0" + m.getUTCHours()).slice(-2) + ":" +
+                            ("0" + m.getUTCMinutes()).slice(-2) + ":" +
+                            ("0" + m.getUTCSeconds()).slice(-2);
+
+                        var row = [];
+                        var row = [element.caseName.toString(),
+                        element.totalPayMoney.toString() + " TL",
+                        element.totalTransfer.toString() + " TL",
+                        element.totalWithdraw.toString() + " TL",
+                        element.totalCommission.toString() + " TL",
+                        element.totalBalance.toString() + " TL",
+                        element.totalProcessNumber.toString()
+                        ];
+                        
+                        dataset.push(row);
+                    });
+                    table = $("#reportTable").DataTable();
+                    table.rows().remove().draw();
+                    table.rows.add(dataset).draw();
+                }
+
+            },
+            error: function (response) {
+            }
+        });
+    });
 });
 
 function show() {
