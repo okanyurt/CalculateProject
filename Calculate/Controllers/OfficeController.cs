@@ -23,6 +23,11 @@ namespace Calculate.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
+            if (Request.Cookies["UserRoleIdKey"] != "2")
+            {
+                return View("~/Views/Shared/DeniedAccess.cshtml");
+            }
+
             var offices = await GetOfficeAsync();
             ViewBag.offices = new SelectList(offices, "Id", "Name");
 

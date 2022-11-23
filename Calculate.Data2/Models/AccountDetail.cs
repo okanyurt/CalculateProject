@@ -15,11 +15,11 @@ namespace Calculate.Data.Models
         public int BankId { get; set; }
 
         [Column("iban_number")]
-        public string IbanNumber { get; set; }
+        public string? IbanNumber { get; set; }
 
 
         [Column("bank_account_number")]
-        public string BankAccountNumber { get; set; }
+        public string? BankAccountNumber { get; set; }
 
         [Column("is_enable")]
         public bool IsEnable { get; set; }

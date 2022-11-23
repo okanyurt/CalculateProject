@@ -86,6 +86,7 @@ namespace Calculate.Controllers
             options.Expires = DateTime.Now.AddDays(1);
             Response.Cookies.Append("AuthenticationKey", $"{User.UserId}", options);
             Response.Cookies.Append("OfficeIdListKey", $"{User.officeIdList}", options);
+            Response.Cookies.Append("UserRoleIdKey", $"{User.RoleID}", options);
 
             return RedirectToAction("Index", "Operation");
         }
