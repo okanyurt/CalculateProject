@@ -79,5 +79,7 @@ namespace Calculate.Data
         public DbSet<Case> Cases { get; set; }
 
         public DbSet<OperationArchive> OperationsArchive { get; set; }
+
+        public DbSet<Office> Offices { get; set; }
     }
 }

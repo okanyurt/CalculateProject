@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Office Add Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <div class="row" id="tableCard">
+                <section id="file-export">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                                    <div class="heading-elements">
+                                        <ul class="list-inline mb-0">
+                                            <li>
+                                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createPopup">
+                                                    <i class="ft-plus white"></i> Ekle
+                                                </button>
+                                            </li>
+                                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-content collapse show">
+                                    <div class="card-body card-dashboard dataTables_wrapper dt-bootstrap">
+                                        <table id="officeTable" class="table table-striped table-bordered file-export">
+                                            <thead>
+                                                <tr>
+                                                    <th>Ofis Adı</th>
+                                                    <th>Güncelle</th>
+                                                    <th>Sil</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (ViewBag.offices != null)
+                                                {
+                                                    @foreach (var item in ViewBag.offices as SelectList)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @item.Text
+                                                            </td>
+                                                            <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Value)"><i class="la la-pencil"></i> Güncelle</a></td>
+                                                            <td><a class="btn btn-danger btn-sm" onclick="remove(@item.Value)"><i class="la la-trash"></i> Sil</a></td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Ofis Adı</th>
+                                                    <th>Güncelle</th>
+                                                    <th>Sil</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <!-- Modal -->
+                    <div class="modal fade text-left" id="createPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel1">Ofis Ekle</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    @using (Html.BeginForm())
+                                    {
+                                        <form class="form-group" autocomplete="off">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput1" class="col-sm-2 col-form-label">Ofis Adı</label>
+                                                        <input style="width:300px !important;" id="officeName" name="officeName" required>
+                                                        <input style="width:300px !important;display:none !important;" id="officeId" name="officeId">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-actions text-center">
+                                                <a type="button" class="btn btn-warning mr-1" href="/Office/Index/">
+                                                    <i class="ft-x"></i> Cancel
+                                                </a>
+                                                <input type="button" id="save" class="btn btn-primary la la-check-square-o" value="Save" onclick="Save()">
+                                            </div>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/office.js"></script>

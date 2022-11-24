@@ -1,0 +1,217 @@
+﻿@model IEnumerable<Calculate.Data.Models.AccountGet>
+@{
+    ViewData["Title"] = "Account Add Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <div class="row" id="tableCard">
+                <section id="file-export">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+                                    <div class="heading-elements">
+                                        <ul class="list-inline mb-0">
+                                            <li>
+                                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createPopup">
+                                                    <i class="ft-plus white"></i> Ekle
+                                                </button>
+                                            </li>
+                                            <li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+                                            <li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+                                            <li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+                                            <li><a data-action="close"><i class="ft-x"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="card-content collapse show">
+                                    <div class="card-body card-dashboard dataTables_wrapper dt-bootstrap">
+                                        <table id="caseTable" class="table table-striped table-bordered file-export">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tarih</th>
+                                                    <th>Hesap Adı</th>
+                                                    <th>Telefon Numarası</th>
+                                                    <th>Kimlik Numarası</th>
+                                                    <th>Not</th>
+                                                    <th>Banka Adı</th>
+                                                    <th>Iban</th>
+                                                    <th>Hesap Numarası</th>
+                                                    <th>Kasa Adı</th>
+                                                    <th>Güncelle</th>
+                                                    <th>Sil</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (Model != null)
+                                                {
+                                                    @foreach (var item in Model)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @item.UpdatedDate
+                                                            </td>
+                                                            <td>
+                                                                @item.Name
+                                                            </td>
+                                                            <td>
+                                                                @item.PhoneNumber
+                                                            </td>
+                                                            <td>
+                                                                @item.IdentityNumber
+                                                            </td>
+                                                            <td>
+                                                                @item.Note
+                                                            </td>
+                                                            <td>
+                                                                @item.BankName
+                                                            </td>
+                                                            <td>
+                                                                @item.IbanNumber
+                                                            </td>
+                                                            <td>
+                                                                @item.BankAccountNumber
+                                                            </td>
+                                                            <td>
+                                                                @item.CaseName
+                                                            </td>
+                                                            <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
+                                                            <td><a class="btn btn-danger btn-sm" onclick="remove(@item.Id)"><i class="la la-trash"></i> Sil</a></td>
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Tarih</th>
+                                                    <th>Hesap Adı</th>
+                                                    <th>Telefon Numarası</th>
+                                                    <th>Kimlik Numarası</th>
+                                                    <th>Not</th>
+                                                    <th>Banka Adı</th>
+                                                    <th>Iban</th>
+                                                    <th>Hesap Numarası</th>
+                                                    <th>Kasa Adı</th>
+                                                    <th>Güncelle</th>
+                                                    <th>Sil</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <!-- Modal -->
+                    <div class="modal fade text-left" id="createPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel1">Hesap Ekle</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    @using (Html.BeginForm())
+                                    {
+                                        <form class="form-group" autocomplete="off">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput1" class="col-sm-2 col-form-label">Kasa Adı</label>
+                                                        <select id="caseId" name="caseId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir Kasa seçiniz</option>
+                                                            @foreach (var item in ViewBag.cases as SelectList)
+                                                            {
+                                                                <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Banka Adı</label>
+                                                        <select id="bankId" name="bankId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir Banka seçiniz</option>
+                                                            @foreach (var item in ViewBag.banks as SelectList)
+                                                            {
+                                                                <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput3" class="col-sm-2 col-form-label">Hesap Adı</label>
+                                                        <input style="width:300px !important;" id="Name" name="Name" required>
+                                                        <input style="width:300px !important;display:none !important;" id="Id" name="Id">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput4" class="col-sm-2 col-form-label">Telefon Numarası</label>
+                                                        <input style="width:300px !important;" id="phoneNumber" type="tel" name="phoneNumber" placeholder="(XXX) XXX-XXXX" pattern="\(\d{3}\) \d{3}\-\d{4}" class="masked" title="10-digit number" required>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput5" class="col-sm-2 col-form-label">Kimlik Numarası</label>
+                                                        <input style="width:300px !important;" type="text" id="identityNumber" name="identityNumber" pattern="[0-9]{11}" />
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput6" class="col-sm-2 col-form-label">Not</label>
+                                                        <input style="width:300px !important;" type="text" id="note" name="note" />
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput7" class="col-sm-2 col-form-label">Iban</label>
+                                                        <input style="width:300px !important;" type="text" id="iban" name="iban" />
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput8" class="col-sm-2 col-form-label">Hesap No</label>
+                                                        <input style="width:300px !important;" type="text" id="bankAccountNumber" name="bankAccountNumber" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-actions text-center">
+                                                <a type="button" class="btn btn-warning mr-1" href="/Account/Index/">
+                                                    <i class="ft-x"></i> Cancel
+                                                </a>
+                                                <button type="button" id="save" class="btn btn-primary la la-check-square-o" onclick="Save()">Save</button>
+                                            </div>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/account.js"></script>

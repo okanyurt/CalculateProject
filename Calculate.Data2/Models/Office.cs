@@ -2,24 +2,14 @@
 
 namespace Calculate.Data.Models
 {
-    [Table("account_details")]
-    public class AccountDetail
+    [Table("offices")]
+    public class Office
     {
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("account_id")]
-        public int AccountId { get; set; }
-
-        [Column("bank_id")]
-        public int BankId { get; set; }
-
-        [Column("iban_number")]
-        public string? IbanNumber { get; set; }
-
-
-        [Column("bank_account_number")]
-        public string? BankAccountNumber { get; set; }
+        [Column("name")]
+        public string Name { get; set; }
 
         [Column("is_enable")]
         public bool IsEnable { get; set; }
