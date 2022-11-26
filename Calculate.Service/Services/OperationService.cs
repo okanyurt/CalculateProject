@@ -177,8 +177,8 @@ namespace Calculate.Service.Services
             operation.AccountId = OperationUpdate.AccountId;
             operation.AccountDetailId = OperationUpdate.AccountDetailId;
             operation.ProcessTypeId = OperationUpdate.ProcessTypeId;
-            operation.Price = minusAccount.Contains(OperationUpdate.ProcessTypeId) ? -1 * OperationUpdate.Price : OperationUpdate.Price;
-            operation.ProcessPrice = -1 * OperationUpdate.ProcessPrice;
+            operation.Price = minusAccount.Contains(OperationUpdate.ProcessTypeId) ? -1 * Math.Abs(OperationUpdate.Price) : OperationUpdate.Price;
+            operation.ProcessPrice = -1 * Math.Abs(OperationUpdate.ProcessPrice);
             operation.UpdatedBy = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
             operation.UpdatedDate = date;
             operation.IsEnable = true;
