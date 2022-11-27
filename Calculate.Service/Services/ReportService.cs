@@ -21,7 +21,7 @@ namespace Calculate.Service.Services
             int admin = (int)EnumRole.ADMIN;
             if (admin == roleId)
             {
-                caseList = await _context.Cases.Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+                caseList = await _context.Cases.Where(x => x.IsEnable == true).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
             }
             else
             {
@@ -107,7 +107,7 @@ namespace Calculate.Service.Services
                            } into g
                            select new Operation
                            {
-                               Price = g.Sum(x => (x.Price + x.ProcessPrice))
+                               Price = g.Sum(x => (x.Price)) //x.ProcessPrice
                            };
 
             return await withdrawalList.FirstOrDefaultAsync();
@@ -238,7 +238,7 @@ namespace Calculate.Service.Services
             {
                 Account = x.Key.Account,
                 AccountDetail = x.Key.AccountDetail,
-                Price = x.Sum(y => y.Price) + x.Sum(y => y.ProcessPrice),
+                Price = x.Sum(y => y.Price), //+ x.Sum(y => y.ProcessPrice),
                 ProcessPrice = 0,
                 ProcessCount = x.Sum(y => y.ProcessCount)
             }).OrderBy(x => x.Account).ToList();
