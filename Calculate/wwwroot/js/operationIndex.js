@@ -192,12 +192,12 @@ function Save() {
                 $('#createPopup').modal('toggle');
 
                 setTimeout(function () {
-                    $("#save").attr('disabled', false);
                     window.location.reload();
-                }, 1000);
+                }, 2000);
             } else {
                 toastr.error(response.message);
             }
+            $("#save").attr('disabled', false);
         },
         error: function (response) {
             $("#save").attr('disabled', false);

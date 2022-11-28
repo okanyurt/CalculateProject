@@ -45,15 +45,15 @@ namespace Calculate.Controllers
             try
             {
                 bool checkError = false;
-
-                if (OperationCreate.CaseId == null || OperationCreate.CaseId == 0)
+               
+                if (OperationCreate == null)
                 {
-                    Error("Kasa adı boş gönderilemez");
+                    Error("Bir hata oluştu. Ekranı yenileyerek tekrar deneyiniz.");
                     checkError = true;
                 }
-                else if (OperationCreate.ProcessNumber == null || OperationCreate.ProcessNumber == 0)
+                else if (OperationCreate.CaseId == null || OperationCreate.CaseId == 0)
                 {
-                    Error("İşlem Numarası boş gönderilemez");
+                    Error("Kasa adı boş gönderilemez");
                     checkError = true;
                 }
                 else if (OperationCreate.AccountId == null || OperationCreate.AccountId == 0)
@@ -76,7 +76,7 @@ namespace Calculate.Controllers
                 {
                     return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = false });
                 }
-
+                OperationCreate.ProcessNumber = OperationCreate.ProcessNumber == null ? 0 : OperationCreate.ProcessNumber;
                 string userId = Request.Cookies["AuthenticationKey"];
                 await _operationService.AddAsync(OperationCreate, userId);
                 Success("İşlem başarılı.");               

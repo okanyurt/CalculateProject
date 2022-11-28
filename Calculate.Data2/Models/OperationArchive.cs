@@ -9,7 +9,7 @@ namespace Calculate.Data.Models
         public int Id { get; set; }
 
         [Column("process_number")]
-        public int ProcessNumber { get; set; }
+        public int? ProcessNumber { get; set; }
 
         [Column("account_id")]
         public int AccountId { get; set; }

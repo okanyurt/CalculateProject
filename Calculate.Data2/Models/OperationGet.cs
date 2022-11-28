@@ -3,7 +3,7 @@
     public class OperationGet
     {
         public int Id { get; set; }
-        public int ProcessNumber { get; set; }
+        public int? ProcessNumber { get; set; }
         public string Account { get; set; }
         public string AccountDetail { get; set; }
         public string ProcessType { get; set; }
