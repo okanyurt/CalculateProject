@@ -142,7 +142,7 @@ namespace Calculate.Service.Services
             var raporList = await list.ToListAsync();
 
             // TODO minusProcess ama yatırım var.Neden kullanıldığı da bakılmalı
-            List<string> minusProcessCount = new List<string>() { "YATIRIM" };
+            List<string> minusProcessCount = new List<string>() { "YATIRIM", "GELEN TRANSFER (+)" };
 
             raporList = raporList.Select(item => new ReportGet
             {
