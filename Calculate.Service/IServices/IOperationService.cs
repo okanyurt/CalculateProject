@@ -26,7 +26,7 @@ namespace Calculate.Service.Services
 
         string GetMaxDate();
 
-        Task<List<OperationGet>> GetAllSelectDateAsync(string _officeId, string _date);
+        Task<List<OperationGet>> GetAllSelectDateAsync(string _officeId, string _date,bool isAdmin);
     }
 }
 

@@ -30,7 +30,7 @@ namespace Calculate.Controllers
         public async Task<List<EndDayReport>> GetAllAsync()
         {
             string officeId = Request.Cookies["OfficeIdListKey"];
-            var operation = await _endDayReportService.GetAllAsync(officeId);
+            var operation = await _endDayReportService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
 
             return operation;
         }
@@ -40,7 +40,7 @@ namespace Calculate.Controllers
         {
             string _officeId = Request.Cookies["OfficeIdListKey"];
 
-            var list = await _endDayReportService.GetAllSelectDateAsync(_officeId, _date);
+            var list = await _endDayReportService.GetAllSelectDateAsync(_officeId, _date, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
             return list;
         }
     }

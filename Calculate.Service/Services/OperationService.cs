@@ -47,6 +47,7 @@ namespace Calculate.Service.Services
 
         public async Task<List<OperationGet>> GetAllAsync(string _officeId,bool isAdmin)
         {
+            int officeId = Convert.ToInt32(_officeId);
             var date = DateTime.UtcNow.AddHours(3).Date;
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
@@ -55,8 +56,8 @@ namespace Calculate.Service.Services
                        join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
                        join c in _context.Cases on o.CaseId equals c.Id
                        where o.IsEnable == true
-                       && (!isAdmin && (c.officeId == Convert.ToInt32(_officeId)) || isAdmin)
-                       && o.UpdatedDate.Date == date
+                             && ((!isAdmin && c.officeId == officeId) || isAdmin)
+                             && o.UpdatedDate.Date == date
                        orderby o.UpdatedDate descending
                        select new OperationGet
                        {
@@ -194,19 +195,21 @@ namespace Calculate.Service.Services
             return date.ToString("yyyy-MM-dd");
         }
 
-        public async Task<List<OperationGet>> GetAllSelectDateAsync(string _officeId, string _date)
+        public async Task<List<OperationGet>> GetAllSelectDateAsync(string _officeId, string _date,bool isAdmin)
         {
             var date = Convert.ToDateTime(_date);
             var unspecified = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, DateTimeKind.Unspecified);
             var specified = DateTime.SpecifyKind(unspecified, DateTimeKind.Utc);
-
+            int officeId = Convert.ToInt32(_officeId);
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
                        join ad in _context.AccountDetails on o.AccountDetailId equals ad.Id
                        join b in _context.Banks on ad.BankId equals b.Id
                        join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
                        join c in _context.Cases on o.CaseId equals c.Id
-                       where o.IsEnable == true && c.officeId == Convert.ToInt32(_officeId) && o.UpdatedDate.Date == specified.Date
+                       where o.IsEnable == true
+                            && ((!isAdmin && c.officeId == officeId) || isAdmin)
+                            && o.UpdatedDate.Date == specified.Date
                        orderby o.UpdatedDate descending
                        select new OperationGet
                        {

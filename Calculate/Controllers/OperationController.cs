@@ -213,7 +213,7 @@ namespace Calculate.Controllers
         public async Task<List<OperationGet>> GetAllSelectDateAsync(string _date)
         {
             string _officeId = Request.Cookies["OfficeIdListKey"];
-            var list = await _operationService.GetAllSelectDateAsync(_officeId, _date);
+            var list = await _operationService.GetAllSelectDateAsync(_officeId, _date, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
             return list;
         }
     }
