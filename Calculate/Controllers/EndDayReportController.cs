@@ -39,6 +39,7 @@ namespace Calculate.Controllers
         public async Task<List<EndDayReport>> GetAllSelectDateAsync(string _date)
         {
             string _officeId = Request.Cookies["OfficeIdListKey"];
+
             var list = await _endDayReportService.GetAllSelectDateAsync(_officeId, _date);
             return list;
         }

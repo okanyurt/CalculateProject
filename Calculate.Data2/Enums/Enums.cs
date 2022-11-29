@@ -16,7 +16,9 @@ public enum EnumProcessType
     [Description("DEVİR")]
     DEVİR = 5,
     [Description("TR DEVİR")]
-    TRDEVİR = 6
+    TRDEVİR = 6,
+    [Description("GELEN TRANSFER")]
+    GELENTRANSFER = 7
 }
 
 public enum EnumRole

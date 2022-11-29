@@ -107,8 +107,9 @@ namespace Calculate.Service.Services
             return result;
         }
 
-        public async Task<List<OperationGet>> GetAllAsync(string _officeId)
+        public async Task<List<OperationGet>> GetAllAsync(string _officeId, bool isAdmin)
         {
+            int officeId = Convert.ToInt32(_officeId);
             var date = DateTime.UtcNow.AddDays(1).AddHours(3).Date;
             var list = from o in _context.Operations
                        join a in _context.Accounts on o.AccountId equals a.Id
@@ -116,7 +117,9 @@ namespace Calculate.Service.Services
                        join b in _context.Banks on ad.BankId equals b.Id
                        join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
                        join c in _context.Cases on o.CaseId equals c.Id
-                       where o.IsEnable == true && c.officeId == Convert.ToInt32(_officeId) && o.UpdatedDate.Date == date && o.ProcessTypeId == 5
+                       where o.IsEnable == true
+                             && ((!isAdmin && c.officeId == officeId) || isAdmin ) 
+                             && o.UpdatedDate.Date == date && o.ProcessTypeId == 5
                        orderby o.UpdatedDate descending
                        select new OperationGet
                        {
@@ -138,10 +141,10 @@ namespace Calculate.Service.Services
             return await list.ToListAsync();
         }
 
-        public async Task<List<Case>> GetCaseAsync(string officeId)
+        public async Task<List<Case>> GetCaseAsync(string officeId, bool isAdmin)
         {
             int _officeId = Convert.ToInt32(officeId);
-            var caseList = await _context.Cases.Where(x => x.officeId == _officeId).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+            var caseList = await _context.Cases.Where(x => (!isAdmin && x.officeId == _officeId) || isAdmin).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
             return caseList;
         }
     }

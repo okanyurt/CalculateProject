@@ -71,7 +71,7 @@ namespace Calculate.Service.Services
             return await list.ToListAsync();
         }
 
-        public string GetMaxDate()
+        public  string GetMaxDate()
         {
             var date = _context.OperationsArchive.Select(x => x.UpdatedDate.Date).Distinct().FirstOrDefault();
             return date.ToString("yyyy-MM-dd");

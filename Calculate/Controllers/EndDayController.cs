@@ -23,11 +23,11 @@ namespace Calculate.Controllers
             }
 
             string officeId = Request.Cookies["OfficeIdListKey"];
-            var caseList = await _endDayService.GetCaseAsync(officeId);
+            var caseList = await _endDayService.GetCaseAsync(officeId, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
           
             ViewBag.cases = new SelectList(caseList, "Id", "Name");
 
-            var operation = await _endDayService.GetAllAsync(officeId);
+            var operation = await _endDayService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
 
             return View(operation);
         }
@@ -44,7 +44,7 @@ namespace Calculate.Controllers
         public async Task<List<OperationGet>> GetAllAsync()
         {
             string officeId = Request.Cookies["OfficeIdListKey"];
-            var result = await _endDayService.GetAllAsync(officeId);
+            var result = await _endDayService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
             return result;
         }
     }
