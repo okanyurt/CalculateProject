@@ -6,7 +6,7 @@ namespace Calculate.Service.Services
     {
         Task<Operation> GetByIdAsync(int id);
 
-        Task<List<OperationGet>> GetAllAsync(string _officeId);
+        Task<List<OperationGet>> GetAllAsync(string _officeId, bool isAdmin);
 
         Task<int> AddAsync(OperationCreate OperationCreate, string userId);
 

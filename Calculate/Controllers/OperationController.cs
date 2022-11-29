@@ -25,7 +25,7 @@ namespace Calculate.Controllers
                 return RedirectToAction("Index", "Login");
             }
             string officeId = Request.Cookies["OfficeIdListKey"];
-            var operation = await _operationService.GetAllAsync(officeId);
+            var operation = await _operationService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
 
             var processType = await GetProcessTypeAsync();
             ViewBag.processTypes = new SelectList(processType, "Id", "Name");
