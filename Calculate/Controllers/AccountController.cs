@@ -1,4 +1,5 @@
 ﻿using Calculate.Core;
+using Calculate.Data.Enums;
 using Calculate.Data.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace Calculate.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            if (Request.Cookies["UserRoleIdKey"] != "2")
+            if (Request.Cookies["UserRoleIdKey"] != Convert.ToInt32(EnumRole.ADMIN).ToString())
             {
                 return View("~/Views/Shared/DeniedAccess.cshtml");
             }
@@ -31,8 +32,8 @@ namespace Calculate.Controllers
             var cases = await _accountService.GetAllCaseAsync();
             ViewBag.cases = new SelectList(cases, "Id", "Name");
 
-            var banks = await _accountService.GetAllBankAsync();
-            ViewBag.banks = new SelectList(banks, "Id", "Name");
+            //var banks = await _accountService.GetAllBankAsync();
+            //ViewBag.banks = new SelectList(banks, "Id", "Name");
 
             var list = await _accountService.GetAllAsync();
             return View(list);
@@ -46,7 +47,7 @@ namespace Calculate.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AccountCreate([FromBody] AccountGet AccountCreate)
+        public async Task<JsonResult> AccountCreate([FromBody] Account AccountCreate)
         {
             try
             {
@@ -69,27 +70,27 @@ namespace Calculate.Controllers
                     checkError = true;
                 }
 
-                if (AccountCreate.BankId == null)
-                {
-                    Error("Banka boş gönderilemez");
-                    checkError = true;
-                }
+                //if (AccountCreate.BankId == null)
+                //{
+                //    Error("Banka boş gönderilemez");
+                //    checkError = true;
+                //}
 
-                if (AccountCreate.IbanNumber == null)
-                {
-                    Error("Iban boş gönderilemez");
-                    checkError = true;
-                }
+                //if (AccountCreate.IbanNumber == null)
+                //{
+                //    Error("Iban boş gönderilemez");
+                //    checkError = true;
+                //}
 
-                if (AccountCreate.BankAccountNumber == null)
-                {
-                    Error("Hesap numarası boş gönderilemez");
-                    checkError = true;
-                }
+                //if (AccountCreate.BankAccountNumber == null)
+                //{
+                //    Error("Hesap numarası boş gönderilemez");
+                //    checkError = true;
+                //}
 
                 if (checkError)
                 {
-                    return Json(new { redirectToUrl = Url.Action("Index", "Case"), isSuccess = false });
+                    return Json(new { redirectToUrl = Url.Action("Index", "Account"), isSuccess = false });
                 }
 
                 string userId = Request.Cookies["AuthenticationKey"];
@@ -106,7 +107,7 @@ namespace Calculate.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AccountEdit([FromBody] AccountGet AccountUpdate)
+        public async Task<JsonResult> AccountEdit([FromBody] Account AccountUpdate)
         {
             try
             {

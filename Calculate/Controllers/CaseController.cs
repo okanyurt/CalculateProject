@@ -1,4 +1,5 @@
 ﻿using Calculate.Core;
+using Calculate.Data.Enums;
 using Calculate.Data.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace Calculate.Controllers
                 return RedirectToAction("Index", "Login");
             }
 
-            if (Request.Cookies["UserRoleIdKey"] != "2")
+            if (Request.Cookies["UserRoleIdKey"] != Convert.ToInt32(EnumRole.ADMIN).ToString())
             {
                 return View("~/Views/Shared/DeniedAccess.cshtml");
             }

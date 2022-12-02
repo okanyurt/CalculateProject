@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     $.noConflict();
-    $('#caseTable').DataTable({
+    $('#accountDetailTable').DataTable({
         "scrollX": true,
         dom: 'Bfrtip',
         buttons: [
@@ -12,14 +12,13 @@
 
 function edit(id) {
     $.ajax({
-        url: '/Account/GetById/' + id,
+        url: '/AccountDetail/GetById/' + id,
         success: function (editdata) {
             $('#createPopup').modal('show');
-            $("#Name").val(editdata.name);
-            $("#phoneNumber").val(editdata.phoneNumber);
-            $("#identityNumber").val(editdata.identityNumber);
-            $("#note").val(editdata.note);
-            $("#caseId").val(editdata.caseId);
+            $("#accountId").val(editdata.accountId);
+            $("#bankId").val(editdata.bankId);
+            $("#iban").val(editdata.iban);
+            $("#bankAccountNumber").val(editdata.bankAccountNumber);
             $("#Id").val(id);
         }
     });
@@ -28,19 +27,18 @@ function edit(id) {
 function Save() {
     $("#save").attr('disabled', true);
     if ($("#Id").val() == 0) {
-        var AccountCreate = {
-            Name: $("#Name").val(),
-            PhoneNumber: $("#phoneNumber").val(),
-            IdentityNumber: $("#identityNumber").val(),
-            Note: $("#note").val(),
-            CaseId: $("#caseId").val()
+        var AccountDetailCreate = {
+             AccountId: $("#accountId").val(),
+             BankId: $("#bankId").val(),
+             IbanNumber: $("#iban").val(),
+             BankAccountNumber: $("#bankAccountNumber").val()
         };
 
         $.ajax({
-            url: '/Account/AccountCreate',
+            url: '/AccountDetail/AccountDetailCreate',
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(AccountCreate),
+            data: JSON.stringify(AccountDetailCreate),
             success: function (response) {
                 if (response.isSuccess) {
                     toastr.success("İşlem başarılı.");
@@ -66,20 +64,19 @@ function Save() {
 }
 
 function Update(id) {
-    var AccountUpdate = {
+    var AccountDetailUpdate = {
         Id: id,
-        Name: $("#Name").val(),
-        PhoneNumber: $("#phoneNumber").val(),
-        IdentityNumber: $("#identityNumber").val(),
-        Note: $("#note").val(),
-        CaseId: $("#caseId").val()
+        AccountId: $("#accountId").val(),
+        BankId: $("#bankId").val(),
+        IbanNumber: $("#iban").val(),
+        BankAccountNumber: $("#bankAccountNumber").val()
     };
 
     $.ajax({
-        url: '/Account/AccountEdit',
+        url: '/AccountDetail/AccountDetailEdit',
         type: "POST",
         contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(AccountUpdate),
+        data: JSON.stringify(AccountDetailUpdate),
         success: function (response) {
             if (response.isSuccess) {
                 toastr.success("İşlem başarılı.");
@@ -99,7 +96,7 @@ function Update(id) {
 function remove(id) {
     if (confirm("Kayıt silinecektir. Emin misiniz?")) {
         $.ajax({
-            url: '/Account/AccountDelete/' + id,
+            url: '/AccountDetail/AccountDetailDelete/' + id,
             success: function (data) {
                 if (data.isSuccess) {
                     toastr.success("İşlem başarılı.");

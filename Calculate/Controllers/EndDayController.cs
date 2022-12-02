@@ -1,4 +1,5 @@
 ﻿using Calculate.Core;
+using Calculate.Data.Enums;
 using Calculate.Data.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +24,11 @@ namespace Calculate.Controllers
             }
 
             string officeId = Request.Cookies["OfficeIdListKey"];
-            var caseList = await _endDayService.GetCaseAsync(officeId, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
+            var caseList = await _endDayService.GetCaseAsync(officeId, Request.Cookies["UserRoleIdKey"] == Convert.ToInt32(EnumRole.ADMIN).ToString() ? true : false);
           
             ViewBag.cases = new SelectList(caseList, "Id", "Name");
 
-            var operation = await _endDayService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
+            var operation = await _endDayService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == Convert.ToInt32(EnumRole.ADMIN).ToString() ? true : false);
 
             return View(operation);
         }
@@ -44,7 +45,7 @@ namespace Calculate.Controllers
         public async Task<List<OperationGet>> GetAllAsync()
         {
             string officeId = Request.Cookies["OfficeIdListKey"];
-            var result = await _endDayService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
+            var result = await _endDayService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == Convert.ToInt32(EnumRole.ADMIN).ToString() ? true : false);
             return result;
         }
     }
