@@ -132,7 +132,7 @@ namespace Calculate.Service.Services
 
         public async Task<List<Account>> GetAllAccountAsync()
         {
-            var list = await _context.Accounts.OrderBy(x => x.Name).ToListAsync();
+            var list = await _context.Accounts.Where(x => x.IsEnable == true).OrderBy(x => x.Name).ToListAsync();
             return list;
         }
     }
