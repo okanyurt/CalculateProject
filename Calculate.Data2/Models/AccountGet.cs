@@ -13,10 +13,6 @@
         public int UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
         public int CaseId { get; set; }
-        public int BankId { get; set; }
-        public string? IbanNumber { get; set; }
-        public string? BankAccountNumber { get; set; }
-        public string CaseName { get; set; }
-        public string BankName { get; set; }       
+        public string CaseName { get; set; }      
     }
 }

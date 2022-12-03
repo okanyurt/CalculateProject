@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     $.noConflict();
-    $('#caseTable').DataTable({
+    $('#userTable').DataTable({
         "scrollX": true,
         dom: 'Bfrtip',
         buttons: [
@@ -12,14 +12,15 @@
 
 function edit(id) {
     $.ajax({
-        url: '/Account/GetById/' + id,
+        url: '/User/GetById/' + id,
         success: function (editdata) {
             $('#createPopup').modal('show');
-            $("#Name").val(editdata.name);
+            $("#userName").val(editdata.userName);
+            $("#roleId").val(editdata.roleID);
+            $("#isEnabledId").val(editdata.isEnabled ? 1 : 0);
+            $("#officeId").val(editdata.officeIdList);
             $("#phoneNumber").val(editdata.phoneNumber);
-            $("#identityNumber").val(editdata.identityNumber);
-            $("#note").val(editdata.note);
-            $("#caseId").val(editdata.caseId);
+            $("#password").val(editdata.passwordHash);
             $("#Id").val(id);
         }
     });
@@ -28,19 +29,29 @@ function edit(id) {
 function Save() {
     $("#save").attr('disabled', true);
     if ($("#Id").val() == 0) {
-        var AccountCreate = {
-            Name: $("#Name").val(),
+
+        var isenabled = true;
+        if ($("#isEnabledId").val() == 1) {
+            isenabled = true;
+        }
+        else {
+            isenabled = false;
+        }
+
+        var UserCreate = {
+            UserName: $("#userName").val(),
+            RoleID: $("#roleId").val(),
+            IsEnabled: isenabled,
+            officeIdList: $("#officeId").val(),
             PhoneNumber: $("#phoneNumber").val(),
-            IdentityNumber: $("#identityNumber").val(),
-            Note: $("#note").val(),
-            CaseId: $("#caseId").val()
+            PasswordHash: $("#password").val()
         };
 
         $.ajax({
-            url: '/Account/AccountCreate',
+            url: '/User/UserCreate',
             type: "POST",
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(AccountCreate),
+            data: JSON.stringify(UserCreate),
             success: function (response) {
                 if (response.isSuccess) {
                     toastr.success("İşlem başarılı.");
@@ -66,20 +77,29 @@ function Save() {
 }
 
 function Update(id) {
-    var AccountUpdate = {
+    var isenabled = true;
+    if ($("#isEnabledId").val() == 1) {
+        isenabled = true;
+    }
+    else {
+        isenabled = false;
+    }
+
+    var UserUpdate = {
         Id: id,
-        Name: $("#Name").val(),
+        UserName: $("#userName").val(),
+        RoleID: $("#roleId").val(),
+        IsEnabled: isenabled,
+        officeIdList: $("#officeId").val(),
         PhoneNumber: $("#phoneNumber").val(),
-        IdentityNumber: $("#identityNumber").val(),
-        Note: $("#note").val(),
-        CaseId: $("#caseId").val()
+        PasswordHash: $("#password").val()
     };
 
     $.ajax({
-        url: '/Account/AccountEdit',
+        url: '/User/UserEdit',
         type: "POST",
         contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(AccountUpdate),
+        data: JSON.stringify(UserUpdate),
         success: function (response) {
             if (response.isSuccess) {
                 toastr.success("İşlem başarılı.");
@@ -99,7 +119,7 @@ function Update(id) {
 function remove(id) {
     if (confirm("Kayıt silinecektir. Emin misiniz?")) {
         $.ajax({
-            url: '/Account/AccountDelete/' + id,
+            url: '/User/UserDelete/' + id,
             success: function (data) {
                 if (data.isSuccess) {
                     toastr.success("İşlem başarılı.");

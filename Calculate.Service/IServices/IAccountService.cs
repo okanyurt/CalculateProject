@@ -8,14 +8,12 @@ namespace Calculate.Service.Services
 
         Task<AccountGet> GetByIdAsync(int id);
 
-        Task<int> AddAsync(AccountGet accountCreate, string userId);
+        Task<int> AddAsync(Account accountCreate, string userId);
 
-        Task<int> UpdateAsync(AccountGet accountUpdate, string userId);
+        Task<int> UpdateAsync(Account accountUpdate, string userId);
 
         Task<int> RemoveAsync(int id, string userId);
 
         Task<List<Case>> GetAllCaseAsync();
-
-        Task<List<Bank>> GetAllBankAsync();
     }
 }

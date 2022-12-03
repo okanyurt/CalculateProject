@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Calculate.Data.Models.AccountGet>
+﻿@model IEnumerable<Calculate.Data.Models.UserGet>
 @{
-    ViewData["Title"] = "Account Add Page";
+    ViewData["Title"] = "User Add Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -34,18 +34,16 @@
                                 </div>
                                 <div class="card-content collapse show">
                                     <div class="card-body card-dashboard dataTables_wrapper dt-bootstrap">
-                                        <table id="caseTable" class="table table-striped table-bordered file-export">
+                                        <table id="userTable" class="table table-striped table-bordered file-export">
                                             <thead>
                                                 <tr>
-                                                    <th>Tarih</th>
-                                                    <th>Hesap Adı</th>
+                                                    <th>Token</th>
+                                                    <th>Kullanıcı Adı</th>
+                                                    <th>Rol</th>
+                                                    <th>Aktif/Pasif</th>
+                                                    <th>Ofis Adı</th>
+                                                    <th>Şifre</th>
                                                     <th>Telefon Numarası</th>
-                                                    <th>Kimlik Numarası</th>
-                                                    <th>Not</th>
-                                                   @* <th>Banka Adı</th>
-                                                    <th>Iban</th>
-                                                    <th>Hesap Numarası</th>*@
-                                                    <th>Kasa Adı</th>
                                                     <th>Güncelle</th>
                                                     <th>Sil</th>
                                                 </tr>
@@ -57,31 +55,25 @@
                                                     {
                                                         <tr>
                                                             <td>
-                                                                @item.UpdatedDate
+                                                                @item.AccessToken
                                                             </td>
                                                             <td>
-                                                                @item.Name
+                                                                @item.UserName
+                                                            </td>
+                                                            <td>
+                                                                @item.RoleID
+                                                            </td>
+                                                            <td>
+                                                                @item.IsEnabled
+                                                            </td>
+                                                            <td>
+                                                                @item.OfficeName
+                                                            </td>
+                                                            <td>
+                                                                @item.PasswordHash
                                                             </td>
                                                             <td>
                                                                 @item.PhoneNumber
-                                                            </td>
-                                                            <td>
-                                                                @item.IdentityNumber
-                                                            </td>
-                                                            <td>
-                                                                @item.Note
-                                                            </td>
-                                                          @*  <td>
-                                                                @item.BankName
-                                                            </td>
-                                                            <td>
-                                                                @item.IbanNumber
-                                                            </td>
-                                                            <td>
-                                                                @item.BankAccountNumber
-                                                            </td>*@
-                                                            <td>
-                                                                @item.CaseName
                                                             </td>
                                                             <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
                                                             <td><a class="btn btn-danger btn-sm" onclick="remove(@item.Id)"><i class="la la-trash"></i> Sil</a></td>
@@ -91,15 +83,13 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th>Tarih</th>
-                                                    <th>Hesap Adı</th>
+                                                    <th>Token</th>
+                                                    <th>Kullanıcı Adı</th>
+                                                    <th>Rol</th>
+                                                    <th>Aktif/Pasif</th>
+                                                    <th>Ofis Adı</th>
+                                                    <th>Şifre</th>
                                                     <th>Telefon Numarası</th>
-                                                    <th>Kimlik Numarası</th>
-                                                    <th>Not</th>
-                                                   @* <th>Banka Adı</th>
-                                                    <th>Iban</th>
-                                                    <th>Hesap Numarası</th>*@
-                                                    <th>Kasa Adı</th>
                                                     <th>Güncelle</th>
                                                     <th>Sil</th>
                                                 </tr>
@@ -120,7 +110,7 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="myModalLabel1">Hesap Ekle</h4>
+                                    <h4 class="modal-title" id="myModalLabel1">Kullanıcı Ekle</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -132,70 +122,59 @@
                                             <div class="form-body">
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput1" class="col-sm-2 col-form-label">Kasa Adı</label>
-                                                        <select id="caseId" name="caseId" style="width:300px !important;" required>
-                                                            <option value="" selected>Lütfen bir Kasa seçiniz</option>
-                                                            @foreach (var item in ViewBag.cases as SelectList)
-                                                            {
-                                                                <option value="@item.Value">@item.Text</option>
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                               @* <div class="row">
-                                                    <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="bankId" name="bankId" style="width:300px !important;" required>
-                                                            <option value="" selected>Lütfen bir Banka seçiniz</option>
-                                                            @foreach (var item in ViewBag.banks as SelectList)
-                                                            {
-                                                                <option value="@item.Value">@item.Text</option>
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                </div>*@
-
-                                                <div class="row">
-                                                    <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput3" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        <input style="width:300px !important;" id="Name" name="Name" required>
+                                                        <label for="donationinput1" class="col-sm-2 col-form-label">Kullanıcı Adı</label>
+                                                        <input style="width:300px !important;" id="userName" name="userName" required>
                                                         <input style="width:300px !important;display:none !important;" id="Id" name="Id">
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput4" class="col-sm-2 col-form-label">Telefon Numarası</label>
+                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Rol</label>
+                                                        <select id="roleId" name="roleId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir Rol seçiniz</option>
+                                                            <option value="1">AGENT</option>
+                                                            <option value="2">ADMIN</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput3" class="col-sm-2 col-form-label">Aktif/Pasif</label>
+                                                        <select id="isEnabledId" name="isEnabledId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen Aktif/Pasif seçiniz</option>
+                                                            <option value="1">True</option>
+                                                            <option value="0">False</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput4" class="col-sm-2 col-form-label">Ofis Adı</label>
+                                                        <select id="officeId" name="officeId" style="width:300px !important;" required>
+                                                            <option value="" selected>Lütfen bir Ofis seçiniz</option>
+                                                            @foreach (var item in ViewBag.offices as SelectList)
+                                                            {
+                                                                <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput5" class="col-sm-2 col-form-label">Telefon Numarası</label>
                                                         <input style="width:300px !important;" id="phoneNumber" type="tel" name="phoneNumber" placeholder="(XXX) XXX-XXXX" pattern="\(\d{3}\) \d{3}\-\d{4}" class="masked" title="10-digit number" required>
                                                     </div>
-                                                </div>
+                                                </div>                                               
                                                 <div class="row">
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput5" class="col-sm-2 col-form-label">Kimlik Numarası</label>
-                                                        <input style="width:300px !important;" type="text" id="identityNumber" name="identityNumber" pattern="[0-9]{11}" />
+                                                        <label for="donationinput6" class="col-sm-2 col-form-label">Şifre</label>
+                                                        <input style="width:300px !important;" type="text" id="password" name="password" />
                                                     </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput6" class="col-sm-2 col-form-label">Not</label>
-                                                        <input style="width:300px !important;" type="text" id="note" name="note" />
-                                                    </div>
-                                                </div>
-                                               @* <div class="row">
-                                                    <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput7" class="col-sm-2 col-form-label">Iban</label>
-                                                        <input style="width:300px !important;" type="text" id="iban" name="iban" />
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput8" class="col-sm-2 col-form-label">Hesap No</label>
-                                                        <input style="width:300px !important;" type="text" id="bankAccountNumber" name="bankAccountNumber" />
-                                                    </div>
-                                                </div>*@
+                                                </div>   
                                             </div>
 
                                             <div class="form-actions text-center">
-                                                <a type="button" class="btn btn-warning mr-1" href="/Account/Index/">
+                                                <a type="button" class="btn btn-warning mr-1" href="/User/Index/">
                                                     <i class="ft-x"></i> Cancel
                                                 </a>
                                                 <button type="button" id="save" class="btn btn-primary la la-check-square-o" onclick="Save()">Save</button>
@@ -214,4 +193,4 @@
 
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/account.js"></script>
+<script src="~/js/user.js"></script>

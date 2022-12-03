@@ -1,4 +1,5 @@
 ﻿using Calculate.Core;
+using Calculate.Data.Enums;
 using Calculate.Data.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,7 @@ namespace Calculate.Controllers
         public async Task<List<EndDayReport>> GetAllAsync()
         {
             string officeId = Request.Cookies["OfficeIdListKey"];
-            var operation = await _endDayReportService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
+            var operation = await _endDayReportService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == Convert.ToInt32(EnumRole.ADMIN).ToString() ? true : false);
 
             return operation;
         }
@@ -40,7 +41,7 @@ namespace Calculate.Controllers
         {
             string _officeId = Request.Cookies["OfficeIdListKey"];
 
-            var list = await _endDayReportService.GetAllSelectDateAsync(_officeId, _date, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
+            var list = await _endDayReportService.GetAllSelectDateAsync(_officeId, _date, Request.Cookies["UserRoleIdKey"] == Convert.ToInt32(EnumRole.ADMIN).ToString() ? true : false);
             return list;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Calculate.Core;
+using Calculate.Data.Enums;
 using Calculate.Data.Models;
 using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace Calculate.Controllers
                 return RedirectToAction("Index", "Login");
             }
             string officeId = Request.Cookies["OfficeIdListKey"];
-            var operation = await _operationService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
+            var operation = await _operationService.GetAllAsync(officeId, Request.Cookies["UserRoleIdKey"] == Convert.ToInt32(EnumRole.ADMIN).ToString() ? true : false);
 
             var processType = await GetProcessTypeAsync();
             ViewBag.processTypes = new SelectList(processType, "Id", "Name");
@@ -213,7 +214,7 @@ namespace Calculate.Controllers
         public async Task<List<OperationGet>> GetAllSelectDateAsync(string _date)
         {
             string _officeId = Request.Cookies["OfficeIdListKey"];
-            var list = await _operationService.GetAllSelectDateAsync(_officeId, _date, Request.Cookies["UserRoleIdKey"] == "2" ? true : false);
+            var list = await _operationService.GetAllSelectDateAsync(_officeId, _date, Request.Cookies["UserRoleIdKey"] == Convert.ToInt32(EnumRole.ADMIN).ToString() ? true : false);
             return list;
         }
     }
