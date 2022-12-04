@@ -14,8 +14,8 @@
                 <section id="file-export">
                     <div class="row">
                         <div class="col-sm-2">
-                            <input type="date" id="searchDate" name="searchDate" value="@ViewBag.maxdate">                         
-                        </div>    
+                            <input type="date" id="searchDate" name="searchDate" value="@ViewBag.maxdate">
+                        </div>
                         <div class="col-sm-1">
                             <button type="button" class="btn btn-success btn-sm" id="searchRecord">
                                 <i class="white"></i> Kayıt Ara
@@ -30,8 +30,8 @@
                                     <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                                     <div class="heading-elements">
                                         <ul class="list-inline mb-0">
-                                            <li>                                               
-                                                <input type="file" class="btn btn-success btn-sm" id="fileUpload" name="fileUpload" onchange="UploadFile();" onselect="UploadFile();" accept=".xlsx">                                                   
+                                            <li>
+                                                <input type="file" class="btn btn-success btn-sm" id="fileUpload" name="fileUpload" onchange="UploadFile();" onselect="UploadFile();" accept=".xlsx">
                                             </li>
                                             <li>
                                                 <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createPopup">
@@ -139,65 +139,72 @@
                                         <form class="form-group" autocomplete="off">
                                             <div class="form-body">
                                                 <div class="row">
+                                                    <p id="errorcaseId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput" class="col-sm-2 col-form-label">Kasa Adı</label>
-                                                        <select id="caseId" name="caseId" style="width:300px !important;" required>
+                                                        <label for="donationinput" class="col-sm-4 col-form-label">Kasa Adı</label>
+                                                        <select id="caseId" name="caseId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir kasa seçiniz</option>
                                                             @foreach (var item in ViewBag.cases as SelectList)
                                                             {
-                                                               <option value="@item.Value">@item.Text</option>
+                                                                <option value="@item.Value">@item.Text</option>
                                                             }
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="errorprocessNumber" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
-                                                        <input style="width:300px !important;" id="processNumber" name="processNumber" required>
+                                                        <label for="donationinput1" class="col-sm-4 col-form-label">İşlem No</label>
+                                                        <input style="width:250px !important;" id="processNumber" name="processNumber" required>
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="erroraccountId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                         <select id="accountId" name="accountId" style="width:300px !important;" required>
-                                                             <option value="" selected>Lütfen bir kasa seçiniz</option>                                   
+                                                        <label for="donationinput2" class="col-sm-4 col-form-label">Hesap Adı</label>
+                                                        <select id="accountId" name="accountId" style="width:250px !important;" required>
+                                                            <option value="" selected>Lütfen bir kasa seçiniz</option>
                                                         </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
+                                                    <p id="erroraccountDetailId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="accountDetailId" name="accountDetailId" style="width:300px !important;" required>
+                                                        <label for="donationinput3" class="col-sm-4 col-form-label">Banka Adı</label>
+                                                        <select id="accountDetailId" name="accountDetailId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir hesap seçiniz</option>
                                                         </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
+                                                    <p id="errorprocessTypeId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                        <select id="processTypeId" name="processTypeId" style="width:300px !important;" required>
+                                                        <label for="donationinput4" class="col-sm-4 col-form-label">İşlem Tipi</label>
+                                                        <select id="processTypeId" name="processTypeId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir işlem türü seçiniz</option>
                                                             @foreach (var item in ViewBag.processTypes as SelectList)
                                                             {
-                                                               <option value="@item.Value">@item.Text</option>
+                                                                <option value="@item.Value">@item.Text</option>
                                                             }
-                                                        </select>                                                     
+                                                        </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
+                                                    <p id="errorprice" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label class="col-sm-2 col-form-label">Miktar</label>
-                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="price" name="price" required>
+                                                        <label class="col-sm-4 col-form-label">Miktar</label>
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:250px !important;" id="price" name="price" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
+                                                    <p id="errorprocessPrice" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label class="col-sm-2 col-form-label">İşlem Ücreti</label>
-                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="processPrice" name="processPrice">
+                                                        <label class="col-sm-4 col-form-label">İşlem Ücreti</label>
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:250px !important;" id="processPrice" name="processPrice">
                                                     </div>
                                                 </div>
                                             </div>
@@ -209,7 +216,7 @@
                                                 <!-- TODO burası submit deil ajax olmalı. İki kere basıldığında iki kayıt atılıor. Tek basıldığında button visible false edilmeli-->
                                                 @*<input type="submit" class="btn btn-primary la la-check-square-o" value="Save" />*@
 
-                                                 <input type="button" id="save" class="btn btn-primary la la-check-square-o" value="Save" onclick="Save()">             
+                                                <input type="button" id="save" class="btn btn-primary la la-check-square-o" value="Save" onclick="Save()">
                                             </div>
                                         </form>
                                     }
@@ -238,67 +245,74 @@
                                         <form class="form-group" id="editForm">
                                             <div class="form-body">
                                                 <div class="row">
+                                                    <p id="erroreditCaseId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput" class="col-sm-2 col-form-label">Kasa Adı</label>
-                                                        <select id="editCaseId" name="editCaseId" style="width:300px !important;" required>
+                                                        <label for="donationinput" class="col-sm-4 col-form-label">Kasa Adı</label>
+                                                        <select id="editCaseId" name="editCaseId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir kasa seçiniz</option>
                                                             @foreach (var item in ViewBag.cases as SelectList)
                                                             {
-                                                               <option value="@item.Value">@item.Text</option>
+                                                                <option value="@item.Value">@item.Text</option>
                                                             }
-                                                        </select>   
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="erroreditProcessNumber" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput1" class="col-sm-2 col-form-label">İşlem No</label>
+                                                        <label for="donationinput1" class="col-sm-4 col-form-label">İşlem No</label>
                                                         <input type="hidden" id="editId" name="Id">
-                                                        <input style="width:300px !important;" id="editProcessNumber" name="editProcessNumber" required>
+                                                        <input style="width:250px !important;" id="editProcessNumber" name="editProcessNumber" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
+                                                    <p id="erroreditAccountId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                         <select id="editAccountId" name="editAccountId" style="width:300px !important;" required>
-                                                            <option value="" selected>Lütfen bir kasa seçiniz</option>                           
-                                                        </select>                      
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput3" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="editAccountDetailId" name="editAccountDetailId" style="width:300px !important;" required>
-                                                           @* <option value="">Lütfen bir hesap seçiniz</option>*@
+                                                        <label for="donationinput2" class="col-sm-4 col-form-label">Hesap Adı</label>
+                                                        <select id="editAccountId" name="editAccountId" style="width:250px !important;" required>
+                                                            <option value="" selected>Lütfen bir kasa seçiniz</option>
                                                         </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
+                                                    <p id="erroreditAccountDetailId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput4" class="col-sm-2 col-form-label">İşlem Tipi</label>
-                                                        <select id="editProcessTypeId" name="editProcessTypeId" style="width:300px !important;" required>
+                                                        <label for="donationinput3" class="col-sm-4 col-form-label">Banka Adı</label>
+                                                        <select id="editAccountDetailId" name="editAccountDetailId" style="width:250px !important;" required>
+                                                            @* <option value="">Lütfen bir hesap seçiniz</option>*@
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <p id="erroreditProcessTypeId" style="color:red"></p>
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="donationinput4" class="col-sm-4 col-form-label">İşlem Tipi</label>
+                                                        <select id="editProcessTypeId" name="editProcessTypeId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir işlem türü seçiniz</option>
                                                             @foreach (var item in ViewBag.processTypes as SelectList)
                                                             {
-                                                               <option value="@item.Value">@item.Text</option>
+                                                                <option value="@item.Value">@item.Text</option>
                                                             }
-                                                        </select>  
+                                                        </select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
+                                                    <p id="erroreditPrice" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label class="col-sm-2 col-form-label">Miktar</label>
-                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="editPrice" name="editPrice" required>
+                                                        <label class="col-sm-4 col-form-label">Miktar</label>
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:250px !important;" id="editPrice" name="editPrice" required>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
+                                                    <p id="erroreditProcessPrice" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label class="col-sm-2 col-form-label">İşlem Ücreti</label>
-                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:300px !important;" id="editProcessPrice" name="editProcessPrice">
+                                                        <label class="col-sm-4 col-form-label">İşlem Ücreti</label>
+                                                        <input type='text' placeholder='0,00' pattern="^\d+(?:,\d+)*$" title="Numerik bir alandır. Ayraç için ',' kullanılır." style="width:250px !important;" id="editProcessPrice" name="editProcessPrice">
                                                     </div>
                                                 </div>
                                             </div>
@@ -307,9 +321,7 @@
                                                 <a type="button" class="btn btn-warning mr-1" href="/Operation/Index/">
                                                     <i class="ft-x"></i> Cancel
                                                 </a>
-                                                <a type="button" class="btn btn-primary la la-check-square-o" onclick="Update()">
-                                                    Update
-                                                </a>
+                                                <input type="button" id="update" class="btn btn-primary la la-check-square-o" value="Update" onclick="Update()">
                                             </div>
                                         </form>
                                     }

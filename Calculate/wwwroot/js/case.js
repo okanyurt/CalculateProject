@@ -21,36 +21,58 @@ function edit(id,officeId) {
     });
 }
 
+function validation(id) {
+    const inpObj = document.getElementById(id);
+    if (!inpObj.checkValidity()) {
+        var _id = "error" + id.toString();
+        document.getElementById(_id).innerHTML = inpObj.validationMessage;
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 function Save() {
     $("#save").attr('disabled', true);
+    document.getElementById("errorcaseName").innerHTML = "";
+    document.getElementById("errorofficeId").innerHTML = "";
     if ($("#caseId").val() == 0) {
         var CaseCreate = {
             Name: $("#caseName").val(),
             OfficeId: $("#officeId").val()
         };
 
-        $.ajax({
-            url: '/Case/CaseCreate',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(CaseCreate),
-            success: function (response) {
-                if (response.isSuccess) {
-                    toastr.success("İşlem başarılı.");
-                    $('#createPopup').modal('toggle');
+        if (validation("officeId") &&
+            validation("caseName")
+        ) {
+            $.ajax({
+                url: '/Case/CaseCreate',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(CaseCreate),
+                success: function (response) {
+                    if (response.isSuccess) {
+                        toastr.success("İşlem başarılı.");
+                        $('#createPopup').modal('toggle');
 
-                    setTimeout(function () {
+                        setTimeout(function () {
+                            $("#save").attr('disabled', false);
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        toastr.error(response.message);
                         $("#save").attr('disabled', false);
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    toastr.error(response.message);
+                    }
+                },
+                error: function (response) {
+                    $("#save").attr('disabled', false);
                 }
-            },
-            error: function (response) {
-                $("#save").attr('disabled', false);
-            }
-        });
+            });
+        }
+        else {
+            $("#save").attr('disabled', false);
+        }
     }
     else {
         Update($("#caseId").val());
@@ -65,25 +87,35 @@ function Update(id) {
         OfficeId: $("#officeId").val()
     };
 
-    $.ajax({
-        url: '/Case/CaseEdit',
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(CaseUpdate),
-        success: function (response) {
-            if (response.isSuccess) {
-                toastr.success("İşlem başarılı.");
-                $('#createPopup').modal('toggle');
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1000);
-            } else {
-                toastr.error(response.message);
+    if (validation("officeId") &&
+        validation("caseName")
+    ) {
+        $.ajax({
+            url: '/Case/CaseEdit',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(CaseUpdate),
+            success: function (response) {
+                if (response.isSuccess) {
+                    toastr.success("İşlem başarılı.");
+                    $('#createPopup').modal('toggle');
+                    setTimeout(function () {
+                        $("#save").attr('disabled', false);
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    toastr.error(response.message);
+                    $("#save").attr('disabled', false);
+                }
+            },
+            error: function (response) {
+                $("#save").attr('disabled', false);
             }
-        },
-        error: function (response) {
-        }
-    });
+        });
+    }
+    else {
+        $("#save").attr('disabled', false);
+    }
 }
 
 function remove(id) {

@@ -6,13 +6,7 @@
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        order: [[0, 'desc']],
-        "createdRow": function (row, data, dataIndex) {
-            if (data[2] == "London") {
-                $(row).addClass('red');
-
-            }
-        }
+        order: [[0, 'desc']]
     });
 
     $('#caseId').change(function () {
@@ -169,8 +163,27 @@ function edit(id) {
     });
 }
 
+function validation(id) {
+    const inpObj = document.getElementById(id);
+    if (!inpObj.checkValidity()) {
+        var _id = "error" + id.toString();
+        document.getElementById(_id).innerHTML = inpObj.validationMessage;
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 function Save() {
     $("#save").attr('disabled', true);
+    document.getElementById("errorcaseId").innerHTML = "";
+    document.getElementById("errorprocessNumber").innerHTML = "";
+    document.getElementById("erroraccountId").innerHTML = "";
+    document.getElementById("erroraccountDetailId").innerHTML = "";
+    document.getElementById("errorprocessTypeId").innerHTML = "";
+    document.getElementById("errorprice").innerHTML = "";
+    document.getElementById("errorprocessPrice").innerHTML = "";
     var OperationCreate = {
         CaseId: parseInt($("#caseId").val()),
         ProcessNumber: parseInt($("#processNumber").val()),
@@ -181,33 +194,55 @@ function Save() {
         ProcessPrice: parseFloat($("#processPrice").val() == "" ? 0 : $("#processPrice").val().replace(",", "."))
     };
 
-    $.ajax({
-        url: '/Operation/OperationCreate',
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(OperationCreate),
-        success: function (response) {
-            if (response.isSuccess) {
-                toastr.success("İşlem başarılı.");
-                $('#createPopup').modal('toggle');
+    if (validation("caseId") &&
+        validation("accountId") &&
+        validation("accountDetailId") &&
+        validation("processTypeId") &&
+        validation("price") &&
+        validation("processPrice")
+    ) {
+        $.ajax({
+            url: '/Operation/OperationCreate',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(OperationCreate),
+            success: function (response) {
+                if (response.isSuccess) {
+                    toastr.success("İşlem başarılı.");
+                    $('#createPopup').modal('toggle');
 
-                setTimeout(function () {
-                    window.location.reload();
-                }, 2000);
-            } else {
-                toastr.error(response.message);
+                    setTimeout(function () {
+                        $("#save").attr('disabled', false);
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    toastr.error(response.message);
+                    $("#save").attr('disabled', false);
+                }
+                $("#save").attr('disabled', false);
+            },
+            error: function (response) {
+                $("#save").attr('disabled', false);
             }
-            $("#save").attr('disabled', false);
-        },
-        error: function (response) {
-            $("#save").attr('disabled', false);
-        }
-    });
+        });
+    }
+    else {
+        $("#save").attr('disabled', false);
+    }
 }
 
 function Update() {
+    $("#update").attr('disabled', true);
+    document.getElementById("erroreditCaseId").innerHTML = "";
+    document.getElementById("erroreditProcessNumber").innerHTML = "";
+    document.getElementById("erroreditAccountId").innerHTML = "";
+    document.getElementById("erroreditAccountDetailId").innerHTML = "";
+    document.getElementById("erroreditProcessTypeId").innerHTML = "";
+    document.getElementById("erroreditPrice").innerHTML = "";
+    document.getElementById("erroreditProcessPrice").innerHTML = "";
     var OperationUpdate = {
         Id: parseInt($("#editId").val()),
+        CaseId: parseInt($("#editCaseId").val()),
         ProcessNumber: parseInt($("#editProcessNumber").val()),
         AccountId: parseInt($("#editAccountId").val()),
         AccountDetailId: parseInt($("#editAccountDetailId").val()),
@@ -216,25 +251,40 @@ function Update() {
         ProcessPrice: parseFloat($("#editProcessPrice").val().replace(",", "."))
     };
 
-    $.ajax({
-        url: '/Operation/OperationEdit',
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(OperationUpdate),
-        success: function (response) {
-            if (response.isSuccess) {
-                toastr.success("İşlem başarılı.");
-                $('#editPopup').modal('toggle');
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1000);
-            } else {
-                toastr.error(response.message);
+    if (validation("editCaseId") &&
+        validation("editProcessNumber") &&
+        validation("editAccountId") &&
+        validation("editAccountDetailId") &&
+        validation("editProcessTypeId") &&
+        validation("editPrice") &&
+        validation("editProcessPrice")
+    ) {
+        $.ajax({
+            url: '/Operation/OperationEdit',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(OperationUpdate),
+            success: function (response) {
+                if (response.isSuccess) {
+                    toastr.success("İşlem başarılı.");
+                    $('#editPopup').modal('toggle');
+                    setTimeout(function () {
+                        $("#update").attr('disabled', false);
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    toastr.error(response.message);
+                    $("#update").attr('disabled', false);
+                }
+            },
+            error: function (response) {
+                $("#update").attr('disabled', false);
             }
-        },
-        error: function (response) {
-        }
-    });
+        });
+    }
+    else {
+        $("#update").attr('disabled', false);
+    }
 }
 
 function UploadFile() {

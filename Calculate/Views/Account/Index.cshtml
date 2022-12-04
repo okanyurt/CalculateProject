@@ -131,9 +131,10 @@
                                         <form class="form-group" autocomplete="off">
                                             <div class="form-body">
                                                 <div class="row">
+                                                    <p id="errorcaseId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput1" class="col-sm-2 col-form-label">Kasa Adı</label>
-                                                        <select id="caseId" name="caseId" style="width:300px !important;" required>
+                                                        <label for="donationinput1" class="col-sm-4 col-form-label">Kasa Adı</label>
+                                                        <select id="caseId" name="caseId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir Kasa seçiniz</option>
                                                             @foreach (var item in ViewBag.cases as SelectList)
                                                             {
@@ -142,56 +143,35 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                               @* <div class="row">
-                                                    <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="bankId" name="bankId" style="width:300px !important;" required>
-                                                            <option value="" selected>Lütfen bir Banka seçiniz</option>
-                                                            @foreach (var item in ViewBag.banks as SelectList)
-                                                            {
-                                                                <option value="@item.Value">@item.Text</option>
-                                                            }
-                                                        </select>
-                                                    </div>
-                                                </div>*@
-
                                                 <div class="row">
+                                                    <p id="errorName" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput3" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        <input style="width:300px !important;" id="Name" name="Name" required>
-                                                        <input style="width:300px !important;display:none !important;" id="Id" name="Id">
+                                                        <label for="donationinput3" class="col-sm-4 col-form-label">Hesap Adı</label>
+                                                        <input style="width:250px !important;" id="Name" name="Name" required>
+                                                        <input style="width:250px !important;display:none !important;" id="Id" name="Id">
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="errorphoneNumber" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput4" class="col-sm-2 col-form-label">Telefon Numarası</label>
-                                                        <input style="width:300px !important;" id="phoneNumber" type="tel" name="phoneNumber" placeholder="(XXX) XXX-XXXX" pattern="\(\d{3}\) \d{3}\-\d{4}" class="masked" title="10-digit number" required>
+                                                        <label for="donationinput4" class="col-sm-4 col-form-label">Telefon Numarası</label>
+                                                        <input style="width:250px !important;" id="phoneNumber" type="tel" name="phoneNumber" placeholder="(XXX) XXX-XXXX" pattern="\(\d{3}\) \d{3}\-\d{4}" class="masked" title="10-digit number" required>
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="erroridentityNumber" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput5" class="col-sm-2 col-form-label">Kimlik Numarası</label>
-                                                        <input style="width:300px !important;" type="text" id="identityNumber" name="identityNumber" pattern="[0-9]{11}" />
+                                                        <label for="donationinput5" class="col-sm-4 col-form-label">Kimlik Numarası</label>
+                                                        <input style="width:250px !important;" type="text" id="identityNumber" name="identityNumber" pattern="[0-9]{11}" />
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="errornote" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput6" class="col-sm-2 col-form-label">Not</label>
-                                                        <input style="width:300px !important;" type="text" id="note" name="note" />
+                                                        <label for="donationinput6" class="col-sm-4 col-form-label">Not</label>
+                                                        <input style="width:250px !important;" type="text" id="note" name="note" />
                                                     </div>
                                                 </div>
-                                               @* <div class="row">
-                                                    <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput7" class="col-sm-2 col-form-label">Iban</label>
-                                                        <input style="width:300px !important;" type="text" id="iban" name="iban" />
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput8" class="col-sm-2 col-form-label">Hesap No</label>
-                                                        <input style="width:300px !important;" type="text" id="bankAccountNumber" name="bankAccountNumber" />
-                                                    </div>
-                                                </div>*@
                                             </div>
 
                                             <div class="form-actions text-center">

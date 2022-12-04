@@ -24,8 +24,24 @@ function edit(id) {
     });
 }
 
+function validation(id) {
+    const inpObj = document.getElementById(id);
+    if (!inpObj.checkValidity()) {
+        var _id = "error" + id.toString();
+        document.getElementById(_id).innerHTML = inpObj.validationMessage;
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 function Save() {
     $("#save").attr('disabled', true);
+    document.getElementById("erroraccountId").innerHTML = "";
+    document.getElementById("errorbankId").innerHTML = "";
+    document.getElementById("erroriban").innerHTML = "";
+    document.getElementById("errorbankAccountNumber").innerHTML = "";
     if ($("#Id").val() == 0) {
         var AccountDetailCreate = {
              AccountId: $("#accountId").val(),
@@ -34,28 +50,38 @@ function Save() {
              BankAccountNumber: $("#bankAccountNumber").val()
         };
 
-        $.ajax({
-            url: '/AccountDetail/AccountDetailCreate',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(AccountDetailCreate),
-            success: function (response) {
-                if (response.isSuccess) {
-                    toastr.success("İşlem başarılı.");
-                    $('#createPopup').modal('toggle');
+        if (validation("accountId") &&
+            validation("bankId") &&
+            validation("iban") &&
+            validation("bankAccountNumber")
+        ) {
+            $.ajax({
+                url: '/AccountDetail/AccountDetailCreate',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(AccountDetailCreate),
+                success: function (response) {
+                    if (response.isSuccess) {
+                        toastr.success("İşlem başarılı.");
+                        $('#createPopup').modal('toggle');
 
-                    setTimeout(function () {
+                        setTimeout(function () {
+                            $("#save").attr('disabled', false);
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        toastr.error(response.message);
                         $("#save").attr('disabled', false);
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    toastr.error(response.message);
+                    }
+                },
+                error: function (response) {
+                    $("#save").attr('disabled', false);
                 }
-            },
-            error: function (response) {
-                $("#save").attr('disabled', false);
-            }
-        });
+            });
+        }
+        else {
+            $("#save").attr('disabled', false);
+        }
     }
     else {
         Update($("#Id").val());
@@ -72,25 +98,37 @@ function Update(id) {
         BankAccountNumber: $("#bankAccountNumber").val()
     };
 
-    $.ajax({
-        url: '/AccountDetail/AccountDetailEdit',
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(AccountDetailUpdate),
-        success: function (response) {
-            if (response.isSuccess) {
-                toastr.success("İşlem başarılı.");
-                $('#createPopup').modal('toggle');
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1000);
-            } else {
-                toastr.error(response.message);
+    if (validation("accountId") &&
+        validation("bankId") &&
+        validation("iban") &&
+        validation("bankAccountNumber")
+    ) {
+        $.ajax({
+            url: '/AccountDetail/AccountDetailEdit',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(AccountDetailUpdate),
+            success: function (response) {
+                if (response.isSuccess) {
+                    toastr.success("İşlem başarılı.");
+                    $('#createPopup').modal('toggle');
+                    setTimeout(function () {
+                        $("#save").attr('disabled', false);
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    toastr.error(response.message);
+                    $("#save").attr('disabled', false);
+                }
+            },
+            error: function (response) {
+                $("#save").attr('disabled', false);
             }
-        },
-        error: function (response) {
-        }
-    });
+        });
+    }
+    else {
+        $("#save").attr('disabled', false);
+    }
 }
 
 function remove(id) {

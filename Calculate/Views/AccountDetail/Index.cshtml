@@ -38,7 +38,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Tarih</th>
-                                                    <th>Hesap Adı</th>                                                 
+                                                    <th>Hesap Adı</th>
                                                     <th>Banka Adı</th>
                                                     <th>Iban</th>
                                                     <th>Hesap Numarası</th>
@@ -57,7 +57,7 @@
                                                             </td>
                                                             <td>
                                                                 @item.AccountName
-                                                            </td>                                                         
+                                                            </td>
                                                             <td>
                                                                 @item.BankName
                                                             </td>
@@ -66,7 +66,7 @@
                                                             </td>
                                                             <td>
                                                                 @item.BankAccountNumber
-                                                            </td>                                                          
+                                                            </td>
                                                             <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
                                                             <td><a class="btn btn-danger btn-sm" onclick="remove(@item.Id)"><i class="la la-trash"></i> Sil</a></td>
                                                         </tr>
@@ -75,8 +75,8 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                   <th>Tarih</th>
-                                                    <th>Hesap Adı</th>                                                 
+                                                    <th>Tarih</th>
+                                                    <th>Hesap Adı</th>
                                                     <th>Banka Adı</th>
                                                     <th>Iban</th>
                                                     <th>Hesap Numarası</th>
@@ -111,10 +111,11 @@
                                         <form class="form-group" autocomplete="off">
                                             <div class="form-body">
                                                 <div class="row">
+                                                    <p id="erroraccountId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput1" class="col-sm-2 col-form-label">Hesap Adı</label>
-                                                        <input style="width:300px !important;display:none !important;" id="Id" name="Id">
-                                                        <select id="accountId" name="accountId" style="width:300px !important;" required>
+                                                        <label for="donationinput1" class="col-sm-4 col-form-label">Hesap Adı</label>
+                                                        <input style="width:250px !important;display:none !important;" id="Id" name="Id">
+                                                        <select id="accountId" name="accountId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir hesap seçiniz</option>
                                                             @foreach (var item in ViewBag.accounts as SelectList)
                                                             {
@@ -124,9 +125,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="errorbankId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Banka Adı</label>
-                                                        <select id="bankId" name="bankId" style="width:300px !important;" required>
+                                                        <label for="donationinput2" class="col-sm-4 col-form-label">Banka Adı</label>
+                                                        <select id="bankId" name="bankId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir Banka seçiniz</option>
                                                             @foreach (var item in ViewBag.banks as SelectList)
                                                             {
@@ -134,17 +136,19 @@
                                                             }
                                                         </select>
                                                     </div>
-                                                </div>                                                                                 
+                                                </div>
                                                 <div class="row">
+                                                    <p id="erroriban" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput7" class="col-sm-2 col-form-label">Iban</label>
-                                                        <input style="width:300px !important;" type="text" id="iban" name="iban" />
+                                                        <label for="donationinput7" class="col-sm-4 col-form-label">Iban</label>
+                                                        <input style="width:250px !important;" type="text" id="iban" name="iban" />
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="errorbankAccountNumber" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput8" class="col-sm-2 col-form-label">Hesap No</label>
-                                                        <input style="width:300px !important;" type="text" id="bankAccountNumber" name="bankAccountNumber" />
+                                                        <label for="donationinput8" class="col-sm-4 col-form-label">Hesap No</label>
+                                                        <input style="width:250px !important;" type="text" id="bankAccountNumber" name="bankAccountNumber" />
                                                     </div>
                                                 </div>
                                             </div>

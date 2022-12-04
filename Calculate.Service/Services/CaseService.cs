@@ -46,7 +46,7 @@ namespace Calculate.Service.Services
                        {
                            Id = c.Id,
                            Name = c.Name,
-                           officeId = c.officeId,
+                           officeId = o.Id,
                            IsEnable = c.IsEnable,
                            CreatedBy = c.CreatedBy,
                            CreatedDate = c.CreatedDate,

@@ -96,9 +96,10 @@
                                         <form class="form-group" autocomplete="off">
                                             <div class="form-body">
                                                 <div class="row">
+                                                    <p id="errorofficeId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput1" class="col-sm-2 col-form-label">Ofis Adı</label>
-                                                        <select id="officeId" name="officeId" style="width:300px !important;" required>
+                                                        <label for="donationinput1" class="col-sm-4 col-form-label">Ofis Adı</label>
+                                                        <select id="officeId" name="officeId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir ofis seçiniz</option>
                                                             @foreach (var item in ViewBag.offices as SelectList)
                                                             {
@@ -109,10 +110,11 @@
                                                 </div>
 
                                                 <div class="row">
+                                                    <p id="errorcaseName" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Kasa Adı</label>
-                                                        <input style="width:300px !important;" id="caseName" name="caseName" required>
-                                                        <input style="width:300px !important;display:none !important;" id="caseId" name="caseId">
+                                                        <label for="donationinput2" class="col-sm-4 col-form-label">Kasa Adı</label>
+                                                        <input style="width:250px !important;" id="caseName" name="caseName" required>
+                                                        <input style="width:250px !important;display:none !important;" id="caseId" name="caseId">
                                                     </div>
                                                 </div>
                                             </div>
