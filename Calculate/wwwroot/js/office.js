@@ -20,35 +20,54 @@ function edit(id) {
     });
 }
 
+function validation(id) {
+    const inpObj = document.getElementById(id);
+    if (!inpObj.checkValidity()) {
+        var _id = "error" + id.toString();
+        document.getElementById(_id).innerHTML = inpObj.validationMessage;
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 function Save() {
     $("#save").attr('disabled', true);
+    document.getElementById("errorofficeName").innerHTML = "";
     if ($("#officeId").val() == 0) {
         var OfficeCreate = {
             Name: $("#officeName").val()
         };
 
-        $.ajax({
-            url: '/Office/OfficeCreate',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(OfficeCreate),
-            success: function (response) {
-                if (response.isSuccess) {
-                    toastr.success("İşlem başarılı.");
-                    $('#createPopup').modal('toggle');
+        if (validation("officeName")) {
+            $.ajax({
+                url: '/Office/OfficeCreate',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(OfficeCreate),
+                success: function (response) {
+                    if (response.isSuccess) {
+                        toastr.success("İşlem başarılı.");
+                        $('#createPopup').modal('toggle');
 
-                    setTimeout(function () {
+                        setTimeout(function () {
+                            $("#save").attr('disabled', false);
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        toastr.error(response.message);
                         $("#save").attr('disabled', false);
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    toastr.error(response.message);
+                    }
+                },
+                error: function (response) {
+                    $("#save").attr('disabled', false);
                 }
-            },
-            error: function (response) {
-                $("#save").attr('disabled', false);
-            }
-        });
+            });
+        }
+        else {
+            $("#save").attr('disabled', false);
+        }
     }
     else {
         Update($("#officeId").val());
@@ -62,25 +81,33 @@ function Update(id) {
         Name: $("#officeName").val()
     };
 
-    $.ajax({
-        url: '/Office/OfficeEdit',
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(OfficeUpdate),
-        success: function (response) {
-            if (response.isSuccess) {
-                toastr.success("İşlem başarılı.");
-                $('#createPopup').modal('toggle');
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1000);
-            } else {
-                toastr.error(response.message);
+    if (validation("officeName")) {
+        $.ajax({
+            url: '/Office/OfficeEdit',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(OfficeUpdate),
+            success: function (response) {
+                if (response.isSuccess) {
+                    toastr.success("İşlem başarılı.");
+                    $('#createPopup').modal('toggle');
+                    setTimeout(function () {
+                        $("#save").attr('disabled', false);
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    toastr.error(response.message);
+                    $("#save").attr('disabled', false);
+                }
+            },
+            error: function (response) {
+                $("#save").attr('disabled', false);
             }
-        },
-        error: function (response) {
-        }
-    });
+        });
+    }
+    else {
+        $("#save").attr('disabled', false);
+    }
 }
 
 function remove(id) {

@@ -25,8 +25,26 @@ function edit(id) {
     });
 }
 
+function validation(id) {
+    const inpObj = document.getElementById(id);
+    if (!inpObj.checkValidity()) {
+        var _id = "error" + id.toString();
+        document.getElementById(_id).innerHTML = inpObj.validationMessage;
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 function Save() {
     $("#save").attr('disabled', true);
+    document.getElementById("errorName").innerHTML = "";
+    document.getElementById("errorphoneNumber").innerHTML = "";
+    document.getElementById("erroridentityNumber").innerHTML = "";
+    document.getElementById("errornote").innerHTML = "";
+    document.getElementById("errorcaseId").innerHTML = "";
+
     if ($("#Id").val() == 0) {
         var AccountCreate = {
             Name: $("#Name").val(),
@@ -36,28 +54,39 @@ function Save() {
             CaseId: $("#caseId").val()
         };
 
-        $.ajax({
-            url: '/Account/AccountCreate',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(AccountCreate),
-            success: function (response) {
-                if (response.isSuccess) {
-                    toastr.success("İşlem başarılı.");
-                    $('#createPopup').modal('toggle');
+        if (validation("caseId") &&
+            validation("Name") &&
+            validation("phoneNumber") &&
+            validation("identityNumber") &&
+            validation("note")        
+        ) {
+            $.ajax({
+                url: '/Account/AccountCreate',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(AccountCreate),
+                success: function (response) {
+                    if (response.isSuccess) {
+                        toastr.success("İşlem başarılı.");
+                        $('#createPopup').modal('toggle');
 
-                    setTimeout(function () {
+                        setTimeout(function () {
+                            $("#save").attr('disabled', false);
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        toastr.error(response.message);
                         $("#save").attr('disabled', false);
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    toastr.error(response.message);
+                    }
+                },
+                error: function (response) {
+                    $("#save").attr('disabled', false);
                 }
-            },
-            error: function (response) {
-                $("#save").attr('disabled', false);
-            }
-        });
+            });
+        }
+        else {
+            $("#save").attr('disabled', false);
+        }
     }
     else {
         Update($("#Id").val());
@@ -75,25 +104,38 @@ function Update(id) {
         CaseId: $("#caseId").val()
     };
 
-    $.ajax({
-        url: '/Account/AccountEdit',
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(AccountUpdate),
-        success: function (response) {
-            if (response.isSuccess) {
-                toastr.success("İşlem başarılı.");
-                $('#createPopup').modal('toggle');
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1000);
-            } else {
-                toastr.error(response.message);
+    if (validation("caseId") &&
+        validation("Name") &&
+        validation("phoneNumber") &&
+        validation("identityNumber") &&
+        validation("note")
+    ) {
+        $.ajax({
+            url: '/Account/AccountEdit',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(AccountUpdate),
+            success: function (response) {
+                if (response.isSuccess) {
+                    toastr.success("İşlem başarılı.");
+                    $('#createPopup').modal('toggle');
+                    setTimeout(function () {
+                        window.location.reload();
+                        $("#save").attr('disabled', false);
+                    }, 1000);
+                } else {
+                    toastr.error(response.message);
+                    $("#save").attr('disabled', false);
+                }
+            },
+            error: function (response) {
+                $("#save").attr('disabled', false);
             }
-        },
-        error: function (response) {
-        }
-    });
+        });
+    }
+    else {
+        $("#save").attr('disabled', false);
+    }
 }
 
 function remove(id) {

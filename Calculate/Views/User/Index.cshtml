@@ -121,16 +121,18 @@
                                         <form class="form-group" autocomplete="off">
                                             <div class="form-body">
                                                 <div class="row">
+                                                    <p id="erroruserName" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput1" class="col-sm-2 col-form-label">Kullanıcı Adı</label>
-                                                        <input style="width:300px !important;" id="userName" name="userName" required>
-                                                        <input style="width:300px !important;display:none !important;" id="Id" name="Id">
+                                                        <label for="donationinput1" class="col-sm-4 col-form-label">Kullanıcı Adı</label>
+                                                        <input style="width:250px !important;" id="userName" name="userName" required>
+                                                        <input style="width:250px !important;display:none !important;" id="Id" name="Id">
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="errorroleId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput2" class="col-sm-2 col-form-label">Rol</label>
-                                                        <select id="roleId" name="roleId" style="width:300px !important;" required>
+                                                        <label for="donationinput2" class="col-sm-4 col-form-label">Rol</label>
+                                                        <select id="roleId" name="roleId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir Rol seçiniz</option>
                                                             <option value="1">AGENT</option>
                                                             <option value="2">ADMIN</option>
@@ -138,9 +140,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="errorisEnabledId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput3" class="col-sm-2 col-form-label">Aktif/Pasif</label>
-                                                        <select id="isEnabledId" name="isEnabledId" style="width:300px !important;" required>
+                                                        <label for="donationinput3" class="col-sm-4 col-form-label">Aktif/Pasif</label>
+                                                        <select id="isEnabledId" name="isEnabledId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen Aktif/Pasif seçiniz</option>
                                                             <option value="1">True</option>
                                                             <option value="0">False</option>
@@ -148,9 +151,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="errorofficeId" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput4" class="col-sm-2 col-form-label">Ofis Adı</label>
-                                                        <select id="officeId" name="officeId" style="width:300px !important;" required>
+                                                        <label for="donationinput4" class="col-sm-4 col-form-label">Ofis Adı</label>
+                                                        <select id="officeId" name="officeId" style="width:250px !important;" required>
                                                             <option value="" selected>Lütfen bir Ofis seçiniz</option>
                                                             @foreach (var item in ViewBag.offices as SelectList)
                                                             {
@@ -160,17 +164,19 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <p id="errorphoneNumber" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput5" class="col-sm-2 col-form-label">Telefon Numarası</label>
-                                                        <input style="width:300px !important;" id="phoneNumber" type="tel" name="phoneNumber" placeholder="(XXX) XXX-XXXX" pattern="\(\d{3}\) \d{3}\-\d{4}" class="masked" title="10-digit number" required>
+                                                        <label for="donationinput5" class="col-sm-4 col-form-label">Telefon Numarası</label>
+                                                        <input style="width:250px !important;" id="phoneNumber" type="tel" name="phoneNumber" placeholder="(XXX) XXX-XXXX" pattern="\(\d{3}\) \d{3}\-\d{4}" class="masked" title="10-digit number" required>
                                                     </div>
-                                                </div>                                               
+                                                </div>
                                                 <div class="row">
+                                                    <p id="errorpassword" style="color:red"></p>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="donationinput6" class="col-sm-2 col-form-label">Şifre</label>
-                                                        <input style="width:300px !important;" type="text" id="password" name="password" />
+                                                        <label for="donationinput6" class="col-sm-4 col-form-label">Şifre</label>
+                                                        <input style="width:250px !important;" type="text" id="password" name="password" required/>
                                                     </div>
-                                                </div>   
+                                                </div>
                                             </div>
 
                                             <div class="form-actions text-center">

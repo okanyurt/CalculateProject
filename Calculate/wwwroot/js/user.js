@@ -26,10 +26,27 @@ function edit(id) {
     });
 }
 
+function validation(id) {
+    const inpObj = document.getElementById(id);
+    if (!inpObj.checkValidity()) {
+        var _id = "error" + id.toString();
+        document.getElementById(_id).innerHTML = inpObj.validationMessage;
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
 function Save() {
     $("#save").attr('disabled', true);
+    document.getElementById("erroruserName").innerHTML = "";
+    document.getElementById("errorroleId").innerHTML = "";
+    document.getElementById("errorisEnabledId").innerHTML = "";
+    document.getElementById("errorofficeId").innerHTML = "";
+    document.getElementById("errorphoneNumber").innerHTML = "";
+    document.getElementById("errorpassword").innerHTML = "";
     if ($("#Id").val() == 0) {
-
         var isenabled = true;
         if ($("#isEnabledId").val() == 1) {
             isenabled = true;
@@ -47,28 +64,40 @@ function Save() {
             PasswordHash: $("#password").val()
         };
 
-        $.ajax({
-            url: '/User/UserCreate',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(UserCreate),
-            success: function (response) {
-                if (response.isSuccess) {
-                    toastr.success("İşlem başarılı.");
-                    $('#createPopup').modal('toggle');
+        if (validation("userName") &&
+            validation("roleId") &&
+            validation("isEnabledId") &&
+            validation("officeId") &&
+            validation("phoneNumber") &&
+            validation("password")
+        ) {
+            $.ajax({
+                url: '/User/UserCreate',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(UserCreate),
+                success: function (response) {
+                    if (response.isSuccess) {
+                        toastr.success("İşlem başarılı.");
+                        $('#createPopup').modal('toggle');
 
-                    setTimeout(function () {
+                        setTimeout(function () {
+                            $("#save").attr('disabled', false);
+                            window.location.reload();
+                        }, 1000);
+                    } else {
+                        toastr.error(response.message);
                         $("#save").attr('disabled', false);
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    toastr.error(response.message);
+                    }
+                },
+                error: function (response) {
+                    $("#save").attr('disabled', false);
                 }
-            },
-            error: function (response) {
-                $("#save").attr('disabled', false);
-            }
-        });
+            });
+        }
+        else {
+            $("#save").attr('disabled', false);
+        }
     }
     else {
         Update($("#Id").val());
@@ -95,25 +124,39 @@ function Update(id) {
         PasswordHash: $("#password").val()
     };
 
-    $.ajax({
-        url: '/User/UserEdit',
-        type: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(UserUpdate),
-        success: function (response) {
-            if (response.isSuccess) {
-                toastr.success("İşlem başarılı.");
-                $('#createPopup').modal('toggle');
-                setTimeout(function () {
-                    window.location.reload();
-                }, 1000);
-            } else {
-                toastr.error(response.message);
+    if (validation("userName") &&
+        validation("roleId") &&
+        validation("isEnabledId") &&
+        validation("officeId") &&
+        validation("phoneNumber") &&
+        validation("password")
+    ) {
+        $.ajax({
+            url: '/User/UserEdit',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(UserUpdate),
+            success: function (response) {
+                if (response.isSuccess) {
+                    toastr.success("İşlem başarılı.");
+                    $('#createPopup').modal('toggle');
+                    setTimeout(function () {
+                        $("#save").attr('disabled', false);
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    toastr.error(response.message);
+                    $("#save").attr('disabled', false);
+                }
+            },
+            error: function (response) {
+                $("#save").attr('disabled', false);
             }
-        },
-        error: function (response) {
-        }
-    });
+        });
+    }
+    else {
+        $("#save").attr('disabled', false);
+    }
 }
 
 function remove(id) {
