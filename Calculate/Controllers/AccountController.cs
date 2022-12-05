@@ -134,6 +134,6 @@ namespace Calculate.Controllers
             {
                 return Json(new { redirectToUrl = Url.Action("Index", "Account"), isSuccess = false });
             }
-        }
+        } 
     }
 }

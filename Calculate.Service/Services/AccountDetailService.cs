@@ -132,8 +132,16 @@ namespace Calculate.Service.Services
 
         public async Task<List<Account>> GetAllAccountAsync()
         {
-            var list = await _context.Accounts.Where(x => x.IsEnable == true).OrderBy(x => x.Name).ToListAsync();
-            return list;
+            var list = from a in _context.Accounts
+                       join c in _context.Cases on a.CaseId equals c.Id
+                       where a.IsEnable == true
+                       orderby a.Name ascending
+                       select new Account
+                       {
+                           Id = a.Id,
+                           Name = a.Name + "-" + c.Name
+                       };
+            return await list.ToListAsync();
         }
     }
 }

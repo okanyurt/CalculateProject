@@ -2,11 +2,15 @@
     $.noConflict();
     $('#example').DataTable({
         "scrollX": true,
+        lengthMenu: [
+            [50, 100, 500, -1],
+            [50, 100, 500, 'All'],
+        ],
         dom: 'Bfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'pageLength','copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        order: [[0, 'desc']]
+        order: [[0, 'desc']]      
     });
 
     $('#caseId').change(function () {
@@ -288,6 +292,39 @@ function Update() {
 }
 
 function UploadFile() {
+    //let selectedFile;
+    //let data = [{
+    //    "name": "jayanth",
+    //    "data": "scd",
+    //    "abc": "sdef"
+    //}]
+    //console.log(window.XLSX);
+    //document.getElementById('fileUpload').addEventListener("change", (event) => {
+    //    selectedFile = event.target.files[0];
+
+    //})
+
+
+    //document.getElementById('fileUpload').addEventListener("click", () => {
+    //    XLSX.utils.json_to_sheet(data, 'out.xlsx');
+    //    if (selectedFile) {
+    //        let fileReader = new FileReader();
+    //        fileReader.readAsBinaryString(selectedFile);
+    //        fileReader.onload = (event) => {
+    //            let data = event.target.result;
+    //            let workbook = XLSX.read(data, { type: "binary" });
+    //            console.log(workbook);
+    //            workbook.SheetNames.forEach(sheet => {
+    //                let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
+    //                console.log(rowObject);
+    //                var list = JSON.stringify(rowObject, undefined, 4)
+    //            });
+    //        }
+    //    }
+    //});
+
+
+
     var excelFile = document.getElementById('fileUpload');
     formData = new FormData();
 
