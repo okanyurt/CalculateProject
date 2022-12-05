@@ -20,7 +20,7 @@ namespace Calculate.Service.Services
 
         Task<List<ProcessType>> GetProcessTypeAsync();
 
-        Task<List<Case>> GetCaseAsync(string officeId);
+        Task<List<Case>> GetCaseAsync(string officeId, string roleId);
 
         Task<bool> SaveUploadExcelAsync(List<OperationUploadExcel> operationUploadExcels, string userId);
 

@@ -42,6 +42,7 @@
                                                     <th>Banka Adı</th>
                                                     <th>Iban</th>
                                                     <th>Hesap Numarası</th>
+                                                    <th>Aktif\Pasif</th>
                                                     <th>Güncelle</th>
                                                     <th>Sil</th>
                                                 </tr>
@@ -67,6 +68,9 @@
                                                             <td>
                                                                 @item.BankAccountNumber
                                                             </td>
+                                                            <td>
+                                                                @item.IsEnable
+                                                            </td>
                                                             <td><a class="btn btn-warning btn-sm" onclick="edit(@item.Id)"><i class="la la-pencil"></i> Güncelle</a></td>
                                                             <td><a class="btn btn-danger btn-sm" onclick="remove(@item.Id)"><i class="la la-trash"></i> Sil</a></td>
                                                         </tr>
@@ -80,6 +84,7 @@
                                                     <th>Banka Adı</th>
                                                     <th>Iban</th>
                                                     <th>Hesap Numarası</th>
+                                                    <th>Aktif\Pasif</th>
                                                     <th>Güncelle</th>
                                                     <th>Sil</th>
                                                 </tr>
