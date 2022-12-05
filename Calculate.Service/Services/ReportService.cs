@@ -122,7 +122,7 @@ namespace Calculate.Service.Services
                        join b in _context.Banks on ad.BankId equals b.Id
                        join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
                        join c in _context.Cases on o.CaseId equals c.Id
-                       where o.IsEnable == true && o.CaseId == Id && o.UpdatedDate.Date == today
+                       where o.IsEnable == true && a.IsEnable == true && o.CaseId == Id && o.UpdatedDate.Date == today
                        group new { a, b, pt, o } by new
                        {
                            Account = a.Name,
