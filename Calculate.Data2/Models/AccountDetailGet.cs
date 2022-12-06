@@ -16,5 +16,7 @@
         public string? AccountName { get; set; }
 
         public string? BankName { get; set; }
+
+        public string? CaseName { get; set; }
     }
 }

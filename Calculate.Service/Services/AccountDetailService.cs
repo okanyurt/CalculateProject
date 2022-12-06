@@ -39,7 +39,9 @@ namespace Calculate.Service.Services
         {
             var list = from a in _context.Accounts
                        join ad in _context.AccountDetails on a.Id equals ad.AccountId
-                       join b in _context.Banks on ad.BankId equals b.Id                     
+                       join b in _context.Banks on ad.BankId equals b.Id     
+                       join c in _context.Cases on a.CaseId equals c.Id
+                       where ad.IsEnable == true
                        orderby ad.UpdatedDate descending
                        select new AccountDetailGet
                        {
@@ -54,7 +56,8 @@ namespace Calculate.Service.Services
                            UpdatedBy = ad.UpdatedBy,
                            UpdatedDate = ad.UpdatedDate,          
                            AccountName = a.Name,
-                           BankName = b.Name
+                           BankName = b.Name,
+                           CaseName = c.Name
                        };
             return await list.ToListAsync();
         }
@@ -64,7 +67,8 @@ namespace Calculate.Service.Services
             var list = from a in _context.Accounts
                        join ad in _context.AccountDetails on a.Id equals ad.AccountId
                        join b in _context.Banks on ad.BankId equals b.Id
-                       where  ad.Id == id
+                       join c in _context.Cases on a.CaseId equals c.Id
+                       where  ad.Id == id && ad.IsEnable == true
                        orderby ad.UpdatedDate descending
                        select new AccountDetailGet
                        {
@@ -79,7 +83,8 @@ namespace Calculate.Service.Services
                            UpdatedBy = ad.UpdatedBy,
                            UpdatedDate = ad.UpdatedDate,
                            AccountName = a.Name,
-                           BankName = b.Name
+                           BankName = b.Name,
+                           CaseName = c.Name
                        };
 
             return await list.FirstOrDefaultAsync();
