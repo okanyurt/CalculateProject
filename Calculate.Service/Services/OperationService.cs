@@ -99,11 +99,20 @@ namespace Calculate.Service.Services
             return await _context.Operations.Where(x => x.IsEnable == true && x.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<List<Case>> GetCaseAsync(string officeId)
+        public async Task<List<Case>> GetCaseAsync(string officeId, string roleId)
         {
             int _officeId = Convert.ToInt32(officeId);
-            var caseList = await _context.Cases.Where(x => x.officeId == _officeId).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
-            return caseList;
+          
+            if (roleId == Convert.ToInt32(EnumRole.ADMIN).ToString())
+            {
+                var caseList = await _context.Cases.Where(x => x.IsEnable == true).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+                return caseList;
+            }
+            else
+            {
+                var caseList = await _context.Cases.Where(x => x.officeId == _officeId && x.IsEnable == true).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
+                return caseList;
+            }        
         }
 
         public async Task<List<ProcessType>> GetProcessTypeAsync()

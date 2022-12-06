@@ -152,7 +152,8 @@ namespace Calculate.Controllers
         public async Task<List<Case>> GetCaseAsync()
         {
             string officeId = Request.Cookies["OfficeIdListKey"];
-            var cases = await _operationService.GetCaseAsync(officeId);
+            string roleId = Request.Cookies["UserRoleIdKey"];
+            var cases = await _operationService.GetCaseAsync(officeId, roleId);
             return cases;
         }
 

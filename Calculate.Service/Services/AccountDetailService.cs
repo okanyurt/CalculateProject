@@ -39,8 +39,7 @@ namespace Calculate.Service.Services
         {
             var list = from a in _context.Accounts
                        join ad in _context.AccountDetails on a.Id equals ad.AccountId
-                       join b in _context.Banks on ad.BankId equals b.Id
-                       where ad.IsEnable == true
+                       join b in _context.Banks on ad.BankId equals b.Id                     
                        orderby ad.UpdatedDate descending
                        select new AccountDetailGet
                        {
@@ -65,7 +64,7 @@ namespace Calculate.Service.Services
             var list = from a in _context.Accounts
                        join ad in _context.AccountDetails on a.Id equals ad.AccountId
                        join b in _context.Banks on ad.BankId equals b.Id
-                       where ad.IsEnable == true && ad.Id == id
+                       where  ad.Id == id
                        orderby ad.UpdatedDate descending
                        select new AccountDetailGet
                        {
