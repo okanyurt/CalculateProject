@@ -45,7 +45,7 @@ namespace Calculate.Service.Services
             return accountList;
         }
 
-        public async Task<List<OperationGet>> GetAllAsync(string _officeId,bool isAdmin)
+        public async Task<List<OperationGet>> GetAllAsync(string _officeId, bool isAdmin)
         {
             int officeId = Convert.ToInt32(_officeId);
             var date = DateTime.UtcNow.AddHours(3).Date;
@@ -56,7 +56,7 @@ namespace Calculate.Service.Services
                        join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
                        join c in _context.Cases on o.CaseId equals c.Id
                        where o.IsEnable == true
-                             && ((!isAdmin && c.officeId == officeId) || isAdmin)
+                             && ((!isAdmin && c.officeId == officeId) || isAdmin)
                              && o.UpdatedDate.Date == date
                        orderby o.UpdatedDate descending
                        select new OperationGet
@@ -102,7 +102,7 @@ namespace Calculate.Service.Services
         public async Task<List<Case>> GetCaseAsync(string officeId, string roleId)
         {
             int _officeId = Convert.ToInt32(officeId);
-          
+
             if (roleId == Convert.ToInt32(EnumRole.ADMIN).ToString())
             {
                 var caseList = await _context.Cases.Where(x => x.IsEnable == true).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
@@ -112,7 +112,7 @@ namespace Calculate.Service.Services
             {
                 var caseList = await _context.Cases.Where(x => x.officeId == _officeId && x.IsEnable == true).Select(x => new Case { Id = x.Id, Name = x.Name }).ToListAsync();
                 return caseList;
-            }        
+            }
         }
 
         public async Task<List<ProcessType>> GetProcessTypeAsync()
@@ -143,28 +143,32 @@ namespace Calculate.Service.Services
             {
                 List<int> minusAccount = new List<int>() { (int)EnumProcessType.CEKIM, (int)EnumProcessType.KOMISYON, (int)EnumProcessType.TRANSFER };
 
-                var dateTimeNow = DateTime.UtcNow;
+                var dateTimeNow = DateTime.UtcNow.AddHours(3);
                 int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
+
                 var valuee = data.AsEnumerable();
-                var query = valuee.Join(_context.Banks, d => d.BankName, b => b.Name, (d, b) => new { d, BankId = b.Id })
-                            .Join(_context.Cases, dbb => dbb.d.CaseName, c => c.Name, (dbb, c) => new { dbb, CaseId = c.Id })
-                            .Join(_context.Accounts, dbbc => dbbc.dbb.d.Account, a => a.Name, (dbbc, a) => new { dbbc, AccountId = a.Id })
-                            .Join(_context.ProcessTypes, dbbca => dbbca.dbbc.dbb.d.ProcessType, p => p.Name, (dbbca, p) => new { dbbca, ProcessTypeId = p.Id })
+                var query = valuee.Join(_context.Banks, d => d.BankName.ToUpper(), b => b.Name.ToUpper(), (d, b) => new { d, BankId = b.Id })
+                            .Join(_context.Cases, dbb => dbb.d.CaseName.ToUpper(), c => c.Name.ToUpper(), (dbb, c) => new { dbb, CaseId = c.Id })
+                            .Join(_context.Accounts, dbbc => dbbc.dbb.d.Account.ToUpper(), a => a.Name.ToUpper(), (dbbc, a) => new { dbbc, AccountId = a.Id, IsEnable = a.IsEnable, CaseId = a.CaseId })
+                            .Join(_context.AccountDetails, dbbcad => dbbcad.AccountId, ad => ad.AccountId, (dbbcad, ad) => new { dbbcad, AccountDetailId = ad.Id, BankId = ad.BankId, IsEnable = ad.IsEnable })
+                            .Join(_context.ProcessTypes, dbbcadp => dbbcadp.dbbcad.dbbc.dbb.d.ProcessType.ToUpper(), p => p.Name.ToUpper(), (dbbcadp, p) => new { dbbcadp, ProcessTypeId = p.Id })
+                            .Where(x => x.dbbcadp.dbbcad.IsEnable == true && x.dbbcadp.dbbcad.dbbc.CaseId == x.dbbcadp.dbbcad.CaseId && x.dbbcadp.BankId == x.dbbcadp.dbbcad.dbbc.dbb.BankId && x.dbbcadp.IsEnable == true)
                             .Select(x => new Operation
                             {
-                                ProcessNumber = Convert.ToInt32(x.dbbca.dbbc.dbb.d.ProcessNumber),
-                                AccountId = x.dbbca.AccountId,
-                                AccountDetailId = x.dbbca.dbbc.dbb.BankId,
+                                ProcessNumber = Convert.ToInt32(x.dbbcadp.dbbcad.dbbc.dbb.d.ProcessNumber),
+                                AccountId = x.dbbcadp.dbbcad.AccountId,
+                                AccountDetailId = x.dbbcadp.AccountDetailId,
                                 ProcessTypeId = x.ProcessTypeId,
-                                Price = minusAccount.Contains(x.ProcessTypeId) ? -1 * Convert.ToDecimal(x.dbbca.dbbc.dbb.d.Price) : Convert.ToDecimal(x.dbbca.dbbc.dbb.d.Price),
-                                ProcessPrice = -1 * Convert.ToDecimal(x.dbbca.dbbc.dbb.d.ProcessPrice),
+                                Price = minusAccount.Contains(x.ProcessTypeId) ? -1 * Convert.ToDecimal(x.dbbcadp.dbbcad.dbbc.dbb.d.Price) : Convert.ToDecimal(x.dbbcadp.dbbcad.dbbc.dbb.d.Price),
+                                ProcessPrice = -1 * Convert.ToDecimal(x.dbbcadp.dbbcad.dbbc.dbb.d.ProcessPrice),
                                 IsEnable = true,
                                 CreatedDate = dateTimeNow,
                                 CreatedBy = currentUserId,
                                 UpdatedDate = dateTimeNow,
                                 UpdatedBy = currentUserId,
-                                CaseId = x.dbbca.dbbc.CaseId
+                                CaseId = x.dbbcadp.dbbcad.dbbc.CaseId
                             });
+
                 var resultData = query.ToList();
                 await _context.Operations.AddRangeAsync(resultData);
 
@@ -204,7 +208,7 @@ namespace Calculate.Service.Services
             return date.ToString("yyyy-MM-dd");
         }
 
-        public async Task<List<OperationGet>> GetAllSelectDateAsync(string _officeId, string _date,bool isAdmin)
+        public async Task<List<OperationGet>> GetAllSelectDateAsync(string _officeId, string _date, bool isAdmin)
         {
             var date = Convert.ToDateTime(_date);
             var unspecified = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, DateTimeKind.Unspecified);
@@ -217,7 +221,7 @@ namespace Calculate.Service.Services
                        join pt in _context.ProcessTypes on o.ProcessTypeId equals pt.Id
                        join c in _context.Cases on o.CaseId equals c.Id
                        where o.IsEnable == true
-                            && ((!isAdmin && c.officeId == officeId) || isAdmin)
+                            && ((!isAdmin && c.officeId == officeId) || isAdmin)
                             && o.UpdatedDate.Date == specified.Date
                        orderby o.UpdatedDate descending
                        select new OperationGet

@@ -8,9 +8,9 @@
         ],
         dom: 'Bfrtip',
         buttons: [
-            'pageLength','copy', 'csv', 'excel', 'pdf', 'print'
+            'pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        order: [[0, 'desc']]      
+        order: [[0, 'desc']]
     });
 
     $('#caseId').change(function () {
@@ -87,8 +87,8 @@
                         m.setHours(m.getHours() + 3);
                         var dateString =
                             ("0" + m.getUTCDate()).slice(-2) + "." +
-                            ("0" + (m.getUTCMonth() + 1)).slice(-2) + "." +                          
-                             m.getUTCFullYear() + " " +
+                            ("0" + (m.getUTCMonth() + 1)).slice(-2) + "." +
+                            m.getUTCFullYear() + " " +
                             ("0" + m.getUTCHours()).slice(-2) + ":" +
                             ("0" + m.getUTCMinutes()).slice(-2) + ":" +
                             ("0" + m.getUTCSeconds()).slice(-2);
@@ -116,6 +116,75 @@
             }
         });
     });
+
+    document.getElementById('fileUpload').addEventListener("change", (event) => {
+        let selectedFile;
+        let data = [{
+            "name": "jayanth",
+            "data": "scd",
+            "abc": "sdef"
+        }]
+        console.log(window.XLSX);
+        selectedFile = event.target.files[0];
+        XLSX.utils.json_to_sheet(data, 'out.xlsx');
+        if (selectedFile) {
+            let fileReader = new FileReader();
+            fileReader.readAsBinaryString(selectedFile);
+            fileReader.onload = (event) => {
+                let data = event.target.result;
+                let workbook = XLSX.read(data, { type: "binary" });
+                console.log(workbook);
+                workbook.SheetNames.forEach(sheet => {
+                    let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
+                    console.log(rowObject);
+                    var arr = [];
+                    rowObject.forEach(function (r) {
+                        var item = {};                       
+                        var i = 0;
+                        for (var key in r) {
+                            if (r.hasOwnProperty(key))
+                                item[i] = r[key];
+                            i++;
+                        }
+
+                        var uploadItem = {
+                            CaseName: item[9].toString(),
+                            ProcessNumber: item[12].toString(),
+                            Account: item[5].toString(),
+                            BankName: item[4].toString(),
+                            ProcessType: item[10].toString(),
+                            Price: item[8].toString(),
+                            ProcessPrice: item[11].toString()
+                        };
+                        arr.push(uploadItem);
+                    });
+                    var list = JSON.stringify(arr)
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Operation/uploadData",
+                        data: list,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.success) {
+                                toastr.success(data.message);
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 2000);
+                            }
+                            else {
+                                toastr.error(data.message);
+                            }
+                        },
+                        error: function (data) {
+                            toastr.error(data.message);
+                        }
+                    });
+                });
+            }
+        }
+    })
 });
 
 function edit(id) {
@@ -289,72 +358,6 @@ function Update() {
     else {
         $("#update").attr('disabled', false);
     }
-}
-
-function UploadFile() {
-    //let selectedFile;
-    //let data = [{
-    //    "name": "jayanth",
-    //    "data": "scd",
-    //    "abc": "sdef"
-    //}]
-    //console.log(window.XLSX);
-    //document.getElementById('fileUpload').addEventListener("change", (event) => {
-    //    selectedFile = event.target.files[0];
-
-    //})
-
-
-    //document.getElementById('fileUpload').addEventListener("click", () => {
-    //    XLSX.utils.json_to_sheet(data, 'out.xlsx');
-    //    if (selectedFile) {
-    //        let fileReader = new FileReader();
-    //        fileReader.readAsBinaryString(selectedFile);
-    //        fileReader.onload = (event) => {
-    //            let data = event.target.result;
-    //            let workbook = XLSX.read(data, { type: "binary" });
-    //            console.log(workbook);
-    //            workbook.SheetNames.forEach(sheet => {
-    //                let rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheet]);
-    //                console.log(rowObject);
-    //                var list = JSON.stringify(rowObject, undefined, 4)
-    //            });
-    //        }
-    //    }
-    //});
-
-
-
-    var excelFile = document.getElementById('fileUpload');
-    formData = new FormData();
-
-    for (var i = 0; i < excelFile.files.length; i++) {
-        var file = excelFile.files[i];
-        formData.append("excelFile", file);
-    }
-    $.ajax({
-        type: "POST",
-        url: "/Operation/uploadData",
-        data: formData,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        contentType: false,
-        processData: false,
-        success: function (data) {
-            if (data.success) {
-                toastr.success(data.message);
-                setTimeout(function () {
-                    window.location.reload();
-                }, 2000);
-            }
-            else {
-                toastr.error(data.message);
-            }
-        },
-        error: function (data) {
-            toastr.error(data.message);
-        }
-    });
 }
 
 function remove(id) {

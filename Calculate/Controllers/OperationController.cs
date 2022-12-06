@@ -5,6 +5,8 @@ using Calculate.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using OfficeOpenXml;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Calculate.Controllers
 {
@@ -158,41 +160,38 @@ namespace Calculate.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> uploadData(IFormFile excelFile)
+        public async Task<JsonResult> uploadData([FromBody] List<OperationUploadExcel> list)
         {
             try
             {
-                var list = new List<OperationUploadExcel>();
-                using (var stream = new MemoryStream())
-                {
-                    await excelFile.CopyToAsync(stream);
-                    ExcelPackage.LicenseContext = LicenseContext.Commercial;
-                    using (var package = new ExcelPackage(stream))
-                    {
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                        var rowcount = worksheet.Dimension.Rows;
-                        for (int row = 3; row < rowcount; row++)
-                        {
-                            list.Add(new OperationUploadExcel
-                            {
-                                CaseName = worksheet.Cells[row, 1].Value.ToString().Trim(),
-                                ProcessNumber = worksheet.Cells[row, 2].Value.ToString().Trim(),
-                                Account = worksheet.Cells[row, 3].Value.ToString().Trim(),
-                                BankName = worksheet.Cells[row, 4].Value.ToString().Trim(),
-                                ProcessType = worksheet.Cells[row, 5].Value.ToString().Trim(),
-                                Price = worksheet.Cells[row, 6].Value.ToString().Trim(),
-                                ProcessPrice = worksheet.Cells[row, 7].Value.ToString().Trim(),
-                            });
-                        }
-                    }
-                }
+                var _list = new List<OperationUploadExcel>();
 
                 var userId = Request.Cookies["AuthenticationKey"];
                 bool result = false;
                 if (list == null)
                     result = true;
                 else
-                    result = await _operationService.SaveUploadExcelAsync(list, userId);
+                {
+                   
+                    for (int row = 0; row < list.Count; row++)
+                    {                      
+                        _list.Add(new OperationUploadExcel
+                        {
+                            CaseName = list[row].CaseName.ToString().Trim().ToUpper(),
+                            ProcessNumber = list[row].ProcessNumber.ToString().Trim(),
+                            Account = list[row].Account.ToString().Trim().ToUpper(),
+                            BankName = list[row].BankName.ToString().Trim().ToUpper(),
+                            ProcessType = list[row].ProcessType.ToString().Trim().ToUpper(),
+                            Price = list[row].Price.ToString().Trim().Replace("₺", "").Replace(".",","),
+                            ProcessPrice = list[row].ProcessPrice.ToString().Trim().Replace("₺", "").Replace(".", ",")
+                        });
+                    }
+                    if (_list != null)
+                    {
+                        result = await _operationService.SaveUploadExcelAsync(_list, userId);
+                    }                 
+                }
+                  
 
                 return Json(new
                 {
