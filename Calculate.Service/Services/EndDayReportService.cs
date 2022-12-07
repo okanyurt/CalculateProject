@@ -57,7 +57,7 @@ namespace Calculate.Service.Services
                        join c in _context.Cases on o.CaseId equals c.Id
                        where o.IsEnable == true
                              && ((!isAdmin && c.officeId ==officeId) || isAdmin)
-                             && o.UpdatedDate.Date == specified
+                             && o.UpdatedDate.Date == specified.Date
                        group new { o, c, pt } by new
                        {
                            CaseName = c.Name
