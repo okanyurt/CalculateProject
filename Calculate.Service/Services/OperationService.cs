@@ -204,7 +204,7 @@ namespace Calculate.Service.Services
 
         public string GetMaxDate()
         {
-            var date = _context.Operations.Select(x => x.UpdatedDate.Date).Distinct().FirstOrDefault();
+            var date = _context.Operations.Max(x => x.UpdatedDate);
             return date.ToString("yyyy-MM-dd");
         }
 

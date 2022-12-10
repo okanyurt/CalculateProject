@@ -29,10 +29,13 @@
                         element.totalTransfer.toString() + " TL",
                         element.totalWithdraw.toString() + " TL",
                         element.totalCommission.toString() + " TL",
+                        element.totalInboundTransfer.toString() + " TL",
+                        element.totalOutgoingTransfer.toString() + " TL",
                         element.totalBalance.toString() + " TL",
+                        element.totalProcessPrice.toString() + " TL",
                         element.totalProcessNumber.toString()
                         ];
-                        
+
                         dataset.push(row);
                     });
                     table = $("#reportTable").DataTable();
@@ -58,7 +61,10 @@ function show() {
                 d.totalTransfer.toString() + " TL",
                 d.totalWithdraw.toString() + " TL",
                 d.totalCommission.toString() + " TL",
+                d.totalInboundTransfer.toString() + " TL",
+                d.totalOutgoingTransfer.toString() + " TL",
                 d.totalBalance.toString() + " TL",
+                d.totalProcessPrice.toString() + " TL",
                 d.totalProcessNumber.toString()
                 ];
                 dataset.push(row);
@@ -71,6 +77,7 @@ function show() {
             else {
                 $.noConflict();
                 table = $('#reportTable').DataTable({
+                    "scrollX": true,
                     buttons: [
                         'copy', 'csv', 'excel', 'pdf', 'print'
                     ],
@@ -82,7 +89,10 @@ function show() {
                         { title: 'Devir' },
                         { title: 'Çekim' },
                         { title: 'Komisyon' },
+                        { title: 'Gelen Transfer' },
+                        { title: 'Giden Transfer' },
                         { title: 'Kalan' },
+                        { title: 'İşlem Ücreti' },
                         { title: 'İşlem Adedi' }
                     ],
                     deferLoading: 57
