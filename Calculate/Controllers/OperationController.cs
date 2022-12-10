@@ -14,10 +14,12 @@ namespace Calculate.Controllers
     {
 
         private readonly IOperationService _operationService;
+        private readonly IGenericRemoveService _genericRemoveService;
 
-        public OperationController(IOperationService operationService)
+        public OperationController(IOperationService operationService, IGenericRemoveService genericRemoveService)
         {
             _operationService = operationService;
+            _genericRemoveService = genericRemoveService;
         }
 
         [HttpGet]
@@ -98,7 +100,12 @@ namespace Calculate.Controllers
             try
             {
                 string userId = Request.Cookies["AuthenticationKey"];
-                await _operationService.RemoveAsync(id, userId);
+                //await _operationService.RemoveAsync(id, userId);
+                int result = await _genericRemoveService.RemoveAsync(id, (int)EnumIsMaster.OPERATION, userId);
+                if (result == 0)
+                {
+                    return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = false });
+                }
                 return Json(new { redirectToUrl = Url.Action("Index", "Operation"), isSuccess = true });
             }
             catch

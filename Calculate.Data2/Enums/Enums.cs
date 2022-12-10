@@ -28,3 +28,17 @@ public enum EnumRole
     [Description("ADMİN")]
     ADMIN = 2,
 }
+
+public enum EnumIsMaster
+{
+    [Description("OFFICE")]
+    OFFICE = 1,
+    [Description("CASE")]
+    CASE = 2,
+    [Description("ACCOUNT")]
+    ACCOUNT = 3,
+    [Description("ACCOUNTDETAIL")]
+    ACCOUNTDETAIL = 4,
+    [Description("OPERATION")]
+    OPERATION = 5,
+}

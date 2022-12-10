@@ -10,10 +10,12 @@ namespace Calculate.Controllers
     public class OfficeController : BaseController
     {
         private readonly IOfficeService _officeService;
+        private readonly IGenericRemoveService _genericRemoveService;
 
-        public OfficeController(IOfficeService officeService)
+        public OfficeController(IOfficeService officeService, IGenericRemoveService genericRemoveService)
         {
             _officeService = officeService;
+            _genericRemoveService = genericRemoveService;
         }
 
         [HttpGet]
@@ -101,7 +103,13 @@ namespace Calculate.Controllers
             try
             {
                 string userId = Request.Cookies["AuthenticationKey"];
-                await _officeService.RemoveAsync(id, userId);
+                //await _officeService.RemoveAsync(id, userId);
+                int result = await _genericRemoveService.RemoveAsync(id,(int)EnumIsMaster.OFFICE,userId);
+                if (result == 0)
+                {
+                    return Json(new { redirectToUrl = Url.Action("Index", "Office"), isSuccess = false });
+                }
+
                 return Json(new { redirectToUrl = Url.Action("Index", "Office"), isSuccess = true });
             }
             catch

@@ -10,10 +10,12 @@ namespace Calculate.Controllers
     public class CaseController : BaseController
     {
         private readonly ICaseService _caseService;
+        private readonly IGenericRemoveService _genericRemoveService;
 
-        public CaseController(ICaseService caseService)
+        public CaseController(ICaseService caseService, IGenericRemoveService genericRemoveService)
         {
             _caseService = caseService;
+            _genericRemoveService = genericRemoveService;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -106,7 +108,12 @@ namespace Calculate.Controllers
             try
             {
                 string userId = Request.Cookies["AuthenticationKey"];
-                await _caseService.RemoveAsync(id, userId);
+                //await _caseService.RemoveAsync(id, userId);
+                int result = await _genericRemoveService.RemoveAsync(id, (int)EnumIsMaster.CASE, userId);
+                if (result == 0)
+                {
+                    return Json(new { redirectToUrl = Url.Action("Index", "Case"), isSuccess = false });
+                }
                 return Json(new { redirectToUrl = Url.Action("Index", "Case"), isSuccess = true });
             }
             catch

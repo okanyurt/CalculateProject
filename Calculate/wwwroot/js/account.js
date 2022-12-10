@@ -149,7 +149,7 @@ function remove(id) {
                         window.location.reload();
                     }, 1000);
                 } else {
-                    toastr.error(result.message);
+                    toastr.error("İşlem başarısız.");
                 }
             }
         });
