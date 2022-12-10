@@ -130,7 +130,7 @@ namespace Calculate.Service.Services
 
         public async Task<List<Bank>> GetAllBankAsync()
         {
-            var list = await _context.Banks.ToListAsync();
+            var list = await _context.Banks.OrderBy(x => x.Name).ToListAsync();
             return list;
         }
 

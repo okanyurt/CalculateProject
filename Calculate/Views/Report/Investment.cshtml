@@ -69,12 +69,9 @@
                                                     <th colspan="2">HalkBank</th>
                                                     <th colspan="2">ING</th>
                                                     <th colspan="2">KuveytTürk</th>
-                                                    <th colspan="2">MFT</th>
                                                     <th colspan="2">QNB FinansBank</th>
-                                                    <th colspan="2">SAHA</th>
                                                     <th colspan="2">TEB</th>
-                                                    <th colspan="2">Türkiye Finans</th>
-                                                    <th colspan="2">Vakıfbank</th>
+                                                    <th colspan="2">Türkiye Finans</th>                                               
                                                     <th colspan="2">YapıKredi Bankası</th>
                                                     <th colspan="2">Ziraat Bankası</th>
                                                     <th colspan="2">İş Bankası</th>
@@ -126,7 +123,7 @@
                 var islemAdediToplam = 0;
                 row.push("");
                 totalRow.push("Genel Toplam");
-                for(var i= 0; i < 34; i++){
+                for(var i= 0; i < 28; i++){
                     if(i % 2){
                         row.push("0");
                         totalRow.push("0");
@@ -153,7 +150,7 @@
                         row.push("");
                         toplam = 0;
                         islemAdediToplam = 0;
-                        for(var i= 0; i < 34; i++){
+                        for(var i= 0; i < 28; i++){
                             if(i % 2)
                               row.push("0");
                             else
@@ -220,75 +217,54 @@
                            totalRow[13] = (parseFloat(totalRow[13].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
                            totalRow[14] = (parseFloat(totalRow[14]) + parseFloat(d.processCount)).toString();                                                   
                         }
-                        else if(d.accountDetail == "MFT"){
-                           row[15] = price + " TL";
-                           row[16] = d.processCount.toString();
-
-                           totalRow[15] = (parseFloat(totalRow[15].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
-                           totalRow[16] = (parseFloat(totalRow[16]) + parseFloat(d.processCount)).toString();  
-                        }
                         else if(d.accountDetail == "QNB FinansBank"){
+                                row[15] = price + " TL";
+                                row[16] = d.processCount.toString();
+
+                                totalRow[15] = (parseFloat(totalRow[15].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
+                                totalRow[16] = (parseFloat(totalRow[16]) + parseFloat(d.processCount)).toString();                         
+                        }
+                        else if(d.accountDetail == "TEB"){                            
                                 row[17] = price + " TL";
                                 row[18] = d.processCount.toString();
 
                                 totalRow[17] = (parseFloat(totalRow[17].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
-                                totalRow[18] = (parseFloat(totalRow[18]) + parseFloat(d.processCount)).toString();                         
+                                totalRow[18] = (parseFloat(totalRow[18]) + parseFloat(d.processCount)).toString();
                         }
-                        else if(d.accountDetail == "SAHA"){
+                        else if(d.accountDetail == "Türkiye Finans"){                           
                                 row[19] = price + " TL";
                                 row[20] = d.processCount.toString();
 
                                 totalRow[19] = (parseFloat(totalRow[19].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
-                                totalRow[20] = (parseFloat(totalRow[20]) + parseFloat(d.processCount)).toString();      
+                                totalRow[20] = (parseFloat(totalRow[20]) + parseFloat(d.processCount)).toString(); 
                         }
-                        else if(d.accountDetail == "TEB"){                            
+                        else if(d.accountDetail == "Yapı Kredi Bankası"){                           
                                 row[21] = price + " TL";
                                 row[22] = d.processCount.toString();
 
                                 totalRow[21] = (parseFloat(totalRow[21].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
                                 totalRow[22] = (parseFloat(totalRow[22]) + parseFloat(d.processCount)).toString();
                         }
-                        else if(d.accountDetail == "Türkiye Finans"){                           
+                        else if(d.accountDetail == "Ziraat Bankası"){                            
                                 row[23] = price + " TL";
                                 row[24] = d.processCount.toString();
 
                                 totalRow[23] = (parseFloat(totalRow[23].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
-                                totalRow[24] = (parseFloat(totalRow[24]) + parseFloat(d.processCount)).toString(); 
+                                totalRow[24] = (parseFloat(totalRow[24]) + parseFloat(d.processCount)).toString();
                         }
-                        else if(d.accountDetail == "VakıfBank"){                           
+                        else if(d.accountDetail == "İş Bankası"){                           
                                 row[25] = price + " TL";
                                 row[26] = d.processCount.toString();
 
                                 totalRow[25] = (parseFloat(totalRow[25].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
-                                totalRow[26] = (parseFloat(totalRow[26]) + parseFloat(d.processCount)).toString(); 
-                        }
-                        else if(d.accountDetail == "Yapı Kredi Bankası"){                           
-                                row[27] = price + " TL";
-                                row[28] = d.processCount.toString();
-
-                                totalRow[27] = (parseFloat(totalRow[27].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
-                                totalRow[28] = (parseFloat(totalRow[28]) + parseFloat(d.processCount)).toString();
-                        }
-                        else if(d.accountDetail == "Ziraat Bankası"){                            
-                                row[29] = price + " TL";
-                                row[30] = d.processCount.toString();
-
-                                totalRow[29] = (parseFloat(totalRow[29].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
-                                totalRow[30] = (parseFloat(totalRow[30]) + parseFloat(d.processCount)).toString();
-                        }
-                        else if(d.accountDetail == "İş Bankası"){                           
-                                row[31] = price + " TL";
-                                row[32] = d.processCount.toString();
-
-                                totalRow[31] = (parseFloat(totalRow[31].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
-                                totalRow[32] = (parseFloat(totalRow[32]) + parseFloat(d.processCount)).toString();                         
+                                totalRow[26] = (parseFloat(totalRow[26]) + parseFloat(d.processCount)).toString();                         
                         }
 
-                        row[33] = toplam.toFixed(2).toString() + " TL";
-                        row[34] = islemAdediToplam.toString();
+                        row[27] = toplam.toFixed(2).toString() + " TL";
+                        row[28] = islemAdediToplam.toString();
 
-                        totalRow[33] = (parseFloat(totalRow[33].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
-                        totalRow[34] = (parseFloat(totalRow[34]) + parseFloat(d.processCount)).toString();
+                        totalRow[27] = (parseFloat(totalRow[27].replace("TL","")) + parseFloat(price)).toFixed(2).toString() + "TL";
+                        totalRow[28] = (parseFloat(totalRow[28]) + parseFloat(d.processCount)).toString();
                     }
 
                     if(index == data.length-1)
@@ -300,7 +276,7 @@
 
                 var appendtr = "<tr>";
                 appendtr += "<th>Hesap Adı</th>";
-                for (var i=0; i <16; i++)
+                for (var i=0; i <13; i++)
                 {
                   appendtr += "<th>Yatırım Toplamı</th>";
                   appendtr += "<th>İşlem Adedi Toplamı</th>";
@@ -320,7 +296,7 @@
                            buttons: [
                                  'copy', 'csv', 'excel', 'pdf', 'print'
                           ],
-                          "order": [[ 35, 'desc' ]],
+                          "order": [[ 29, 'desc' ]],
                            data: dataset,
                            columnDefs: [
                                 {
@@ -333,7 +309,7 @@
                                     width: 300
                                 },
                                 {
-                                     targets: 35,
+                                     targets: 29,
                                      visible:false
                                 }
                            ],
@@ -343,7 +319,7 @@
                     table.on('order.dt search.dt', function () {
                               let i = 1;
  
-                           table.cells(null, 35, { search: 'applied', order: 'applied' }).every(function (cell) {
+                           table.cells(null, 29, { search: 'applied', order: 'applied' }).every(function (cell) {
                            this.data(i++);
                       });
                     }).draw();

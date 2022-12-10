@@ -33,10 +33,13 @@ namespace Calculate.Service.Services
                        {
                            TotalProcessNumber = g.Count(),
                            TotalPayMoney = g.Where(x => x.pt.Id == 1).Sum(x => x.o.Price),
-                           TotalTransfer = g.Where(x => x.pt.Id == 4).Sum(x => x.o.Price),
+                           TotalTransfer = g.Where(x => x.pt.Id == 5).Sum(x => x.o.Price),
                            TotalWithdraw = g.Where(x => x.pt.Id == 2).Sum(x => x.o.Price),
                            TotalCommission = g.Where(x => x.pt.Id == 3).Sum(x => x.o.Price),
-                           TotalBalance = g.Sum(x => x.o.Price) + g.Sum(x => x.o.ProcessPrice),
+                           TotalInboundTransfer = g.Where(x => x.pt.Id == 7).Sum(x => x.o.Price),
+                           TotalOutgoingTransfer = g.Where(x => x.pt.Id == 4).Sum(x => x.o.Price),
+                           TotalProcessPrice = g.Sum(x => x.o.ProcessPrice),
+                           TotalBalance = g.Sum(x => x.o.Price),
                            CaseName = g.Key.CaseName
                        };
 
@@ -66,10 +69,13 @@ namespace Calculate.Service.Services
                        {
                            TotalProcessNumber = g.Count(),
                            TotalPayMoney = g.Where(x => x.pt.Id == 1).Sum(x => x.o.Price),
-                           TotalTransfer = g.Where(x => x.pt.Id == 4).Sum(x => x.o.Price),
+                           TotalTransfer = g.Where(x => x.pt.Id == 5).Sum(x => x.o.Price),
                            TotalWithdraw = g.Where(x => x.pt.Id == 2).Sum(x => x.o.Price),
                            TotalCommission = g.Where(x => x.pt.Id == 3).Sum(x => x.o.Price),
-                           TotalBalance = g.Sum(x => x.o.Price) + g.Sum(x => x.o.ProcessPrice),
+                           TotalInboundTransfer = g.Where(x => x.pt.Id == 7).Sum(x => x.o.Price),
+                           TotalOutgoingTransfer = g.Where(x => x.pt.Id == 4).Sum(x => x.o.Price),
+                           TotalProcessPrice = g.Sum(x => x.o.ProcessPrice),
+                           TotalBalance = g.Sum(x => x.o.Price),
                            CaseName = g.Key.CaseName
                        };
 
@@ -78,7 +84,7 @@ namespace Calculate.Service.Services
 
         public  string GetMaxDate()
         {
-            var date = _context.OperationsArchive.Select(x => x.UpdatedDate.Date).Distinct().FirstOrDefault();
+            var date = _context.OperationsArchive.Max(x=>x.UpdatedDate);
             return date.ToString("yyyy-MM-dd");
         }
     }

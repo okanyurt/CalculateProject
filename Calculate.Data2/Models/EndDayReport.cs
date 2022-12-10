@@ -8,6 +8,10 @@
         public decimal TotalWithdraw { get; set; }
         public decimal TotalCommission { get; set; }
         public decimal TotalBalance { get; set; }
+        public decimal TotalInboundTransfer { get; set; }
+        public decimal TotalOutgoingTransfer { get; set; }
+
+        public decimal TotalProcessPrice { get; set; }
         public string CaseName { get; set; }
     }
 }
