@@ -2,6 +2,7 @@
 using Calculate.Data.Enums;
 using Calculate.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace Calculate.Service.Services
 {
@@ -147,11 +148,11 @@ namespace Calculate.Service.Services
                 int currentUserId = _context.Users.FirstOrDefault(x => x.UserId == userId).Id;
 
                 var valuee = data.AsEnumerable();
-                var query = valuee.Join(_context.Banks, d => d.BankName.ToUpper(), b => b.Name.ToUpper(), (d, b) => new { d, BankId = b.Id })
-                            .Join(_context.Cases, dbb => dbb.d.CaseName.ToUpper(), c => c.Name.ToUpper(), (dbb, c) => new { dbb, CaseId = c.Id })
-                            .Join(_context.Accounts, dbbc => dbbc.dbb.d.Account.ToUpper(), a => a.Name.ToUpper(), (dbbc, a) => new { dbbc, AccountId = a.Id, IsEnable = a.IsEnable, CaseId = a.CaseId })
+                var query = valuee.Join(_context.Banks, d => d.BankName.ToUpper(new CultureInfo("tr-TR", false)), b => b.Name.ToUpper(new CultureInfo("tr-TR", false)), (d, b) => new { d, BankId = b.Id })
+                            .Join(_context.Cases, dbb => dbb.d.CaseName.ToUpper(new CultureInfo("tr-TR", false)), c => c.Name.ToUpper(new CultureInfo("tr-TR", false)), (dbb, c) => new { dbb, CaseId = c.Id })
+                            .Join(_context.Accounts, dbbc => dbbc.dbb.d.Account.ToUpper(new CultureInfo("tr-TR", false)), a => a.Name.ToUpper(new CultureInfo("tr-TR", false)), (dbbc, a) => new { dbbc, AccountId = a.Id, IsEnable = a.IsEnable, CaseId = a.CaseId })
                             .Join(_context.AccountDetails, dbbcad => dbbcad.AccountId, ad => ad.AccountId, (dbbcad, ad) => new { dbbcad, AccountDetailId = ad.Id, BankId = ad.BankId, IsEnable = ad.IsEnable })
-                            .Join(_context.ProcessTypes, dbbcadp => dbbcadp.dbbcad.dbbc.dbb.d.ProcessType.ToUpper(), p => p.Name.ToUpper(), (dbbcadp, p) => new { dbbcadp, ProcessTypeId = p.Id })
+                            .Join(_context.ProcessTypes, dbbcadp => dbbcadp.dbbcad.dbbc.dbb.d.ProcessType.ToUpper(new CultureInfo("tr-TR", false)), p => p.Name.ToUpper(new CultureInfo("tr-TR", false)), (dbbcadp, p) => new { dbbcadp, ProcessTypeId = p.Id })
                             .Where(x => x.dbbcadp.dbbcad.IsEnable == true && x.dbbcadp.dbbcad.dbbc.CaseId == x.dbbcadp.dbbcad.CaseId && x.dbbcadp.BankId == x.dbbcadp.dbbcad.dbbc.dbb.BankId && x.dbbcadp.IsEnable == true)
                             .Select(x => new Operation
                             {
@@ -170,9 +171,27 @@ namespace Calculate.Service.Services
                             });
 
                 var resultData = query.ToList();
-                await _context.Operations.AddRangeAsync(resultData);
+                var trans = _context.Database.BeginTransaction();
+                if (resultData.Count == data.Count)
+                {
+                    try
+                    {
+                        await _context.Operations.AddRangeAsync(resultData);
 
-                await _context.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
+                        trans.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+               
             }
             catch (Exception ex)
             {
