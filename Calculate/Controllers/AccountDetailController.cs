@@ -10,10 +10,12 @@ namespace Calculate.Controllers
     public class AccountDetailController : BaseController
     {
         private readonly IAccountDetailService _accountDetailService;
+        private readonly IGenericRemoveService _genericRemoveService;
 
-        public AccountDetailController(IAccountDetailService accountDetailService)
+        public AccountDetailController(IAccountDetailService accountDetailService, IGenericRemoveService genericRemoveService)
         {
             _accountDetailService = accountDetailService;
+            _genericRemoveService = genericRemoveService;
         }
 
         [HttpGet]
@@ -115,7 +117,12 @@ namespace Calculate.Controllers
             try
             {
                 string userId = Request.Cookies["AuthenticationKey"];
-                await _accountDetailService.RemoveAsync(id, userId);
+                //await _accountDetailService.RemoveAsync(id, userId);
+                int result = await _genericRemoveService.RemoveAsync(id, (int)EnumIsMaster.ACCOUNTDETAIL, userId);
+                if (result == 0)
+                {
+                    return Json(new { redirectToUrl = Url.Action("Index", "AccountDetail"), isSuccess = false });
+                }
                 return Json(new { redirectToUrl = Url.Action("Index", "AccountDetail"), isSuccess = true });
             }
             catch

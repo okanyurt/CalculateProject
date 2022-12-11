@@ -21,6 +21,7 @@ builder.Services.AddScoped<ICaseService, CaseService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IAccountDetailService, AccountDetailService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGenericRemoveService, GenericRemoveService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
