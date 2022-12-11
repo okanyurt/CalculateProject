@@ -69,9 +69,9 @@ namespace Calculate.Service.Services
                     Price = x.Sum(y => y.Price) + x.Sum(y => y.ProcessPrice),
                     ProcessPrice = 0,
                     CreatedBy = currentUserId,
-                    CreatedDate = date.AddDays(1),
+                    CreatedDate = date.AddDays(1).Date,
                     UpdatedBy = currentUserId,
-                    UpdatedDate = date.AddDays(1),
+                    UpdatedDate = date.AddDays(1).Date,
                     IsEnable = true,
                     CaseId = caseId,
                     IsSystem = true
