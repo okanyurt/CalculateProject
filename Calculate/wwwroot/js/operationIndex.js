@@ -292,7 +292,6 @@ function Save() {
                     toastr.error(response.message);
                     $("#save").attr('disabled', false);
                 }
-                $("#save").attr('disabled', false);
             },
             error: function (response) {
                 $("#save").attr('disabled', false);
