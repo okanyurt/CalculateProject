@@ -65,14 +65,15 @@ namespace Calculate.Service.Services
         {
             var date = DateTime.UtcNow.AddHours(3).Date;
             var caseList = from o in _context.Operations
-                           where o.UpdatedDate.Date == date && o.IsEnable == true && o.CaseId == Id
+                           join a in _context.Accounts on o.AccountId equals a.Id
+                           where o.UpdatedDate.Date == date && o.IsEnable == true && a.IsEnable == true && o.CaseId == Id
                            group o by new
                            {
                                Case = o.CaseId
                            } into g
                            select new Operation
                            {
-                               Price = g.Sum(x => (x.Price+x.ProcessPrice))
+                               Price = g.Sum(x => (x.Price + x.ProcessPrice))
                            };
 
             return await caseList.FirstOrDefaultAsync();
