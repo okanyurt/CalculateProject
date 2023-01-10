@@ -73,7 +73,7 @@ namespace Calculate.Service.Services
                            } into g
                            select new Operation
                            {
-                               Price = g.Sum(x => (x.Price+x.ProcessPrice))
+                               Price = g.Sum(x => (x.Price + x.ProcessPrice))
                            };
 
             return await caseList.FirstOrDefaultAsync();
